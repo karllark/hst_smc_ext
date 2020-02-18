@@ -1,4 +1,4 @@
-Code for HST M31 UV extinction project
+Code for HST SMC UV extinction project
 ======================================
 
 Routines for HST SMC UV extinction curves program.
