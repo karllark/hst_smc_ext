@@ -110,16 +110,17 @@ class ExtData():
 
     def read_ext_data_idlsave(self, ext_filename):
         spec_dict = readsav(ext_filename)
-        print(spec_dict.keys())
-        exit()
 
-        indxs, = np.where(np.isfinite(spec_dict['realcurv']))
-        self.ext_waves['STIS'] = spec_dict['wavein'][indxs]*1e-4
-        self.ext_curve['STIS'] = spec_dict['realcurv'][indxs]
+        indxs, = np.where(np.isfinite(spec_dict['uvcurve']))
+        self.ext_waves['STIS'] = spec_dict['uvwaves'][indxs]*1e-4
+        self.ext_curve['STIS'] = spec_dict['uvcurve'][indxs]
 
-        indxs, = np.where(spec_dict['xcurv'] > 0.)
-        self.ext_waves['MODEL'] = 1.0/spec_dict['xcurv'][indxs]
-        self.ext_curve['MODEL'] = spec_dict['bestcurv'][indxs]
+        self.ext_waves['BANDS'] = spec_dict['opirwaves']*1e-4
+        self.ext_curve['BANDS'] = spec_dict['opircurve']
+
+        # indxs, = np.where(spec_dict['xcurv'] > 0.)
+        # self.ext_waves['MODEL'] = 1.0/spec_dict['xcurv'][indxs]
+        # self.ext_curve['MODEL'] = spec_dict['bestcurv'][indxs]
 
         #print(spec_dict.keys())
 

@@ -31,7 +31,7 @@ if __name__ == "__main__":
     ax.append(pyplot.subplot(gs[1, 1]))
 
 #    datapath = "/home/kgordon/Hubble/SMCExt/Ed/"
-    datapath = "/home/kgordon/Hubble/SMCExt/Ed_SMC/"
+    datapath = "/home/kgordon/Hubble/SMCExt/SENDTOKARL2/"
     plot_ext_stack(
         "smc_stars_reddened_good_highebv.dat",
         ax[0],

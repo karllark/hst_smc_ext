@@ -8,7 +8,7 @@ from extdata import *
 
 def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
 
-    f = open(locpath + filelist, "r")
+    f = open(filelist, "r")
     file_lines = list(f)
     starnames = []
     extdata = []
@@ -35,20 +35,20 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
     for i in range(n_stars):
         k = i
 
-        if idlsave:
-            norm_val = 1.0
-        else:
-            norm_indxs = np.where(
-                (extdata[k].ext_waves["BANDS"] >= norm_wave_range[0])
-                & (extdata[k].ext_waves["BANDS"] <= norm_wave_range[1])
-            )
-            norm_val = 1.0 / np.average(extdata[k].ext_curve["BANDS"][norm_indxs])
+        norm_indxs = np.where(
+            (extdata[k].ext_waves["BANDS"] >= norm_wave_range[0])
+            & (extdata[k].ext_waves["BANDS"] <= norm_wave_range[1])
+        )
+        norm_val = 1.0 / np.average(extdata[k].ext_curve["BANDS"][norm_indxs])
 
-            ax.plot(
-                1.0 / extdata[k].ext_waves["BANDS"],
-                extdata[k].ext_curve["BANDS"] * norm_val + offset_val * i,
-                col_vals[i % 6] + "o",
-            )
+        ax.plot(
+            1.0 / extdata[k].ext_waves["BANDS"],
+            extdata[k].ext_curve["BANDS"] * norm_val + offset_val * i,
+            col_vals[i % 6] + "o",
+        )
+
+        norm_val = 1.0
+        print(norm_val)
 
         ax.plot(
             1.0 / extdata[k].ext_waves["STIS"],
@@ -56,13 +56,13 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
             col_vals[i % 6] + "-",
         )
 
-        if idlsave:
-            indxs, = np.where(1.0 / extdata[k].ext_waves["MODEL"] < 9.0)
-            ax.plot(
-                1.0 / extdata[k].ext_waves["MODEL"][indxs],
-                extdata[k].ext_curve["MODEL"][indxs] * norm_val + offset_val * i,
-                col_vals[i % 6] + "--",
-            )
+        # if idlsave:
+        #    indxs, = np.where(1.0 / extdata[k].ext_waves["MODEL"] < 9.0)
+        #    ax.plot(
+        #        1.0 / extdata[k].ext_waves["MODEL"][indxs],
+        #        extdata[k].ext_curve["MODEL"][indxs] * norm_val + offset_val * i,
+        #        col_vals[i % 6] + "--",
+        #    )
 
         ann_indxs = np.where(
             (extdata[k].ext_waves["STIS"] >= ann_wave_range[0])
