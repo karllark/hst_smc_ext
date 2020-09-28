@@ -28,7 +28,7 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
             extdata.append(text)
 
     norm_wave_range = [0.4, 0.6]
-    col_vals = ["b", "g"]  # , "r", "m", "c", "y"]
+    col_vals = ["b", "g", "r", "m", "c", "y"]
     ncol = len(col_vals)
     offset_val = 5.0
 
@@ -65,9 +65,9 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
                 col_vals[i % ncol] + "--",
             )
 
-    ax.set_xlim(100., 3e3)
-    ax.set_xscale("log")
-    ax.set_ylim(-5.0, 20.0 + offset_val * n_stars)
+    ax.set_xlim(100., 500.)
+    ax.set_xscale("linear")
+    ax.set_ylim(-1.0, 13.0 + offset_val * n_stars)
 
 
 if __name__ == "__main__":
@@ -98,15 +98,6 @@ if __name__ == "__main__":
         idlsave=True,
         locpath=datapath,
         fontsize=fontsize,
-    )
-    ylimits = ax.get_ylim()
-    xlimits = ax.get_xlim()
-    ax.text(
-        xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
-        ylimits[0] + 0.95 * (ylimits[1] - ylimits[0]),
-        u"SMC, Good, $E(B-V) > 0.15$",
-        fontsize=1.5 * fontsize,
-        horizontalalignment="left",
     )
     ax.set_xlabel(r"$\lambda$ [$nm$]", fontsize=1.3 * fontsize)
     ax.set_ylabel(r"$E(\lambda - V)/E(B - V)$ + offset", fontsize=1.3 * fontsize)
