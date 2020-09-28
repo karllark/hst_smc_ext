@@ -1,8 +1,7 @@
-import numpy as np
 import matplotlib.pyplot as pyplot
 import argparse
 import matplotlib
-
+import numpy as np
 from extdata import ExtData
 
 
@@ -29,7 +28,6 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
             extdata.append(text)
 
     norm_wave_range = [0.4, 0.6]
-    ann_wave_range = 1.0 / np.array([8.65, 8.45])
     col_vals = ["b", "g"]  # , "r", "m", "c", "y"]
     ncol = len(col_vals)
     offset_val = 5.0
@@ -48,13 +46,13 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
         # print(norm_val)
 
         ax.plot(
-            1.0 / extdata[k].ext_waves["BANDS"],
+            extdata[k].ext_waves["BANDS"] * 1e3,
             extdata[k].ext_curve["BANDS"] * norm_val + offset_val * i,
             col_vals[i % ncol] + "o",
         )
 
         ax.plot(
-            1.0 / extdata[k].ext_waves["STIS"],
+            extdata[k].ext_waves["STIS"] * 1e3,
             extdata[k].ext_curve["STIS"] * norm_val + offset_val * i,
             col_vals[i % ncol] + "-",
         )
@@ -62,59 +60,24 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
         if idlsave:
             (indxs,) = np.where(1.0 / extdata[k].ext_waves["MODEL"] < 9.0)
             ax.plot(
-                1.0 / extdata[k].ext_waves["MODEL"][indxs],
+                extdata[k].ext_waves["MODEL"][indxs] * 1e3,
                 extdata[k].ext_curve["MODEL"][indxs] * norm_val + offset_val * i,
                 col_vals[i % ncol] + "--",
             )
 
-        ann_indxs = np.where(
-            (extdata[k].ext_waves["STIS"] >= ann_wave_range[0])
-            & (extdata[k].ext_waves["STIS"] <= ann_wave_range[1])
-        )
-        ann_val = np.average(extdata[k].ext_curve["STIS"][ann_indxs])
-        ann_val *= norm_val
-        ann_val += offset_val * i
-        ax.annotate(
-            starnames[k],
-            xy=(8.8, ann_val),
-            xytext=(9.3, ann_val),
-            verticalalignment="center",
-            arrowprops=dict(facecolor=col_vals[i % ncol], shrink=0.1),
-            fontsize=0.85 * fontsize,
-            rotation=-45.0,
-            color=col_vals[i % ncol],
-        )
-
-    ax.set_xlim(1.0 / 2.5, 10.5)
+    ax.set_xlim(100., 3e3)
+    ax.set_xscale("log")
     ax.set_ylim(-5.0, 20.0 + offset_val * n_stars)
 
 
 if __name__ == "__main__":
-
-    # commandline parser
     parser = argparse.ArgumentParser()
-    parser.add_argument("filelist", help="file with list of stars to plot")
-    parser.add_argument(
-        "-i",
-        "--idlsave",
-        help="extinction data in an IDL save file",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-p", "--png", help="save figure as a png file", action="store_true"
-    )
-    parser.add_argument(
-        "-e", "--eps", help="save figure as an eps file", action="store_true"
-    )
-    parser.add_argument("--path", help="path to filelist and extinction curves")
+    parser.add_argument("--png", help="save figure as a png file", action="store_true")
+    parser.add_argument("--eps", help="save figure as an eps file", action="store_true")
+    parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
     args = parser.parse_args()
 
-    if args.path:
-        locpath = args.path + "/"
-    else:
-        locpath = ""
-
-    fontsize = 18
+    fontsize = 16
 
     font = {"size": fontsize}
 
@@ -125,11 +88,36 @@ if __name__ == "__main__":
     matplotlib.rc("xtick.major", width=2)
     matplotlib.rc("ytick.major", width=2)
 
-    fig, ax = pyplot.subplots(nrows=1, ncols=1, figsize=(10, 12))
+    fig, ax = pyplot.subplots(figsize=(8, 9))
 
-    plot_ext_stack(args.filelist, ax, idlsave=args.idlsave, locpath=locpath)
-
-    ax.set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]", fontsize=1.3 * fontsize)
+#    datapath = "/home/kgordon/Hubble/SMCExt/Ed/"
+    datapath = "/home/kgordon/Hubble/SMCExt/SENDTOKARL_FINAL/"
+    plot_ext_stack(
+        "smc_stars_reddened_good_highebv.dat",
+        ax,
+        idlsave=True,
+        locpath=datapath,
+        fontsize=fontsize,
+    )
+    ylimits = ax.get_ylim()
+    xlimits = ax.get_xlim()
+    ax.text(
+        xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
+        ylimits[0] + 0.95 * (ylimits[1] - ylimits[0]),
+        u"SMC, Good, $E(B-V) > 0.15$",
+        fontsize=1.5 * fontsize,
+        horizontalalignment="left",
+    )
+    ax.set_xlabel(r"$\lambda$ [$nm$]", fontsize=1.3 * fontsize)
     ax.set_ylabel(r"$E(\lambda - V)/E(B - V)$ + offset", fontsize=1.3 * fontsize)
 
-    pyplot.show()
+    fig.tight_layout()
+
+    if args.png:
+        fig.savefig("smc_ext_goodonly.png")
+    elif args.pdf:
+        fig.savefig("smc_ext_goodonly.pdf")
+    elif args.eps:
+        fig.savefig("smc_ext_goodonly.eps")
+    else:
+        pyplot.show()

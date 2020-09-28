@@ -118,9 +118,23 @@ class ExtData():
         self.ext_waves['BANDS'] = spec_dict['opirwaves']*1e-4
         self.ext_curve['BANDS'] = spec_dict['opircurve']
 
-        # indxs, = np.where(spec_dict['xcurv'] > 0.)
-        # self.ext_waves['MODEL'] = 1.0/spec_dict['xcurv'][indxs]
-        # self.ext_curve['MODEL'] = spec_dict['bestcurv'][indxs]
+        # model is given as x instead of wavelength
+        indxs, = np.where(spec_dict['xcurv'] > 0.)
+        self.ext_waves['MODEL'] = np.flip(1.0 / spec_dict['xcurv'][indxs])
+        self.ext_curve['MODEL'] = np.flip(spec_dict['bestcurv'][indxs])
+
+        if ext_filename == '/home/kgordon/Hubble/SMCExt/SENDTOKARL_FINAL/AZV_456_EXTCURVE.save':
+            print(ext_filename)
+
+            print("BANDS")
+            print(self.ext_waves["BANDS"])
+            print(self.ext_curve["BANDS"])
+
+            print("MODEL")
+            x = self.ext_waves["BANDS"]
+            print(np.interp(x, self.ext_waves["MODEL"], self.ext_curve["MODEL"]))
+            # print(self.ext_waves["MODEL"])
+            # print(self.ext_curve["MODEL"])
 
         #print(spec_dict.keys())
 
