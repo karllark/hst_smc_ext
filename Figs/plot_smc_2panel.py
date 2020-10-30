@@ -27,18 +27,19 @@ if __name__ == "__main__":
     gs = gridspec.GridSpec(2, 2)
     ax = []
     ax.append(pyplot.subplot(gs[0:2, 0]))
-    ax.append(pyplot.subplot(gs[0, 1]))
-    ax.append(pyplot.subplot(gs[1, 1]))
+    ax.append(pyplot.subplot(gs[0:2, 1]))
+    # ax.append(pyplot.subplot(gs[1, 1]))
 
 #    datapath = "/home/kgordon/Hubble/SMCExt/Ed/"
     datapath = "/home/kgordon/Hubble/SMCExt/SENDTOKARL_FINAL/"
     plot_ext_stack(
-        "smc_stars_reddened_good_highebv.dat",
+        "data/smc_stars_reddened_good_highebv.dat",
         ax[0],
         idlsave=True,
         locpath=datapath,
         fontsize=fontsize,
     )
+    ax[0].set_xlim(0.0, 9.0)
     ylimits = ax[0].get_ylim()
     xlimits = ax[0].get_xlim()
     ax[0].text(
@@ -50,12 +51,13 @@ if __name__ == "__main__":
     )
 
     plot_ext_stack(
-        "smc_stars_reddened_good_lowebv.dat",
+        "data/smc_stars_reddened_good_lowebv.dat",
         ax[1],
         idlsave=True,
         locpath=datapath,
         fontsize=fontsize,
     )
+    ax[1].set_xlim(0.0, 9.0)
     ylimits = ax[1].get_ylim()
     xlimits = ax[1].get_xlim()
     ax[1].text(
@@ -66,27 +68,13 @@ if __name__ == "__main__":
         horizontalalignment="left",
     )
 
-    plot_ext_stack(
-        "smc_stars_reddened_suspect.dat",
-        ax[2],
-        idlsave=True,
-        locpath=datapath,
-        fontsize=fontsize,
-    )
-    ylimits = ax[2].get_ylim()
-    xlimits = ax[2].get_xlim()
-    ax[2].text(
-        xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
-        ylimits[0] + 0.9 * (ylimits[1] - ylimits[0]),
-        "Suspect, Photometry",
-        fontsize=fontsize,
-        horizontalalignment="left",
-    )
-
     ax[0].set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]", fontsize=1.3 * fontsize)
     ax[0].set_ylabel(r"$E(\lambda - V)/E(B - V)$ + offset", fontsize=1.3 * fontsize)
 
-    ax[2].set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]", fontsize=1.3 * fontsize)
+    ax[0].set_ylim(-5, 90.)
+    ax[1].set_ylim(-5, 90.)
+
+    # ax[2].set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]", fontsize=1.3 * fontsize)
 
     fig.tight_layout()
 

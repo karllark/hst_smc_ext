@@ -3,7 +3,7 @@ import argparse
 import matplotlib
 import numpy as np
 from extdata import ExtData
-# from matplotlib.ticker import ScalarFormatter
+from matplotlib.ticker import ScalarFormatter
 
 
 def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
@@ -66,13 +66,13 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
                 col_vals[i % ncol] + "--",
             )
 
-    ax.set_xlim(80., 400.)
+    ax.set_xlim(90., 300.)
     ax.set_ylim(-1.0, 16.0 + offset_val * n_stars)
 
     ylimits = ax.get_ylim()
     xlimits = ax.get_xlim()
     ax.text(
-        xlimits[0] + 0.45 * (xlimits[1] - xlimits[0]),
+        xlimits[0] + 0.25 * (xlimits[1] - xlimits[0]),
         ylimits[0] + 0.95 * (ylimits[1] - ylimits[0]),
         u"SMC, $E(B-V) > 0.15$",
         fontsize=1.5 * fontsize,
@@ -80,8 +80,9 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
     )
 
     # ax.axvline(100., color='k')
-    # ax.set_xscale("log")
-    # ax.xaxis.set_major_formatter(ScalarFormatter())
+    ax.set_xscale("log")
+    ax.xaxis.set_major_formatter(ScalarFormatter())
+    ax.xaxis.set_minor_formatter(ScalarFormatter())
 
 
 if __name__ == "__main__":
