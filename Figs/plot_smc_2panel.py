@@ -71,18 +71,18 @@ if __name__ == "__main__":
     ax[0].set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]", fontsize=1.3 * fontsize)
     ax[0].set_ylabel(r"$E(\lambda - V)/E(B - V)$ + offset", fontsize=1.3 * fontsize)
 
-    ax[0].set_ylim(-5, 90.)
-    ax[1].set_ylim(-5, 90.)
+    ax[0].set_ylim(-5, 100.)
+    ax[1].set_ylim(-5, 100.)
 
     # ax[2].set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]", fontsize=1.3 * fontsize)
 
     fig.tight_layout()
 
     if args.png:
-        fig.savefig("smc_ext_3panel.png")
+        fig.savefig("smc_ext_2panel.png")
     elif args.pdf:
-        fig.savefig("smc_ext_3panel.pdf")
+        fig.savefig("smc_ext_2panel.pdf")
     elif args.eps:
-        fig.savefig("smc_ext_3panel.eps")
+        fig.savefig("smc_ext_2panel.eps")
     else:
         pyplot.show()
