@@ -35,7 +35,7 @@ Figures
 
 1. ??
 
-1. UV spectra of all program stars: Figs/plot_uv_mspec.py data/smc_stars_all.dat
+2. UV spectra of all program stars: Figs/plot_uv_mspec.py data/smc_stars_all.dat
 
 3. from Ralph Bohlin
 
