@@ -68,7 +68,7 @@ if __name__ == "__main__":
             yoffset=yoff,
             pcolor=col_vals[k % n_cols],
             annotate_key="IUE",
-            annotate_wave_range=[0.25, 0.3] * u.micron,
+            annotate_wave_range=[0.25, 0.27] * u.micron,
             annotate_text=cstarname,
             annotate_rotation=-10.,
             annotate_yoffset=0.0,
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         ax[i].set_yscale("log")
         ax[i].set_xlabel(r"$\lambda$ [$\mu m$]", fontsize=1.3 * fontsize)
         ax[i].set_ylabel(
-            r"$F(\lambda)/F(2500~\AA)$ [$ergs\ cm^{-2}\ s\ \AA$]",
+            r"$F(\lambda)/F(2500~\AA)$ + offset [$ergs\ cm^{-2}\ s\ \AA$]",
             fontsize=1.3 * fontsize,
         )
         ax[i].tick_params("both", length=10, width=2, which="major")
@@ -95,10 +95,10 @@ if __name__ == "__main__":
     fig.tight_layout()
 
     # plot or save to a file
-    save_str = "_uvspec"
+    save_str = "Figs/smcext_uvspec"
     if args.png:
-        fig.savefig(args.starname.replace(".dat", save_str + ".png"))
+        fig.savefig(f"{save_str}.png")
     elif args.pdf:
-        fig.savefig(args.starname.replace(".dat", save_str + ".pdf"))
+        fig.savefig(f"{save_str}.pdf")
     else:
         plt.show()

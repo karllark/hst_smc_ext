@@ -30,6 +30,12 @@ including (TBD) the STIS spectra.  `dust_extinction` provides the
 fitting curves shapes (FM90, AxAvToExv).  `measure_extinction` gives the routines
 to read the data and calculate extinction curves.
 
+Generate full list of extinction curves sightlines (in data dir).
+`cat smc_stars_reddened_good_highebv.dat smc_stars_reddened_good_lowebv.dat smc_stars_reddened_suspect.dat | sort > smc_stars_all.dat`
+
+Converting the extinction curves measured by Ed F.
+`utils/convert_edidlsave_to_fits.py`
+
 Figures
 -------
 
