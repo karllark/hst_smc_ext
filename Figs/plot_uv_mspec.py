@@ -74,6 +74,7 @@ if __name__ == "__main__":
             annotate_yoffset=0.0,
             fontsize=12,
         )
+        print(cstarname)
 
     # finish configuring the plot
     for i in range(2):
