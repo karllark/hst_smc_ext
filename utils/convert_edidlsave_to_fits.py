@@ -21,16 +21,16 @@ class ExtData(ExtDataStock):
         In the process, convert the elvebv curves to elv (more fundemental measurement)
         """
         self.type = "elx"
-        self.rel_band = "V"
+        self.type_rel_band = "V"
 
         spec_dict = readsav(ext_filename)
 
         (indxs,) = np.where(np.isfinite(spec_dict["uvcurve"]))
         ngood = len(indxs)
-        self.waves["STIS"] = spec_dict["uvwaves"][indxs] * u.Angstrom
-        self.exts["STIS"] = spec_dict["uvcurve"][indxs] * ebv
-        self.npts["STIS"] = np.full((ngood), 1)
-        self.uncs["STIS"] = np.full((ngood), 0.0)
+        self.waves["IUE"] = spec_dict["uvwaves"][indxs] * u.Angstrom
+        self.exts["IUE"] = spec_dict["uvcurve"][indxs] * ebv
+        self.npts["IUE"] = np.full((ngood), 1)
+        self.uncs["IUE"] = np.full((ngood), 0.0)
 
         nphot = len(spec_dict["opirwaves"])
         self.waves["BAND"] = spec_dict["opirwaves"] * u.Angstrom

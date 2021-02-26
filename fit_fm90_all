@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+
+extargs="--png --nsteps=10000 --burnfrac=0.4"
+# extargs="--png"
+fmfit="python utils/fit_uv_ext_fm90.py"
+
+rm -f fits/*FM90.h5
+
+$fmfit fits/2dfs0413_ext.fits $extargs
+$fmfit fits/2dfs0626_ext.fits $extargs
+$fmfit fits/2dfs0662_ext.fits $extargs
+$fmfit fits/2dfs0699_ext.fits $extargs
+$fmfit fits/2dfs3014_ext.fits $extargs
+$fmfit fits/2dfs3030_ext.fits $extargs
+$fmfit fits/2dfs3171_ext.fits $extargs
+$fmfit fits/azv_004_ext.fits $extargs
+$fmfit fits/azv_018_ext.fits $extargs
+$fmfit fits/azv_023_ext.fits $extargs
+$fmfit fits/azv_070_ext.fits $extargs
+$fmfit fits/azv_086_ext.fits $extargs
+$fmfit fits/azv_132_ext.fits $extargs
+$fmfit fits/azv_151_ext.fits $extargs
+$fmfit fits/azv_214_ext.fits $extargs
+$fmfit fits/azv_218_ext.fits $extargs
+$fmfit fits/azv_289_ext.fits $extargs
+$fmfit fits/azv_380_ext.fits $extargs
+$fmfit fits/azv_398_ext.fits $extargs
+$fmfit fits/azv_404_ext.fits $extargs
+$fmfit fits/azv_456_ext.fits $extargs
+$fmfit fits/azv_462_ext.fits $extargs
+$fmfit fits/bbb_smc280_ext.fits $extargs
+$fmfit fits/mr12_09_ext.fits $extargs
+$fmfit fits/mr12_11_ext.fits $extargs
+$fmfit fits/ngc330_110_ext.fits $extargs
+$fmfit fits/ngc330_114_ext.fits $extargs
+$fmfit fits/ngc330_116_ext.fits $extargs
+$fmfit fits/ngc346_056_ext.fits $extargs
+$fmfit fits/sk_191_ext.fits $extargs
+$fmfit fits/smc5_000398_ext.fits $extargs
+$fmfit fits/smc5_003739_ext.fits $extargs
+$fmfit fits/smc5_079264_ext.fits $extargs
+$fmfit fits/smc5_082923_ext.fits $extargs
