@@ -1,0 +1,86 @@
+Title: Ultraviolet Extinction Properties in the Milky Way
+Authors: Lynne A. Valencic, Geoffrey C. Clayton, Karl D. Gordon
+Table: Photometry Sources
+================================================================================
+Byte-by-byte Description of file: datafile3.txt
+--------------------------------------------------------------------------------
+   Bytes Format Units Label         Explanations
+--------------------------------------------------------------------------------
+   1-  2 A2     ---   SourceNumber  Source number from Table 2
+   5-204 A200   ---   Citation      Literature reference
+--------------------------------------------------------------------------------
+ 1  Hiltner, W. A. 1956, ApJS, 2, 389  
+ 2  Nicolet, B. 1978, A&AS, 34, 1 
+ 3  Shild, R., Garrison, R., & Hiltner, W. 1983, ApJS, 51, 321 
+ 4  Haupt, H., & Schroll, A. 1974, A&AS, 15, 311 
+ 5  Guetter, H. 1974, PASP, 86, 795 
+ 6  Racine, R. 1968, AJ, 73, 233  
+ 7  Dworetsky, M., Whitelock, P., & Carnochan, D. 1982, MNRAS, 201, 901  
+ 8  Deutschman W., Davis, R., & Schild, R. 1976, ApJS, 30, 97  
+ 9  SKY2000 Master Star Catalogue, Version 2. Sande, C., Warren, W., Tracewell,  D., Home, A., Miller, A. 1997, BAAS, 191, 128.12 
+10  Klare, G., & Neckel, T. 1977, A&AS, 27, 215 
+11  Denoyelle, J. 1977, A&AS, 27, 343 
+12  Feinstein, A., & Marraco, H. 1980, PASP, 92, 266 
+13  Feinstein, A., Fitzgerald, M., & Moffat, A. 1980, AJ, 85, 708  
+14  The Tycho-2 Catalogue of the 2.5 Million Brightest Stars.  Hog, E., Fabricius, C., Makarov, V., Uraban, S. Corbin, T., Wycoff, G., Bastian, U., Schwekendiek, P., Wicenec, A. 2000, A&A, 355, L27 
+15  Forte, J. 1976, A&AS, 25, 271  
+16  Gutierrez-Moreno, A., & Moreno, H. 1968, ApJS, 15, 459  
+17  Dachs, J., & Kaiser, D. 1984, A&AS, 58, 411  
+18  Fernie, J. 1983, ApJS, 52, 7  
+19  Hill, P., Kilkenny, D., & van Breda, I. 1974, MNRAS, 168, 451  
+20  Dachs, J., Kaiser, D., Nikolov, A., & Sherwood, W. 1982, A&AS, 50, 261  
+21  Hill, P. 1970, MNRAS, 150, 23   
+22  Chini, R., & Neckel, T. 1981, A&A, 102, 171  
+23  Simonson, S. 1968, ApJ, 154, 923  
+24  Hiltner, W., & Johnson, H. 1956, ApJ, 124, 367  
+25  Johnson, H. & Hiltner, W. 1956, ApJ, 123, 267  
+26  Wildey, R. 1964, ApJS, 8, 439  
+27  Wramdemark, S. 1976, A&AS, 26, 31  
+28  Garrison, R., & Kormendy, J. 1976, PASP, 88, 865  
+29  Blaauw, A., Hiltner, W., & Johnson, H. 1959, ApJ, 130, 69 
+30  Sarg, K., & Wramdemark, S. 1970, A&AS, 2, 251  
+31  Johnson, H., Iriarte, B., Mitchell, R., & Wisniewski, W. 1966, CoLPL, 4, 99  
+32  Haug, U. 1970. A&AS, 1, 35  
+33  Johnson, H. & Morgan, W. 1955, ApJ, 122, 429  
+34  Tapia, M., Roth, M., Costero, R., & Navarro, S. 1984, RMxAA, 9, 65  
+35  Johnson, H. & Morgan, W. 1955, ApJ, 122, 142 
+36  Chini, R., & Wink, J. 1984, A&A, 139, 5  
+37  Lutz, T. 1971, PASP, 83, 488  
+38  Neckel, T., & Chini, R. 1981, A&AS, 45, 451  
+39  Warren, W., & Hesser, J. 1977, ApJS, 34, 115  
+40  Crampton, D. 1971, AJ, 76, 260  
+41  Moffat, A., & Fitzgerald, M. 1974, A&A, 34, 291 
+42  Garrison, R., & Schild, R. 1979, AJ, 84, 1020 
+43  Heske, A., & Wendker, H. 1984, A&AS, 57, 205  
+44  Dixon, M. 1970, MNRAS, 151, 87   
+45  Drilling, J., Landolt, A., & Schoenberner, D. 1984, ApJ, 279, 748  
+46  Kozok, J. 1985, A&AS, 61, 387 
+47  Walker, M. 1961, ApJ, 133, 438 
+48  Serkowski, K., Gehrels, T., & Wisniewski, W. 1969, AJ, 74, 85 
+49  Feinstein, A., Marraco, H., Muzzio, J. 1973, A&AS, 12, 331 
+50  Sung, H., Chun, M.-Y., & Bessell M. 2000, AJ, 120, 333 
+51  Crawford, D., Barnes, J., & Golson, J. 1971, AJ, 76, 1058  
+52  Walker, M. 1969, ApJ, 155, 447 
+53  Landolt, A. 1973, PASP, 85, 661  
+54  Popper, D., & Dumont, P. 1977, AJ, 82, 216  
+55  The Tycho Catalogue. 1997, ESA SP-1200  
+56  Wramdemark, S. 1980, A&AS, 41, 33 
+57  Siedensticker, K. 1989, A&AS, 79, 61 
+58  Lutz, T. & Lutz, J. 1977, AJ, 82, 431 
+59  Crawford, D. 1963, ApJ, 137, 523 
+60  Claria, J. 1974, AJ, 79, 1022  
+61  Whittet, D., & van Breda, I. 1980, MNRAS, 192, 467 
+62  Voelcker, K. 1975, A&AS, 22, 1 
+63  Tapia, M. 1981, MNRAS, 197, 949 
+64  The, P., Bakker, R., & Tjin A Djie, H. 1980, A&A, 89, 209 
+65  Carter, B.  1990, MNRAS, 242, 1 
+66  Perry, C.L., Franklin, C.B., Landolt, A.U., & Crawford, D.L. 1976, AJ, 81, 632 
+67  Ducati, J.R. 2002, Catalogue of Stellar Photometry in Johnson's 11-color system  
+68  Walker, M. 1956, ApJS, 365, 2    
+69  Bigay, J.H. 1963, JO, 46, 319 
+70  Pesch, P. 1959, ApJ, 130, 764 
+71  Egret, D. 1980,  BICDS, 18, 82 
+72  Slutskii, V.E., Stal'Bovskii, O.I. Shevchenko, V.S. 1980, SvAL, 6, 397 
+73  Schild, R.E., Hiltner, W.A., & Sanduleak, N. 1969, ApJ, 156. 609 
+74  Feinstein, A. 1969, MNRAS, 143, 273 
+75  Massey, P. & Johnson, J. 1993, AJ, 105, 980 
