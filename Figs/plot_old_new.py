@@ -54,7 +54,7 @@ if __name__ == "__main__":
         oext = ExtData(filename=f"prev/{ofile}")
         next = ExtData(filename=f"fits/{nfiles[k]}")
 
-        dext = copy.deepcopy(next)
+        dext = copy.deepcopy(oext)
 
         for curtype, csym in zip(ptypes, psym):
             oext.exts[curtype][oext.npts[curtype] == 0] = np.nan
@@ -80,18 +80,23 @@ if __name__ == "__main__":
             )
 
             # plot the difference between new-old -> foreground
-            iold = np.interp(
-                next.waves[curtype], oext.waves[curtype], oext.exts[curtype]
+            # iold = np.interp(
+            #    next.waves[curtype], oext.waves[curtype], oext.exts[curtype]
+            # )
+            print(len(oext.waves[curtype]), len(next.waves[curtype]))
+            inew = np.interp(
+                oext.waves[curtype], next.waves[curtype], next.exts[curtype]
             )
-            dext.exts[curtype] = next.exts[curtype] - iold
+            # dext.exts[curtype] = next.exts[curtype] - iold
+            dext.exts[curtype] = inew - oext.exts[curtype]
             ax[k].plot(
-                1.0 / next.waves[curtype],
+                1.0 / oext.waves[curtype],
                 dext.exts[curtype],
                 f"r{csym}",
                 label=dlabel,
             )
             fax[1, 2].plot(
-                1.0 / next.waves[curtype],
+                1.0 / oext.waves[curtype],
                 dext.exts[curtype],
                 f"{pcol[k]}-",
                 label=dlabel2,
