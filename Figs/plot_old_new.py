@@ -3,6 +3,7 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import copy
 
 from measure_extinction.extdata import ExtData
 
@@ -25,7 +26,7 @@ if __name__ == "__main__":
     mpl.rc("ytick.major", width=2)
     mpl.rc("ytick.minor", width=2)
 
-    fig, fax = plt.subplots(nrows=2, ncols=3, figsize=(14, 10), sharey=True, sharex=True)
+    fig, fax = plt.subplots(nrows=2, ncols=3, figsize=(16, 8), sharey=True, sharex=True)
 
     ax = [fax[0, 0], fax[0, 1], fax[1, 0], fax[1, 1], fax[0, 2]]
 
@@ -47,10 +48,13 @@ if __name__ == "__main__":
         "azv_398_ext.fits",
         "azv_456_ext.fits",
     ]
+    pcol = ["r", "b", "g", "c", "m"]
     for k, ofile in enumerate(ofiles):
 
         oext = ExtData(filename=f"prev/{ofile}")
         next = ExtData(filename=f"fits/{nfiles[k]}")
+
+        dext = copy.deepcopy(next)
 
         for curtype, csym in zip(ptypes, psym):
             oext.exts[curtype][oext.npts[curtype] == 0] = np.nan
@@ -79,20 +83,25 @@ if __name__ == "__main__":
             iold = np.interp(
                 next.waves[curtype], oext.waves[curtype], oext.exts[curtype]
             )
+            dext.exts[curtype] = next.exts[curtype] - iold
             ax[k].plot(
                 1.0 / next.waves[curtype],
-                next.exts[curtype] - iold,
+                dext.exts[curtype],
                 f"r{csym}",
                 label=dlabel,
             )
             fax[1, 2].plot(
                 1.0 / next.waves[curtype],
-                next.exts[curtype] - iold,
+                dext.exts[curtype],
+                f"{pcol[k]}-",
                 label=dlabel2,
             )
 
         ax[k].set_title(snames[k])
-        # ax[k].legend()
+
+        # save differential extinction
+        tfile = nfiles[k].replace(".fits", "_diff.fits")
+        dext.save(f"fits/{tfile}")
 
     ax[0].legend()
     fax[1, 2].legend()
