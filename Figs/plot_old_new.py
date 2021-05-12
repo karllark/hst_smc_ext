@@ -79,24 +79,29 @@ if __name__ == "__main__":
                 label=nlabel,
             )
 
-            # plot the difference between new-old -> foreground
-            # iold = np.interp(
-            #    next.waves[curtype], oext.waves[curtype], oext.exts[curtype]
-            # )
             print(len(oext.waves[curtype]), len(next.waves[curtype]))
-            inew = np.interp(
-                oext.waves[curtype], next.waves[curtype], next.exts[curtype]
-            )
-            # dext.exts[curtype] = next.exts[curtype] - iold
-            dext.exts[curtype] = inew - oext.exts[curtype]
+            if curtype == "BAND":  # need to remove RI measurements as not in new ext
+                gphot = (oext.waves[curtype].value <= 0.6) | (oext.waves[curtype].value >= 1.0)
+
+                dext.waves[curtype] = next.waves[curtype]
+                dext.exts[curtype] = next.exts[curtype] - oext.exts[curtype][gphot]
+                # dext.name[curtype] = next.name[curtype]
+                dext.npts[curtype] = next.npts[curtype]
+                dext.uncs[curtype] = next.uncs[curtype]
+            else:
+                inew = np.interp(
+                    oext.waves[curtype], next.waves[curtype], next.exts[curtype]
+                )
+                dext.exts[curtype] = inew - oext.exts[curtype]
+
             ax[k].plot(
-                1.0 / oext.waves[curtype],
+                1.0 / dext.waves[curtype],
                 dext.exts[curtype],
                 f"r{csym}",
                 label=dlabel,
             )
             fax[1, 2].plot(
-                1.0 / oext.waves[curtype],
+                1.0 / dext.waves[curtype],
                 dext.exts[curtype],
                 f"{pcol[k]}-",
                 label=dlabel2,
