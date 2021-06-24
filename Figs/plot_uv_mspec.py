@@ -6,6 +6,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import argparse
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import numpy as np
 
 import astropy.units as u
 
@@ -32,10 +33,35 @@ if __name__ == "__main__":
     f = open(args.filelist, "r")
     file_lines = list(f)
     starnames = []
+    spslopes = []
     for line in file_lines:
         if (line.find("#") != 0) & (len(line) > 0):
             name = line.rstrip()
             starnames.append(name)
+
+            # use the IUE spectra to make a measure of the UV spectral slope
+            # used to sort for a nicer plot
+            fstarname, file_path = get_full_starfile(name)
+            starobs = StarData(fstarname, path=file_path)
+
+            gvals1 = np.logical_and(
+                starobs.data["IUE"].waves > 0.15 * u.micron,
+                starobs.data["IUE"].waves < 0.20 * u.micron,
+            )
+            gavls1 = np.logical_and(gvals1, starobs.data["IUE"].npts > 0)
+            gvals2 = np.logical_and(
+                starobs.data["IUE"].waves > 0.25 * u.micron,
+                starobs.data["IUE"].waves < 0.30 * u.micron,
+            )
+            gavls2 = np.logical_and(gvals2, starobs.data["IUE"].npts > 0)
+            spslopes.append(
+                np.median(starobs.data["IUE"].fluxes[gvals1])
+                / np.median(starobs.data["IUE"].fluxes[gvals2])
+            )
+
+    # sort starnames by UV slope
+    starnames = np.array(starnames)
+    starnames = starnames[np.argsort(spslopes)]
 
     # plotting setup for easier to read plots
     fontsize = 14
@@ -58,6 +84,11 @@ if __name__ == "__main__":
     for k, cstarname in enumerate(starnames):
         fstarname, file_path = get_full_starfile(cstarname)
         starobs = StarData(fstarname, path=file_path)
+
+        # remove negative values as they look horrible on stacked log plots
+        nvals = starobs.data["IUE"].fluxes < 0
+        starobs.data["IUE"].npts[nvals] = 0
+
         if k // half_num > 0:
             yoff = 2.5 ** (k - half_num)
         else:
@@ -70,11 +101,10 @@ if __name__ == "__main__":
             annotate_key="IUE",
             annotate_wave_range=[0.25, 0.27] * u.micron,
             annotate_text=cstarname,
-            annotate_rotation=-10.,
+            annotate_rotation=-10.0,
             annotate_yoffset=0.0,
             fontsize=12,
         )
-        print(cstarname)
 
     # finish configuring the plot
     for i in range(2):

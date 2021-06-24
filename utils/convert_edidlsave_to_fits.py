@@ -55,15 +55,20 @@ if __name__ == "__main__":
     sdata = Table.read(f"{datapath}SMC_EXTINCTION_STARS.csv")
 
     # read and save the extinction curves
-    filelist = "data/smc_stars_all.dat"
+    filelist = "data/smc_stars_all_ed_to_extstar.dat"
     f = open(filelist, "r")
     file_lines = list(f)
     for line in file_lines:
         if (line.find("#") != 0) & (len(line) > 0):
-            name = line.rstrip()
+            names = line.split()
+            name = names[0]
 
             # E(B-V)
-            ebv = float(sdata["E(44-55)"][name.replace('_', ' ').upper() == sdata["STAR"]].data[0])
+            ebv = float(
+                sdata["E(44-55)"][name.replace("_", " ").upper() == sdata["STAR"]].data[
+                    0
+                ]
+            )
 
             # read
             text = ExtData()
@@ -71,7 +76,7 @@ if __name__ == "__main__":
 
             # save
             column_info = {"ebv": ebv}
-            savefile = f"fits/{name}_ext.fits"
+            savefile = f"fits/{names[1]}_ext.fits"
             text.save(savefile, column_info=column_info)
 
             # check the file can be read
