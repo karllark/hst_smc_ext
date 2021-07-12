@@ -75,7 +75,7 @@ if __name__ == "__main__":
     mpl.rc("ytick.minor", width=2)
 
     # setup the plot
-    fig, ax = plt.subplots(ncols=2, figsize=(13, 8))
+    fig, ax = plt.subplots(ncols=2, figsize=(13, 10))
 
     # plot the spectra in two columns
     half_num = len(starnames) // 2 + 1
@@ -120,6 +120,9 @@ if __name__ == "__main__":
         )
         ax[i].tick_params("both", length=10, width=2, which="major")
         ax[i].tick_params("both", length=5, width=1, which="minor")
+
+    ax[1].yaxis.tick_right()
+    ax[1].yaxis.set_label_position("right")
 
     # use the whitespace better
     fig.tight_layout()
