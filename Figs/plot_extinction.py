@@ -62,7 +62,7 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
                     #                    locpath + "FITSPEC_" + starnames[-1].upper() + "_ATLAS.save"
                 )
             else:
-                text.read_ext_data(locpath + starnames[-1] + "_ext.fits")
+                text.read(locpath + starnames[-1] + "_ext.fits")
             extdatas.append(text)
 
     ann_wave_range = [15.0, 18.0]
@@ -77,6 +77,8 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
 
     for k, cdata in enumerate(extdatas):
 
+        cdata.trans_elv_elvebv()
+
         # plot the extinction curves
         cdata.plot(
             ax,
@@ -90,6 +92,7 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
             annotate_wave_range=ann_wave_range,
             annotate_rotation=10.0,
             annotate_yoffset=1.5,
+            model=True,
         )
 
     ax.set_yscale("linear")

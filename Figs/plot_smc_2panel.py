@@ -31,11 +31,10 @@ if __name__ == "__main__":
     # ax.append(pyplot.subplot(gs[1, 1]))
 
 #    datapath = "/home/kgordon/Hubble/SMCExt/Ed/"
-    datapath = "/home/kgordon/Hubble/SMCExt/SENDTOKARL_FINAL/"
+    datapath = "/home/kgordon/Python_git/hst_smc_ext/fits/"
     plot_ext_stack(
         "data/smc_stars_reddened_good_highebv.dat",
         ax[0],
-        idlsave=True,
         locpath=datapath,
         fontsize=fontsize,
     )
@@ -53,7 +52,6 @@ if __name__ == "__main__":
     plot_ext_stack(
         "data/smc_stars_reddened_good_lowebv.dat",
         ax[1],
-        idlsave=True,
         locpath=datapath,
         fontsize=fontsize,
     )
