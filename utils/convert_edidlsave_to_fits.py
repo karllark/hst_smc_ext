@@ -51,8 +51,9 @@ class ExtData(ExtDataStock):
 if __name__ == "__main__":
 
     datapath = "/home/kgordon/Hubble/SMCExt/SENDTOKARL_FINAL/"
+
     # read in the spreadsheet data
-    sdata = Table.read(f"{datapath}SMC_EXTINCTION_STARS.csv")
+    sdata = Table.read("data/edf_fits_param_edit.csv")
 
     # read and save the extinction curves
     filelist = "data/smc_stars_all_ed_to_extstar.dat"
@@ -64,20 +65,34 @@ if __name__ == "__main__":
             name = names[0]
 
             # E(B-V)
-            ebv = float(
-                sdata["E(44-55)"][name.replace("_", " ").upper() == sdata["STAR"]].data[
-                    0
-                ]
-            )
+            mindx = name.upper() == sdata["name"]
+            ebv = float(sdata["ebv"][mindx].data[0])
+            ebv_unc = float(sdata["ebv_sig"][mindx].data[0])
+            rv = float(sdata["rv"][mindx].data[0])
+            rv_unc = float(sdata["rv_sig"][mindx].data[0])
+            loghi = float(sdata["logN(HI)"][mindx].data[0])
+            loghi_unc = float(sdata["logN(HI)_sig"][mindx].data[0])
+
+            # compute the av
+            av = rv * ebv
+            if (rv_unc / rv) ** 2 > (ebv_unc / ebv) ** 2:
+                av_unc = av * np.sqrt((rv_unc / rv) ** 2 + (ebv_unc / ebv) ** 2)
+            else:
+                av_unc = av * ebv_unc / ebv
 
             # read
             text = ExtData()
             text.read_ext_data_idlsave(f"{datapath}{name.upper()}_EXTCURVE.save", ebv)
 
             # save
-            column_info = {"ebv": ebv}
+            text.columns = {
+                "EBV": (ebv, ebv_unc),
+                "RV": (rv, rv_unc),
+                "LOGHI": (loghi, loghi_unc),
+            }
+            extcols = {"loghi": loghi, "loghi_unc": loghi_unc}
             savefile = f"fits/{names[1]}_ext.fits"
-            text.save(savefile, column_info=column_info)
+            text.save(savefile)
 
             # check the file can be read
             testext = ExtData(filename=savefile)

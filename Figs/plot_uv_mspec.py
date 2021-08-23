@@ -44,19 +44,24 @@ if __name__ == "__main__":
             fstarname, file_path = get_full_starfile(name)
             starobs = StarData(fstarname, path=file_path)
 
+            if "IUE" not in starobs.data.keys():
+                bkey = "STIS"
+            else:
+                bkey = "IUE"
+
             gvals1 = np.logical_and(
-                starobs.data["IUE"].waves > 0.15 * u.micron,
-                starobs.data["IUE"].waves < 0.20 * u.micron,
+                starobs.data[bkey].waves > 0.15 * u.micron,
+                starobs.data[bkey].waves < 0.20 * u.micron,
             )
-            gavls1 = np.logical_and(gvals1, starobs.data["IUE"].npts > 0)
+            gavls1 = np.logical_and(gvals1, starobs.data[bkey].npts > 0)
             gvals2 = np.logical_and(
-                starobs.data["IUE"].waves > 0.25 * u.micron,
-                starobs.data["IUE"].waves < 0.30 * u.micron,
+                starobs.data[bkey].waves > 0.25 * u.micron,
+                starobs.data[bkey].waves < 0.30 * u.micron,
             )
-            gavls2 = np.logical_and(gvals2, starobs.data["IUE"].npts > 0)
+            gavls2 = np.logical_and(gvals2, starobs.data[bkey].npts > 0)
             spslopes.append(
-                np.median(starobs.data["IUE"].fluxes[gvals1])
-                / np.median(starobs.data["IUE"].fluxes[gvals2])
+                np.median(starobs.data[bkey].fluxes[gvals1])
+                / np.median(starobs.data[bkey].fluxes[gvals2])
             )
 
     # sort starnames by UV slope
@@ -85,9 +90,14 @@ if __name__ == "__main__":
         fstarname, file_path = get_full_starfile(cstarname)
         starobs = StarData(fstarname, path=file_path)
 
+        if "IUE" not in starobs.data.keys():
+            bkey = "STIS"
+        else:
+            bkey = "IUE"
+
         # remove negative values as they look horrible on stacked log plots
-        nvals = starobs.data["IUE"].fluxes < 0
-        starobs.data["IUE"].npts[nvals] = 0
+        nvals = starobs.data[bkey].fluxes < 0
+        starobs.data[bkey].npts[nvals] = 0
 
         if k // half_num > 0:
             yoff = 2.5 ** (k - half_num)
@@ -98,7 +108,7 @@ if __name__ == "__main__":
             norm_wave_range=[0.2, 0.3] * u.micron,
             yoffset=yoff,
             pcolor=col_vals[k % n_cols],
-            annotate_key="IUE",
+            annotate_key=bkey,
             annotate_wave_range=[0.25, 0.27] * u.micron,
             annotate_text=cstarname,
             annotate_rotation=-10.0,
@@ -115,7 +125,7 @@ if __name__ == "__main__":
         ax[i].set_yscale("log")
         ax[i].set_xlabel(r"$\lambda$ [$\mu m$]", fontsize=1.3 * fontsize)
         ax[i].set_ylabel(
-            r"$F(\lambda)/F(2500~\AA)$ + offset [$ergs\ cm^{-2}\ s\ \AA$]",
+            r"$F(\lambda)/F(2600~\AA)$ + offset [$ergs\ cm^{-2}\ s\ \AA$]",
             fontsize=1.3 * fontsize,
         )
         ax[i].tick_params("both", length=10, width=2, which="major")

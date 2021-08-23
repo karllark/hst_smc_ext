@@ -36,6 +36,7 @@ if __name__ == "__main__":
 
     # get the new results
     gor22 = Table.read("data/edf_fits_param_edit.csv")
+    print(gor22.colnames)
     gor22["b3"] = gor22["c3"] / np.square(gor22["gamma"])
     gor22["av"] = gor22["ebv"] * gor22["rv"]
 
