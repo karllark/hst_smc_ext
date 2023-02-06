@@ -3,7 +3,7 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as pyplot
 import matplotlib
-from astropy.table import Table
+from astropy.table import QTable
 
 from measure_extinction.extdata import ExtData
 
@@ -51,7 +51,7 @@ def get_props(filename):
         nhs[k] = nh
         nhs_unc[k] = nh_unc
 
-    return (avs, avs_unc, ebvs, ebvs_unc, rvs, rvs_unc, nhs, nhs_unc)
+    return (avs, avs_unc, ebvs, ebvs_unc, rvs, rvs_unc, nhs, nhs_unc, extnames)
 
 
 if __name__ == "__main__":
@@ -63,8 +63,8 @@ if __name__ == "__main__":
     gfilename = "data/smc_stars_reddened_good_highebv.dat"
     lfilename = "data/smc_stars_reddened_good_lowebv.dat"
 
-    avs, avs_unc, ebvs, ebvs_unc, rvs, rvs_unc, nhs, nhs_unc = get_props(gfilename)
-    lavs, lavs_unc, lebvs, lebvs_unc, lrvs, lrvs_unc, lnhs, lnhs_unc = get_props(
+    avs, avs_unc, ebvs, ebvs_unc, rvs, rvs_unc, nhs, nhs_unc, names = get_props(gfilename)
+    lavs, lavs_unc, lebvs, lebvs_unc, lrvs, lrvs_unc, lnhs, lnhs_unc, lnames = get_props(
         lfilename
     )
 
@@ -73,6 +73,13 @@ if __name__ == "__main__":
     nhs = 10 ** nhs
     lnhs_unc = 0.5 * (10 ** (lnhs + lnhs_unc) - 10 ** (lnhs - lnhs_unc))
     lnhs = 10 ** lnhs
+
+    # get the MW HI foreground from radio measurements
+    mwfore = QTable.read("data/nhi_askap_karl.dat", format="ascii.csv")
+    print(mwfore)
+
+    print(names)
+    exit()
 
     # output some info
     # a = Table()
