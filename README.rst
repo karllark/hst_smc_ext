@@ -46,7 +46,7 @@ Figures
 
 3. from Ralph Bohlin
 
-4. Figs/plot_smc_3panel.py
+4. Figs/plot_smc_2panel.py
 
 5. Figs/model_contamination.py
 
