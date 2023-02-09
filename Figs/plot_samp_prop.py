@@ -97,8 +97,8 @@ if __name__ == "__main__":
         nhs_forecor[k] -= mwforeground
         avs_forecor[k] -= mwforeground / 1.55e21
 
-    lnhs_forecor = np.copy(nhs)
-    lavs_forecor = np.copy(avs)
+    lnhs_forecor = np.copy(lnhs)
+    lavs_forecor = np.copy(lavs)
     for k, cname in enumerate(lnames):
         (mindx,) = np.where(cname == mwfore["name"])
         if len(mindx) == 0:
@@ -106,6 +106,12 @@ if __name__ == "__main__":
         mwforeground = 1e20 * mwfore["nhi_mw_askap"][mindx[0]]
         lnhs_forecor[k] -= mwforeground
         lavs_forecor[k] -= mwforeground / 1.55e21
+
+    # print out the names of low A(V) sightlines after MW foreground correction
+    names = np.array(names)
+    lnames = np.array(lnames)
+    print(names[avs_forecor < 0.2])
+    print(lnames[lavs_forecor < 0.2])
 
     # plots
     fontsize = 14
@@ -160,6 +166,15 @@ if __name__ == "__main__":
         xerr=lavs_unc,
         yerr=lnhs_unc,
         fmt="bo",
+        # label="E(B-V) < 0.15",
+    )
+    ax[1].errorbar(
+        lavs_forecor,
+        lnhs_forecor,
+        xerr=lavs_unc,
+        yerr=lnhs_unc,
+        fmt="bo",
+        alpha=0.3,
         # label="E(B-V) < 0.15",
     )
     ax[1].set_xlabel(r"$A(V)$")
