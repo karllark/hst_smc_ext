@@ -63,10 +63,20 @@ if __name__ == "__main__":
     gfilename = "data/smc_stars_reddened_good_highebv.dat"
     lfilename = "data/smc_stars_reddened_good_lowebv.dat"
 
-    avs, avs_unc, ebvs, ebvs_unc, rvs, rvs_unc, nhs, nhs_unc, names = get_props(gfilename)
-    lavs, lavs_unc, lebvs, lebvs_unc, lrvs, lrvs_unc, lnhs, lnhs_unc, lnames = get_props(
-        lfilename
+    avs, avs_unc, ebvs, ebvs_unc, rvs, rvs_unc, nhs, nhs_unc, names = get_props(
+        gfilename
     )
+    (
+        lavs,
+        lavs_unc,
+        lebvs,
+        lebvs_unc,
+        lrvs,
+        lrvs_unc,
+        lnhs,
+        lnhs_unc,
+        lnames,
+    ) = get_props(lfilename)
 
     # nhs from log to linear
     nhs_unc = 0.5 * (10 ** (nhs + nhs_unc) - 10 ** (nhs - nhs_unc))
@@ -75,18 +85,27 @@ if __name__ == "__main__":
     lnhs = 10 ** lnhs
 
     # get the MW HI foreground from radio measurements
-    mwfore = QTable.read("data/nhi_askap_karl.dat", format="ascii.csv")
-    print(mwfore)
+    mwfore = QTable.read("data/nhi_askap_karl.dat", format="ascii")
 
-    print(names)
-    exit()
+    nhs_forecor = np.copy(nhs)
+    avs_forecor = np.copy(avs)
+    for k, cname in enumerate(names):
+        (mindx,) = np.where(cname == mwfore["name"])
+        if len(mindx) == 0:
+            print(f"{cname} not found in MW foreground file")
+        mwforeground = 1e20 * mwfore["nhi_mw_askap"][mindx[0]]
+        nhs_forecor[k] -= mwforeground
+        avs_forecor[k] -= mwforeground / 1.55e21
 
-    # output some info
-    # a = Table()
-    # a["name"] = extnames
-    # a["AV"] = avs
-    # a["RV"] = rvs
-    # print(a)
+    lnhs_forecor = np.copy(nhs)
+    lavs_forecor = np.copy(avs)
+    for k, cname in enumerate(lnames):
+        (mindx,) = np.where(cname == mwfore["name"])
+        if len(mindx) == 0:
+            print(f"{cname} not found in MW foreground file")
+        mwforeground = 1e20 * mwfore["nhi_mw_askap"][mindx[0]]
+        lnhs_forecor[k] -= mwforeground
+        lavs_forecor[k] -= mwforeground / 1.55e21
 
     # plots
     fontsize = 14
@@ -107,20 +126,10 @@ if __name__ == "__main__":
 
     # R(V) versus A(V)
     ax[0].errorbar(
-        avs,
-        rvs,
-        xerr=avs_unc,
-        yerr=rvs_unc,
-        fmt="go",
-        label="E(B-V) > 0.15",
+        avs, rvs, xerr=avs_unc, yerr=rvs_unc, fmt="go", label="E(B-V) > 0.15",
     )
     ax[0].errorbar(
-        lavs,
-        lrvs,
-        xerr=lavs_unc,
-        yerr=lrvs_unc,
-        fmt="bo",
-        label="E(B-V) < 0.15",
+        lavs, lrvs, xerr=lavs_unc, yerr=lrvs_unc, fmt="bo", label="E(B-V) < 0.15",
     )
     ax[0].set_ylabel(r"$R(V)$")
     ax[0].set_xlabel(r"$A(V)$")
@@ -137,6 +146,15 @@ if __name__ == "__main__":
         # label="E(B-V) > 0.15",
     )
     ax[1].errorbar(
+        avs_forecor,
+        nhs_forecor,
+        xerr=avs_unc,
+        yerr=nhs_unc,
+        fmt="go",
+        alpha=0.3,
+        # label="E(B-V) > 0.15",
+    )
+    ax[1].errorbar(
         lavs,
         lnhs,
         xerr=lavs_unc,
@@ -150,7 +168,9 @@ if __name__ == "__main__":
     ax[1].tick_params("both", length=5, width=1, which="minor")
 
     # plot MW and SMC expected lines
-    ax[1].plot([0.0, 1.5], [0.0, 13.18e21 * 1.5], "k--", label="SMC (Gordon et al. 2003)")
+    ax[1].plot(
+        [0.0, 1.5], [0.0, 13.18e21 * 1.5], "k--", label="SMC (Gordon et al. 2003)"
+    )
     ax[1].plot([0.0, 1.5], [0.0, 1.55e21 * 1.5], "k:", label="MW (Bohlin et al. 1978+)")
 
     # legends
