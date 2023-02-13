@@ -60,52 +60,37 @@ if __name__ == "__main__":
     parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
     args = parser.parse_args()
 
-    gfilename = "data/smc_stars_reddened_good_highebv.dat"
-    lfilename = "data/smc_stars_reddened_good_lowebv.dat"
+    # gfilename = "data/smc_stars_reddened_good_highebv.dat"
+    # lfilename = "data/smc_stars_reddened_good_lowebv.dat"
+    filename = "data/smc_stars_reddened_good.dat"
 
     avs, avs_unc, ebvs, ebvs_unc, rvs, rvs_unc, nhs, nhs_unc, names = get_props(
-        gfilename
+        filename
     )
-    (
-        lavs,
-        lavs_unc,
-        lebvs,
-        lebvs_unc,
-        lrvs,
-        lrvs_unc,
-        lnhs,
-        lnhs_unc,
-        lnames,
-    ) = get_props(lfilename)
 
     # nhs from log to linear
     nhs_unc = 0.5 * (10 ** (nhs + nhs_unc) - 10 ** (nhs - nhs_unc))
     nhs = 10 ** nhs
-    lnhs_unc = 0.5 * (10 ** (lnhs + lnhs_unc) - 10 ** (lnhs - lnhs_unc))
-    lnhs = 10 ** lnhs
 
     # get the MW HI foreground from radio measurements
     mwfore = QTable.read("data/nhi_askap_karl.dat", format="ascii")
 
     nhs_forecor = np.copy(nhs)
+    nhs_unc_forecor = np.copy(nhs_unc)
     avs_forecor = np.copy(avs)
+    avs_unc_forecor = np.copy(avs_unc)
+    nhs_mw = np.zeros(len(nhs))
+    nhs_mw_unc = np.zeros(len(nhs))
     for k, cname in enumerate(names):
         (mindx,) = np.where(cname == mwfore["name"])
         if len(mindx) == 0:
             print(f"{cname} not found in MW foreground file")
-        mwforeground = 1e20 * mwfore["nhi_mw_askap"][mindx[0]]
-        nhs_forecor[k] -= mwforeground
-        avs_forecor[k] -= mwforeground / 1.55e21
-
-    lnhs_forecor = np.copy(lnhs)
-    lavs_forecor = np.copy(lavs)
-    for k, cname in enumerate(lnames):
-        (mindx,) = np.where(cname == mwfore["name"])
-        if len(mindx) == 0:
-            print(f"{cname} not found in MW foreground file")
-        mwforeground = 1e20 * mwfore["nhi_mw_askap"][mindx[0]]
-        lnhs_forecor[k] -= mwforeground
-        lavs_forecor[k] -= mwforeground / 1.55e21
+        nhs_mw[k] = 1e20 * mwfore["nhi_mw_askap"][mindx[0]]
+        nhs_mw_unc[k] = 1e20 * mwfore["nhi_mw_askap_err"][mindx[0]]
+        nhs_forecor[k] -= nhs_mw[k]
+        nhs_unc_forecor[k] = np.sqrt(nhs_unc[k] ** 2 + nhs_mw_unc[k] ** 2)
+        avs_forecor[k] -= nhs_mw[k] / 1.55e21
+        avs_unc_forecor[k] = np.sqrt(avs_unc_forecor[k] ** 2 + (nhs_mw_unc[k] / 1.55e21) ** 2)
 
     # print out the names of low A(V) sightlines after MW foreground correction
     # names = np.array(names)
@@ -115,30 +100,40 @@ if __name__ == "__main__":
 
     # output a table of the sample properties
     outtab = QTable()
-    outtab["name"] = names + lnames
-    outtab["ebvs"] = np.concatenate([ebvs, lebvs])
-    outtab["ebvs_unc"] = np.concatenate([ebvs_unc, lebvs_unc])
-    outtab["avs"] = np.concatenate([avs, lavs])
-    outtab["avs_unc"] = np.concatenate([avs_unc, lavs_unc])
-    outtab["rvs"] = np.concatenate([rvs, lrvs])
-    outtab["rvs_unc"] = np.concatenate([rvs_unc, lrvs_unc])
-    outtab["nhs"] = np.concatenate([nhs, lnhs])
-    outtab["nhs_unc"] = np.concatenate([nhs_unc, lnhs_unc])
+    outtab["name"] = names
+    outtab["ebvs"] = ebvs
+    outtab["ebvs_unc"] = ebvs_unc
+    outtab["rvs"] = rvs
+    outtab["rvs_unc"] = rvs_unc
+    outtab["avs"] = avs
+    outtab["avs_unc"] = avs_unc
+    outtab["nhs"] = nhs
+    outtab["nhs_unc"] = nhs_unc
+    outtab["avs_forecor"] = avs_forecor
+    outtab["avs_unc_forecor"] = avs_unc_forecor
+    outtab["nhs_forecor"] = nhs_forecor
+    outtab["nhs_unc_forecor"] = nhs_unc_forecor
 
     np.argsort(outtab["name"])
     outtab = outtab[np.argsort(outtab["name"])]
     outtab["nhs"] /= 1e21
     outtab["nhs_unc"] /= 1e21
+    outtab["nhs_forecor"] /= 1e21
+    outtab["nhs_unc_forecor"] /= 1e21
 
     # loop over and write as a custom formatted latex table
     outfile = open("data/samp_properties.tex", "w")
     for row in outtab:
         outline = f"{row['name']}"
-        outline = f"{outline} & {row['ebvs']:.3f} \\pm {row['ebvs_unc']:.3f}"
-        outline = f"{outline} & {row['rvs']:.2f} \\pm {row['rvs_unc']:.2f}"
-        outline = f"{outline} & {row['avs']:.2f} \\pm {row['avs_unc']:.2f}"
-        outline = f"{outline} & {row['nhs']:.2f} \\pm {row['nhs_unc']:.2f}"
-        outfile.write(outline)
+        if row["avs_forecor"] / row["avs"] < 0.5:
+            outline = f"{outline}*"
+        outline = f"{outline} & ${row['ebvs']:.3f} \\pm {row['ebvs_unc']:.3f}$"
+        outline = f"{outline} & ${row['rvs']:.2f} \\pm {row['rvs_unc']:.2f}$"
+        outline = f"{outline} & ${row['avs']:.2f} \\pm {row['avs_unc']:.2f}$"
+        outline = f"{outline} & ${row['nhs']:.2f} \\pm {row['nhs_unc']:.2f}$"
+        outline = f"{outline} & ${row['avs_forecor']:.2f} \\pm {row['avs_unc_forecor']:.2f}$"
+        outline = f"{outline} & ${row['nhs_forecor']:.2f} \\pm {row['nhs_unc_forecor']:.2f}$"
+        outfile.write(f"{outline} \\\\ \n")
     outfile.close()
 
     # plots
@@ -160,10 +155,7 @@ if __name__ == "__main__":
 
     # R(V) versus A(V)
     ax[0].errorbar(
-        avs, rvs, xerr=avs_unc, yerr=rvs_unc, fmt="go", label="E(B-V) > 0.15",
-    )
-    ax[0].errorbar(
-        lavs, lrvs, xerr=lavs_unc, yerr=lrvs_unc, fmt="bo", label="E(B-V) < 0.15",
+        avs, rvs, xerr=avs_unc, yerr=rvs_unc, fmt="go", label="data",
     )
     ax[0].set_ylabel(r"$R(V)$")
     ax[0].set_xlabel(r"$A(V)$")
@@ -187,23 +179,6 @@ if __name__ == "__main__":
         fmt="go",
         alpha=0.3,
         # label="E(B-V) > 0.15",
-    )
-    ax[1].errorbar(
-        lavs,
-        lnhs,
-        xerr=lavs_unc,
-        yerr=lnhs_unc,
-        fmt="bo",
-        # label="E(B-V) < 0.15",
-    )
-    ax[1].errorbar(
-        lavs_forecor,
-        lnhs_forecor,
-        xerr=lavs_unc,
-        yerr=lnhs_unc,
-        fmt="bo",
-        alpha=0.3,
-        # label="E(B-V) < 0.15",
     )
     ax[1].set_xlabel(r"$A(V)$")
     ax[1].set_ylabel(r"$N(HI)$")
