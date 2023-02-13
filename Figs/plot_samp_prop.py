@@ -108,10 +108,38 @@ if __name__ == "__main__":
         lavs_forecor[k] -= mwforeground / 1.55e21
 
     # print out the names of low A(V) sightlines after MW foreground correction
-    names = np.array(names)
-    lnames = np.array(lnames)
-    print(names[avs_forecor < 0.2])
-    print(lnames[lavs_forecor < 0.2])
+    # names = np.array(names)
+    # lnames = np.array(lnames)
+    # print(names[avs_forecor < 0.2])
+    # print(lnames[lavs_forecor < 0.2])
+
+    # output a table of the sample properties
+    outtab = QTable()
+    outtab["name"] = names + lnames
+    outtab["ebvs"] = np.concatenate([ebvs, lebvs])
+    outtab["ebvs_unc"] = np.concatenate([ebvs_unc, lebvs_unc])
+    outtab["avs"] = np.concatenate([avs, lavs])
+    outtab["avs_unc"] = np.concatenate([avs_unc, lavs_unc])
+    outtab["rvs"] = np.concatenate([rvs, lrvs])
+    outtab["rvs_unc"] = np.concatenate([rvs_unc, lrvs_unc])
+    outtab["nhs"] = np.concatenate([nhs, lnhs])
+    outtab["nhs_unc"] = np.concatenate([nhs_unc, lnhs_unc])
+
+    np.argsort(outtab["name"])
+    outtab = outtab[np.argsort(outtab["name"])]
+    outtab["nhs"] /= 1e21
+    outtab["nhs_unc"] /= 1e21
+
+    # loop over and write as a custom formatted latex table
+    outfile = open("data/samp_properties.tex", "w")
+    for row in outtab:
+        outline = f"{row['name']}"
+        outline = f"{outline} & {row['ebvs']:.3f} \\pm {row['ebvs_unc']:.3f}"
+        outline = f"{outline} & {row['rvs']:.2f} \\pm {row['rvs_unc']:.2f}"
+        outline = f"{outline} & {row['avs']:.2f} \\pm {row['avs_unc']:.2f}"
+        outline = f"{outline} & {row['nhs']:.2f} \\pm {row['nhs_unc']:.2f}"
+        outfile.write(outline)
+    outfile.close()
 
     # plots
     fontsize = 14

@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 # import pkg_resources
 import argparse
 import matplotlib.pyplot as plt
@@ -17,7 +15,7 @@ from measure_extinction.utils.helpers import get_full_starfile
 def plot_mspec_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("filelist", help="file with list of stars to plot")
-    parser.add_argument("--path", help="path to star files", default="./")
+    parser.add_argument("--path", help="path to star files", default="DAT_Files/")
     parser.add_argument("--png", help="save figure as a png file", action="store_true")
     parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
     return parser
@@ -98,6 +96,9 @@ if __name__ == "__main__":
         # remove negative values as they look horrible on stacked log plots
         nvals = starobs.data[bkey].fluxes < 0
         starobs.data[bkey].npts[nvals] = 0
+
+        if cstarname in ["mr12-star09", "mr12-star10", "mr12-star11"]:
+            starobs.data[bkey].rebin_constres([0.1, 0.34] * u.micron, 500.)
 
         if k // half_num > 0:
             yoff = 2.5 ** (k - half_num)
