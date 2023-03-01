@@ -51,7 +51,7 @@ Figures
 5. Figs/model_contamination.py
 
 6. Figure showing the obspair, modelpair, and difference between them.
-   This is measureing the MW foreground extinction.
+   This is measuring the MW foreground extinction.
    Figs/plot_old_new.py
 
 7. Figure showing the normalized MW foreground extinctions.
