@@ -42,11 +42,11 @@ if __name__ == "__main__":
         "azv456_azv70_ext.fits",
     ]
     nfiles = [
-        "azv_018_ext.fits",
-        "azv_023_ext.fits",
-        "azv_214_ext.fits",
-        "azv_398_ext.fits",
-        "azv_456_ext.fits",
+        "azv18_ext.fits",
+        "azv23_ext.fits",
+        "azv214_ext.fits",
+        "azv398_ext.fits",
+        "azv456_ext.fits",
     ]
     pcol = ["r", "b", "g", "c", "m"]
     for k, ofile in enumerate(ofiles):
