@@ -41,7 +41,7 @@ def foreground_correct_extinction(ext, foreax, foremod):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("extname", help="extinction curve name")
-    parser.add_argument("foreav", help="foreground A(V)", type=float)
+    parser.add_argument("foreav", help="foreground HI column [10]", type=float)
     parser.add_argument("--prev", help="previous extinction")
     parser.add_argument("--png", help="save figure as a png file", action="store_true")
     parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")

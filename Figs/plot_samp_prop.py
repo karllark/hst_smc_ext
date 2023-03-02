@@ -62,7 +62,8 @@ if __name__ == "__main__":
 
     # gfilename = "data/smc_stars_reddened_good_highebv.dat"
     # lfilename = "data/smc_stars_reddened_good_lowebv.dat"
-    filename = "data/smc_stars_reddened_good.dat"
+    # filename = "data/smc_stars_reddened_good.dat"
+    filename = "data/smc_stars_all.dat"
 
     avs, avs_unc, ebvs, ebvs_unc, rvs, rvs_unc, nhs, nhs_unc, names = get_props(
         filename
@@ -75,12 +76,18 @@ if __name__ == "__main__":
     # get the MW HI foreground from radio measurements
     mwfore = QTable.read("data/nhi_askap_karl.dat", format="ascii")
 
+    # get the IR information
+    irtab = QTable.read(
+        "data/forgordon_fit_param_smc.txt", format="ascii.commented_header"
+    )
+
     nhs_forecor = np.copy(nhs)
     nhs_unc_forecor = np.copy(nhs_unc)
     avs_forecor = np.copy(avs)
     avs_unc_forecor = np.copy(avs_unc)
     nhs_mw = np.zeros(len(nhs))
     nhs_mw_unc = np.zeros(len(nhs))
+    qpahs = np.zeros(len(nhs))
     for k, cname in enumerate(names):
         (mindx,) = np.where(cname == mwfore["name"])
         if len(mindx) == 0:
@@ -91,6 +98,12 @@ if __name__ == "__main__":
         nhs_unc_forecor[k] = np.sqrt(nhs_unc[k] ** 2 + nhs_mw_unc[k] ** 2)
         avs_forecor[k] -= nhs_mw[k] / 1.55e21
         avs_unc_forecor[k] = np.sqrt(avs_unc_forecor[k] ** 2 + (nhs_mw_unc[k] / 1.55e21) ** 2)
+
+        (mindx,) = np.where(cname == irtab["Star"])
+        if len(mindx) == 0:
+            print(f"{cname} not found in IR properties file")
+        else:
+            qpahs[k] = irtab["q_PAH"][mindx[0]] * 100.0  # put in percentage terms
 
     # print out the names of low A(V) sightlines after MW foreground correction
     # names = np.array(names)
@@ -113,16 +126,22 @@ if __name__ == "__main__":
     outtab["avs_unc_forecor"] = avs_unc_forecor
     outtab["nhs_forecor"] = nhs_forecor
     outtab["nhs_unc_forecor"] = nhs_unc_forecor
+    outtab["nhs_mw"] = nhs_mw
+    outtab["nhs_mw_unc"] = nhs_mw_unc
+    outtab["q_pahs"] = qpahs
 
     np.argsort(outtab["name"])
     outtab = outtab[np.argsort(outtab["name"])]
     outtab["nhs"] /= 1e21
     outtab["nhs_unc"] /= 1e21
+    outtab["nhs_mw"] /= 1e21
+    outtab["nhs_mw_unc"] /= 1e21
     outtab["nhs_forecor"] /= 1e21
     outtab["nhs_unc_forecor"] /= 1e21
 
     # loop over and write as a custom formatted latex table
-    outfile = open("data/samp_properties.tex", "w")
+    outfile = open("data/derived_samp_properties.tex", "w")
+    outfile2 = open("data/ancillary_samp_properties.tex", "w")
     for row in outtab:
         outline = f"{row['name']}"
         if row["avs_forecor"] / row["avs"] < 0.5:
@@ -134,7 +153,16 @@ if __name__ == "__main__":
         outline = f"{outline} & ${row['avs_forecor']:.2f} \\pm {row['avs_unc_forecor']:.2f}$"
         outline = f"{outline} & ${row['nhs_forecor']:.2f} \\pm {row['nhs_unc_forecor']:.2f}$"
         outfile.write(f"{outline} \\\\ \n")
+
+        outline2 = f"{row['name']}"
+        outline2 = f"{outline2} & ${row['nhs_mw']:.3f} \\pm {row['nhs_mw_unc']:.3f}$"
+        if row["q_pahs"] > 0.0:
+            outline2 = f"{outline2} & ${row['q_pahs']:.2f}$"
+        else:
+            outline2 = f"{outline2} & \\nodata"
+        outfile2.write(f"{outline2} \\\\ \n")
     outfile.close()
+    outfile2.close()
 
     # plots
     fontsize = 14
