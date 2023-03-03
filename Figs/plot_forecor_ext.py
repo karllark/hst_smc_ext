@@ -10,12 +10,14 @@ from measure_extinction.extdata import ExtData
 from dust_extinction.parameter_averages import G23
 
 
-def foreground_correct_extinction(ext, foreax, foremod):
+def foreground_correct_extinction(ext, forehi, foremod):
     """
     Correct an extinction curve for foreground extinction
     """
     # foreground corrected extinction
     ext_fc = copy.deepcopy(ext)
+    foreebv = forehi / 5e21
+    foreax = foreebv * 3.1
 
     for src in ext.waves.keys():
         # get foreground ext in A(l)/A(V)
@@ -28,8 +30,16 @@ def foreground_correct_extinction(ext, foreax, foremod):
                 ext_fc.columns["AV"][1],
             )
             ext_fc.columns["EBV"] = (
-                ext.columns["EBV"][0] - foreax / 3.1,
+                ext.columns["EBV"][0] - foreebv,
                 ext_fc.columns["EBV"][1],
+            )
+            ext_fc.columns["RV"] = (
+                ext_fc.columns["AV"][0] / ext_fc.columns["EBV"][0],
+                ext_fc.columns["RV"][0]
+            )
+            ext_fc.columns["LOGHI"] = (
+                np.log10(10 ** ext.columns["LOGHI"][0] - forehi),
+                ext_fc.columns["LOGHI"][1],
             )
         else:
             print(f"{ext.type} not supported.")
@@ -41,11 +51,13 @@ def foreground_correct_extinction(ext, foreax, foremod):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("extname", help="extinction curve name")
-    parser.add_argument("foreav", help="foreground HI column [10]", type=float)
+    parser.add_argument("forehi", help="foreground HI column [10^21]", type=float)
     parser.add_argument("--prev", help="previous extinction")
     parser.add_argument("--png", help="save figure as a png file", action="store_true")
     parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
     args = parser.parse_args()
+
+    args.forehi *= 1e21
 
     if "mr12" in args.extname:
         rebinfac = 10
@@ -72,6 +84,12 @@ if __name__ == "__main__":
     tot_av = ext.columns["EBV"][0] * ext.columns["RV"][0]
     ext.columns["AV"] = (tot_av, 0.0)
 
+    # do foreground correction
+    extmod = G23(Rv=3.1)
+    ext_fc = foreground_correct_extinction(ext, args.forehi, extmod)
+    ext_fc.save(f"fits/{args.extname}_ext_forecor.fits")
+
+    # make plots
     ext.plot(
         ax[0],
         color="b",
@@ -80,8 +98,6 @@ if __name__ == "__main__":
         rebin_fac=rebinfac,
     )
 
-    extmod = G23(Rv=3.1)
-    ext_fc = foreground_correct_extinction(ext, args.foreav, extmod)
     ext_fc.plot(
         ax[0],
         color="g",
@@ -109,7 +125,7 @@ if __name__ == "__main__":
     )
 
     # add in average MW with R(V) = 3.1
-    mwaves = np.logspace(np.log10(0.1), np.log10(3.0), num=100) * u.micron
+    mwaves = np.logspace(np.log10(0.1), np.log10(3.0), num=500) * u.micron
     ax[1].plot(mwaves, (extmod(mwaves) - 1.0) * 3.1, "k-", label="G23 R(V)=3.1")
 
     if args.prev:
@@ -130,8 +146,8 @@ if __name__ == "__main__":
     ax[1].set_xscale("log")
 
     tot_ebv = ext.columns["EBV"][0]
-    ax[0].legend(title=rf"{args.extname} total E(B-V)={tot_ebv}")
-    ax[1].legend(title=rf"{args.extname} foreground E(B-V)={args.foreav / 3.1:.3f}")
+    ax[0].legend(title=f"{args.extname}\ntotal E(B-V)={tot_ebv}\nforeground E(B-V)={args.forehi / 5e21:.3f}")
+    ax[1].legend(title=rf"{args.extname}")
 
     fig.tight_layout()
 

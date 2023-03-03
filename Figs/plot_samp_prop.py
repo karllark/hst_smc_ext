@@ -87,6 +87,8 @@ if __name__ == "__main__":
     avs_unc_forecor = np.copy(avs_unc)
     nhs_mw = np.zeros(len(nhs))
     nhs_mw_unc = np.zeros(len(nhs))
+    ebvs_mw = np.zeros(len(nhs))
+    ebvs_mw_unc = np.zeros(len(nhs))
     qpahs = np.zeros(len(nhs))
     for k, cname in enumerate(names):
         (mindx,) = np.where(cname == mwfore["name"])
@@ -96,6 +98,8 @@ if __name__ == "__main__":
         nhs_mw_unc[k] = 1e20 * mwfore["nhi_mw_askap_err"][mindx[0]]
         nhs_forecor[k] -= nhs_mw[k]
         nhs_unc_forecor[k] = np.sqrt(nhs_unc[k] ** 2 + nhs_mw_unc[k] ** 2)
+        ebvs_mw[k] = nhs_mw[k] / 5e21
+        ebvs_mw_unc[k] = nhs_mw_unc[k] / 5e21
         avs_forecor[k] -= nhs_mw[k] / 1.55e21
         avs_unc_forecor[k] = np.sqrt(avs_unc_forecor[k] ** 2 + (nhs_mw_unc[k] / 1.55e21) ** 2)
 
@@ -110,6 +114,9 @@ if __name__ == "__main__":
     # lnames = np.array(lnames)
     # print(names[avs_forecor < 0.2])
     # print(lnames[lavs_forecor < 0.2])
+
+    print("E(B-V)_SMC", min(ebvs), max(ebvs), np.average(ebvs))
+    print("E(B-V)_MW", min(ebvs_mw), max(ebvs_mw), np.average(ebvs_mw))
 
     # output a table of the sample properties
     outtab = QTable()
@@ -128,6 +135,8 @@ if __name__ == "__main__":
     outtab["nhs_unc_forecor"] = nhs_unc_forecor
     outtab["nhs_mw"] = nhs_mw
     outtab["nhs_mw_unc"] = nhs_mw_unc
+    outtab["ebvs_mw"] = ebvs_mw
+    outtab["ebvs_mw_unc"] = ebvs_mw_unc
     outtab["q_pahs"] = qpahs
 
     np.argsort(outtab["name"])
@@ -156,6 +165,7 @@ if __name__ == "__main__":
 
         outline2 = f"{row['name']}"
         outline2 = f"{outline2} & ${row['nhs_mw']:.3f} \\pm {row['nhs_mw_unc']:.3f}$"
+        outline2 = f"{outline2} & ${row['ebvs_mw']:.3f} \\pm {row['ebvs_mw_unc']:.3f}$"
         if row["q_pahs"] > 0.0:
             outline2 = f"{outline2} & ${row['q_pahs']:.2f}$"
         else:

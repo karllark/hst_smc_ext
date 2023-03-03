@@ -60,4 +60,14 @@ Figures
 Tables
 ------
 
-1.
+1. Manually
+
+2. Manually - from Ralph
+
+3. Manually - from Ed
+
+4. Manually - from Ed
+
+5. Output as data/ancillary_samp_properties.tex
+
+6. Output as data/derived_samp_properties.tex
