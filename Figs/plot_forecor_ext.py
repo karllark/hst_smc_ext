@@ -10,7 +10,7 @@ from measure_extinction.extdata import ExtData
 from dust_extinction.parameter_averages import G23
 
 
-def foreground_correct_extinction(ext, forehi, foremod):
+def foreground_correct_extinction(ext, forehi, forehi_unc, foremod):
     """
     Correct an extinction curve for foreground extinction
     """
@@ -37,8 +37,16 @@ def foreground_correct_extinction(ext, forehi, foremod):
                 ext_fc.columns["AV"][0] / ext_fc.columns["EBV"][0],
                 ext_fc.columns["RV"][0]
             )
+            if ext.columns["LOGHI"][0] > 0.0:
+                hi = 10 ** ext.columns["LOGHI"][0] - forehi
+                if hi > 0:
+                    loghi = np.log10(10 ** ext.columns["LOGHI"][0] - forehi)
+                else:
+                    loghi = 0.0
+            else:
+                loghi = 0.0
             ext_fc.columns["LOGHI"] = (
-                np.log10(10 ** ext.columns["LOGHI"][0] - forehi),
+                loghi,
                 ext_fc.columns["LOGHI"][1],
             )
         else:
@@ -52,12 +60,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("extname", help="extinction curve name")
     parser.add_argument("forehi", help="foreground HI column [10^21]", type=float)
+    parser.add_argument("forehi_unc", help="foreground HI column unc [10^21]", type=float)
     parser.add_argument("--prev", help="previous extinction")
     parser.add_argument("--png", help="save figure as a png file", action="store_true")
     parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
     args = parser.parse_args()
 
     args.forehi *= 1e21
+    args.forehi_unc *= 1e21
 
     if "mr12" in args.extname:
         rebinfac = 10
@@ -86,7 +96,7 @@ if __name__ == "__main__":
 
     # do foreground correction
     extmod = G23(Rv=3.1)
-    ext_fc = foreground_correct_extinction(ext, args.forehi, extmod)
+    ext_fc = foreground_correct_extinction(ext, args.forehi, args.forehi_unc, extmod)
     ext_fc.save(f"fits/{args.extname}_ext_forecor.fits")
 
     # make plots
@@ -151,7 +161,7 @@ if __name__ == "__main__":
 
     fig.tight_layout()
 
-    save_str = f"forecor_ext_{args.extname}"
+    save_str = f"fits/forecor_ext_{args.extname}"
     if args.png:
         fig.savefig(f"{save_str}.png")
     elif args.pdf:

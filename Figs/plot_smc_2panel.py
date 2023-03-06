@@ -12,6 +12,12 @@ if __name__ == "__main__":
     parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
     args = parser.parse_args()
 
+    file1 = "data/smc_stars_reddened_good.dat"
+    file2 = "data/smc_stars_reddened_good.dat"
+    # file2 = "data/smc_stars_reddened_suspect.dat"
+    forecor1 = False
+    forecor2 = True
+
     fontsize = 16
 
     font = {"size": fontsize}
@@ -23,7 +29,7 @@ if __name__ == "__main__":
     matplotlib.rc("xtick.major", width=2)
     matplotlib.rc("ytick.major", width=2)
 
-    fig, ax = pyplot.subplots(figsize=(15, 9))
+    fig, ax = pyplot.subplots(figsize=(13, 8))
     gs = gridspec.GridSpec(2, 2)
     ax = []
     ax.append(pyplot.subplot(gs[0:2, 0]))
@@ -31,12 +37,14 @@ if __name__ == "__main__":
     # ax.append(pyplot.subplot(gs[1, 1]))
 
 #    datapath = "/home/kgordon/Hubble/SMCExt/Ed/"
-    datapath = "/home/kgordon/Python_git/hst_smc_ext/fits/"
+    datapath = "/home/kgordon/Python/hst_smc_ext/fits/"
     plot_ext_stack(
-        "data/smc_stars_reddened_good_highebv.dat",
+        #  "data/smc_stars_reddened_good_highebv.dat",
+        file1,
         ax[0],
         locpath=datapath,
         fontsize=fontsize,
+        forecor=forecor1,
     )
     ax[0].set_xlim(0.0, 9.0)
     ylimits = ax[0].get_ylim()
@@ -50,10 +58,12 @@ if __name__ == "__main__":
     )
 
     plot_ext_stack(
-        "data/smc_stars_reddened_good_lowebv.dat",
+        #  "data/smc_stars_reddened_good_lowebv.dat",
+        file2,
         ax[1],
         locpath=datapath,
         fontsize=fontsize,
+        forecor=forecor2,
     )
     ax[1].set_xlim(0.0, 9.0)
     ylimits = ax[1].get_ylim()

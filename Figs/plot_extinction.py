@@ -43,7 +43,8 @@ class ExtData(ExtDataStock):
         self.uncs["MODEL"] = np.full((nmod), 0.0)
 
 
-def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
+def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14,
+                   forecor=False):
 
     f = open(filelist, "r")
     file_lines = list(f)
@@ -62,7 +63,11 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
                     #                    locpath + "FITSPEC_" + starnames[-1].upper() + "_ATLAS.save"
                 )
             else:
-                text.read(locpath + starnames[-1] + "_ext.fits")
+                filebase = locpath + starnames[-1] + "_ext"
+                if forecor:
+                    filebase = f"{filebase}_forecor"
+                print(filebase)
+                text.read(f"{filebase}.fits")
             extdatas.append(text)
 
     ann_wave_range = [15.0, 18.0]
@@ -92,7 +97,7 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14):
             annotate_wave_range=ann_wave_range,
             annotate_rotation=10.0,
             annotate_yoffset=1.5,
-            model=True,
+            model=False,
         )
 
     ax.set_yscale("linear")
