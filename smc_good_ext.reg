@@ -1,0 +1,18 @@
+# Region file format: DS9 version 4.1
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+circle(1:10:55.7200,-72:42:56.100,120.000") # width=3 text={AzV 456}
+circle(0:45:34.4900,-73:18:41.800,120.000") # width=3 text={MR12-11}
+circle(0:57:13.8500,-72:22:30.100,120.000") # color=blue width=3 text={SMC5-3739}
+circle(0:59:04.3400,-72:19:40.800,120.000") # color=blue width=3 text={AzV 218}
+circle(0:47:45.5800,-73:13:37.200,120.000") # color=blue width=3 text={2DFS 662}
+circle(1:16:09.1900,-73:12:38.800,120.000") # color=blue width=3 text={2DFS 3171}
+circle(0:55:50.0400,-72:19:23.700,120.000") # color=blue width=3 text={SMC5 79264}
+circle(1:06:09.8100,-71:56:00.700,120.000") # color=blue width=3 text={AzV 398}
+circle(0:47:38.9100,-73:22:53.900,120.000") # color=blue width=3 text={AzV 23}
+circle(00:47:12.22, -73:06:33.1,120.000") # color=blue width=3 text={AzV 18}
+circle(01:14:26.28, -73:17:13.5,120.000") # color=blue width=3 text={2DFS 3014}
+circle(00:46:55.80, -73:06:14.6,120.000") # color=blue width=3 text={2DFS 626}
+circle(00:48:05.15, -73:12:03.6,120.000") # color=blue width=3 text={BBB SMC280}
+circle(01:14:40.14, -73:16:14.5,120.000") # color=blue width=3 text={2DFS 3030}
+circle(00:58:54.78, -72:13:17.2,120.000") # color=blue width=3 text={AzV 214}
