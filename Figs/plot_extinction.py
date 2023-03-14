@@ -43,13 +43,15 @@ class ExtData(ExtDataStock):
         self.uncs["MODEL"] = np.full((nmod), 0.0)
 
 
-def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14,
-                   forecor=False):
+def plot_ext_stack(
+    filelist, ax, idlsave=False, locpath="./", fontsize=14, forecor=False
+):
 
     f = open(filelist, "r")
     file_lines = list(f)
     starnames = []
     extdatas = []
+    spslopes = []
     for line in file_lines:
         if (line.find("#") != 0) & (len(line) > 0):
             name = line.rstrip()
@@ -70,19 +72,52 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14,
                 text.read(f"{filebase}.fits")
             extdatas.append(text)
 
+            if "IUE" not in text.waves.keys():
+                bkey = "STIS"
+            else:
+                bkey = "IUE"
+
+            gvals1 = np.logical_and(
+                text.waves[bkey] > 0.17 * u.micron,
+                text.waves[bkey] < 0.20 * u.micron,
+            )
+            gvals1 = np.logical_and(gvals1, text.npts[bkey] > 0)
+            gvals2 = np.logical_and(
+                text.waves[bkey] > 0.27 * u.micron,
+                text.waves[bkey] < 0.30 * u.micron,
+            )
+            gvals2 = np.logical_and(gvals2, text.npts[bkey] > 0)
+            spslopes.append(
+                np.median(text.exts[bkey][gvals1]) - np.median(text.exts[bkey][gvals2])
+            )
+
+    print(1.0 / 0.17, 1.0 / 0.20)
+    print(1.0 / 0.27, 1.0 / 0.30)
+
+    slpsort = np.argsort(spslopes)
+
     ann_wave_range = [15.0, 18.0]
     col_vals = ["b", "g", "c"]
     # lin_vals = ["--", ":", "-."]
     n_cols = len(col_vals)
 
     ann_wave_range = 1.0 / np.array([0.3, 0.25]) / u.micron
-    ann_wave_range = np.array([0.3, 3.]) / u.micron
+    ann_wave_range = np.array([0.3, 3.0]) / u.micron
     n_stars = len(starnames)
     offset_val = 5.0
 
-    for k, cdata in enumerate(extdatas):
+    # for k, cdata in enumerate(extdatas):
+    for j in range(len(extdatas)):
+        # k = slpsort[j]
+        k = j
+        cdata = extdatas[k]
 
         cdata.trans_elv_elvebv()
+
+        if "mr12" in starnames[k]:
+            rebinfac = 5
+        else:
+            rebinfac = None
 
         # plot the extinction curves
         cdata.plot(
@@ -98,6 +133,7 @@ def plot_ext_stack(filelist, ax, idlsave=False, locpath="./", fontsize=14,
             annotate_rotation=10.0,
             annotate_yoffset=1.5,
             model=False,
+            rebin_fac=rebinfac,
         )
 
     ax.set_yscale("linear")

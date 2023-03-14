@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+
+forecor="python Figs/plot_forecor_ext.py"
+
+# exttags=""
+# extargs="--pdf"
+extargs="--png"
+
+$forecor 2dfs0413 0.324 0.033 $extargs
+$forecor 2dfs0626 0.316  0.035 $extargs
+$forecor 2dfs0662 0.307  0.023 $extargs
+$forecor 2dfs0699 0.341  0.004 $extargs
+$forecor 2dfs3014 0.204  0.038 $extargs
+$forecor 2dfs3030 0.210  0.043 $extargs
+$forecor 2dfs3171 0.141  0.063 $extargs
+$forecor azv132 0.346  0.013 $extargs
+$forecor azv18 0.280  0.046 $extargs
+$forecor azv214 0.291  0.008 $extargs
+$forecor azv218 0.284  0.038 $extargs
+$forecor azv23 0.296  0.032 $extargs
+$forecor azv289 0.261  0.050 $extargs
+$forecor azv380 0.220  0.042 $extargs
+$forecor azv398 0.126  0.077 $extargs
+$forecor azv4 0.297  0.027 $extargs
+$forecor azv456 0.150  0.058 $extargs
+$forecor azv462 0.114  0.096 $extargs
+$forecor azv70 0.354  0.034 $extargs
+$forecor azv86 0.302  0.035 $extargs
+$forecor bbb-smc280 0.327  0.046 $extargs
+$forecor mr12-star09 0.325  0.004 $extargs
+$forecor mr12-star11 0.325  0.004 $extargs
+$forecor ngc330-110 0.307  0.025 $extargs
+$forecor ngc330-114 0.320  0.009 $extargs
+$forecor ngc330-116 0.379  0.004 $extargs
+$forecor sk191 0.355  0.063 $extargs
+$forecor smc5-000398 0.297  0.024 $extargs
+$forecor smc5-003739 0.334  0.016 $extargs
+$forecor smc5-079264 0.323  0.005 $extargs
+$forecor smc5-082923 0.272 0.016 $extargs

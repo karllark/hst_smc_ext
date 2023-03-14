@@ -51,12 +51,12 @@ if __name__ == "__main__":
                 starobs.data[bkey].waves > 0.15 * u.micron,
                 starobs.data[bkey].waves < 0.20 * u.micron,
             )
-            gavls1 = np.logical_and(gvals1, starobs.data[bkey].npts > 0)
+            gvals1 = np.logical_and(gvals1, starobs.data[bkey].npts > 0)
             gvals2 = np.logical_and(
                 starobs.data[bkey].waves > 0.25 * u.micron,
                 starobs.data[bkey].waves < 0.30 * u.micron,
             )
-            gavls2 = np.logical_and(gvals2, starobs.data[bkey].npts > 0)
+            gvals2 = np.logical_and(gvals2, starobs.data[bkey].npts > 0)
             spslopes.append(
                 np.median(starobs.data[bkey].fluxes[gvals1])
                 / np.median(starobs.data[bkey].fluxes[gvals2])
@@ -98,12 +98,12 @@ if __name__ == "__main__":
         starobs.data[bkey].npts[nvals] = 0
 
         if cstarname in ["mr12-star09", "mr12-star10", "mr12-star11"]:
-            starobs.data[bkey].rebin_constres([0.1, 0.34] * u.micron, 500.)
+            starobs.data[bkey].rebin_constres([0.1, 0.34] * u.micron, 500.0)
 
         if k // half_num > 0:
             yoff = 2.5 ** (k - half_num)
         else:
-            yoff = 2.5 ** k
+            yoff = 2.5**k
         starobs.plot(
             ax[k // half_num],
             norm_wave_range=[0.2, 0.3] * u.micron,

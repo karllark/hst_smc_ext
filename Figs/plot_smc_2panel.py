@@ -7,13 +7,16 @@ from plot_extinction import plot_ext_stack
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("--suspect", help="show suspect sightlines", action="store_true")
     parser.add_argument("--png", help="save figure as a png file", action="store_true")
-    parser.add_argument("--eps", help="save figure as an eps file", action="store_true")
     parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
     args = parser.parse_args()
 
-    file1 = "data/smc_stars_reddened_good.dat"
-    file2 = "data/smc_stars_reddened_good.dat"
+    if args.suspect:
+        file1 = "data/smc_stars_reddened_suspect.dat"
+    else:
+        file1 = "data/smc_stars_reddened_good.dat"
+    file2 = file1
     # file2 = "data/smc_stars_reddened_suspect.dat"
     forecor1 = False
     forecor2 = True
@@ -36,7 +39,7 @@ if __name__ == "__main__":
     ax.append(pyplot.subplot(gs[0:2, 1]))
     # ax.append(pyplot.subplot(gs[1, 1]))
 
-#    datapath = "/home/kgordon/Hubble/SMCExt/Ed/"
+    #    datapath = "/home/kgordon/Hubble/SMCExt/Ed/"
     datapath = "/home/kgordon/Python/hst_smc_ext/fits/"
     plot_ext_stack(
         #  "data/smc_stars_reddened_good_highebv.dat",
@@ -52,7 +55,7 @@ if __name__ == "__main__":
     ax[0].text(
         xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
         ylimits[0] + 0.95 * (ylimits[1] - ylimits[0]),
-        u"SMC, Good, $E(B-V) > 0.15$",
+        "As measured",
         fontsize=1.5 * fontsize,
         horizontalalignment="left",
     )
@@ -70,27 +73,28 @@ if __name__ == "__main__":
     xlimits = ax[1].get_xlim()
     ax[1].text(
         xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
-        ylimits[0] + 0.9 * (ylimits[1] - ylimits[0]),
-        u"Foreground, Good, $E(B-V) < 0.15$",
-        fontsize=fontsize,
+        ylimits[0] + 0.95 * (ylimits[1] - ylimits[0]),
+        "Foreground corrected",
+        fontsize=1.5 * fontsize,
         horizontalalignment="left",
     )
 
     ax[0].set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]", fontsize=1.3 * fontsize)
     ax[0].set_ylabel(r"$E(\lambda - V)/E(B - V)$ + offset", fontsize=1.3 * fontsize)
 
-    ax[0].set_ylim(-5, 100.)
-    ax[1].set_ylim(-5, 100.)
+    ax[0].set_ylim(-5, 100.0)
+    ax[1].set_ylim(-5, 100.0)
 
     # ax[2].set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]", fontsize=1.3 * fontsize)
 
     fig.tight_layout()
 
+    filebase = "smc_ext_before_after_foreground"
+    if args.suspect:
+        filebase = f"{filebase}_suspect"
     if args.png:
-        fig.savefig("smc_ext_2panel.png")
+        fig.savefig(f"{filebase}.png")
     elif args.pdf:
-        fig.savefig("smc_ext_2panel.pdf")
-    elif args.eps:
-        fig.savefig("smc_ext_2panel.eps")
+        fig.savefig(f"{filebase}.pdf")
     else:
         pyplot.show()

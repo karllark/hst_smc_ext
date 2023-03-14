@@ -64,6 +64,7 @@ if __name__ == "__main__":
     # lfilename = "data/smc_stars_reddened_good_lowebv.dat"
     # filename = "data/smc_stars_reddened_good.dat"
     filename = "data/smc_stars_all.dat"
+    filename = "data/smc_stars_reddened_suspect.dat"
 
     avs, avs_unc, ebvs, ebvs_unc, rvs, rvs_unc, nhs, nhs_unc, names = get_props(
         filename
@@ -209,15 +210,15 @@ if __name__ == "__main__":
         fmt="go",
         # label="E(B-V) > 0.15",
     )
-    ax[1].errorbar(
-        avs_forecor,
-        nhs_forecor,
-        xerr=avs_unc,
-        yerr=nhs_unc,
-        fmt="go",
-        alpha=0.3,
-        # label="E(B-V) > 0.15",
-    )
+    # ax[1].errorbar(
+    #     avs_forecor,
+    #     nhs_forecor,
+    #     xerr=avs_unc,
+    #     yerr=nhs_unc,
+    #     fmt="go",
+    #     alpha=0.3,
+    #     # label="E(B-V) > 0.15",
+    # )
     ax[1].set_xlabel(r"$A(V)$")
     ax[1].set_ylabel(r"$N(HI)$")
     ax[1].tick_params("both", length=10, width=2, which="major")
