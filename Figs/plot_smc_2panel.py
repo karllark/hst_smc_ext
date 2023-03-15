@@ -8,18 +8,28 @@ from plot_extinction import plot_ext_stack
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--suspect", help="show suspect sightlines", action="store_true")
+    parser.add_argument("--both", help="plot both good and adjusted samples", action="store_true")
     parser.add_argument("--png", help="save figure as a png file", action="store_true")
     parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
     args = parser.parse_args()
 
-    if args.suspect:
-        file1 = "data/smc_stars_reddened_suspect.dat"
-    else:
+    if args.both:
+        file2 = "data/smc_stars_reddened_suspect.dat"
         file1 = "data/smc_stars_reddened_good.dat"
-    file2 = file1
-    # file2 = "data/smc_stars_reddened_suspect.dat"
-    forecor1 = False
-    forecor2 = True
+        forecor1 = True
+        forecor2 = True
+        ptitle1 = "Good"
+        ptitle2 = "Forground adjusted"
+    else:
+        if args.suspect:
+            file1 = "data/smc_stars_reddened_suspect.dat"
+        else:
+            file1 = "data/smc_stars_reddened_good.dat"
+        file2 = file1
+        forecor1 = False
+        forecor2 = True
+        ptitle1 = "As measured"
+        ptitle2 = "Foreground corrected"
 
     fontsize = 16
 
@@ -56,7 +66,7 @@ if __name__ == "__main__":
     ax[0].text(
         xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
         ylimits[0] + 0.95 * (ylimits[1] - ylimits[0]),
-        "As measured",
+        ptitle1,
         fontsize=1.5 * fontsize,
         horizontalalignment="left",
     )
@@ -75,7 +85,7 @@ if __name__ == "__main__":
     ax[1].text(
         xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
         ylimits[0] + 0.95 * (ylimits[1] - ylimits[0]),
-        "Foreground corrected",
+        ptitle2,
         fontsize=1.5 * fontsize,
         horizontalalignment="left",
     )
@@ -93,6 +103,8 @@ if __name__ == "__main__":
     filebase = "smc_ext_before_after_foreground"
     if args.suspect:
         filebase = f"{filebase}_suspect"
+    if args.both:
+        filebase = f"{filebase}_allext"
     if args.png:
         fig.savefig(f"{filebase}.png")
     elif args.pdf:
