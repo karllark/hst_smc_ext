@@ -32,12 +32,13 @@ if __name__ == "__main__":
     matplotlib.rc("xtick.major", width=2)
     matplotlib.rc("ytick.major", width=2)
 
-    fig, ax = pyplot.subplots(figsize=(13, 8))
-    gs = gridspec.GridSpec(2, 2)
-    ax = []
-    ax.append(pyplot.subplot(gs[0:2, 0]))
-    ax.append(pyplot.subplot(gs[0:2, 1]))
+    # fig, ax = pyplot.subplots(figsize=(13, 8))
+    # gs = gridspec.GridSpec(2, 2)
+    # ax = []
+    # ax.append(pyplot.subplot(gs[0:2, 0]))
+    # ax.append(pyplot.subplot(gs[0:2, 1]))
     # ax.append(pyplot.subplot(gs[1, 1]))
+    fig, ax = pyplot.subplots(ncols=2, figsize=(13, 8))
 
     #    datapath = "/home/kgordon/Hubble/SMCExt/Ed/"
     datapath = "/home/kgordon/Python/hst_smc_ext/fits/"
@@ -82,8 +83,8 @@ if __name__ == "__main__":
     ax[0].set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]", fontsize=1.3 * fontsize)
     ax[0].set_ylabel(r"$E(\lambda - V)/E(B - V)$ + offset", fontsize=1.3 * fontsize)
 
-    ax[0].set_ylim(-5, 100.0)
-    ax[1].set_ylim(-5, 100.0)
+    # ax[0].set_ylim(-5, 100.0)
+    # ax[1].set_ylim(-5, 100.0)
 
     # ax[2].set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]", fontsize=1.3 * fontsize)
 

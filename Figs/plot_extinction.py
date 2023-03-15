@@ -138,6 +138,9 @@ def plot_ext_stack(
 
     ax.set_yscale("linear")
 
+    ax.set_xlim(1.0 / 2.5, 10.5)
+    ax.set_ylim(-5.0, 30.0 + offset_val * n_stars)
+
     ax.set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]")
 
     ax.tick_params("both", length=10, width=2, which="major")
@@ -145,9 +148,6 @@ def plot_ext_stack(
 
     ax.spines["right"].set_visible(False)
     ax.spines["top"].set_visible(False)
-
-    ax.set_xlim(1.0 / 2.5, 10.5)
-    ax.set_ylim(-5.0, 20.0 + offset_val * n_stars)
 
 
 if __name__ == "__main__":
