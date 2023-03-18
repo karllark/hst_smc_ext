@@ -12,23 +12,9 @@ from measure_extinction.stardata import StarData
 from measure_extinction.utils.helpers import get_full_starfile
 
 
-def plot_mspec_parser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("filelist", help="file with list of stars to plot")
-    parser.add_argument("--path", help="path to star files", default="DAT_Files/")
-    parser.add_argument("--png", help="save figure as a png file", action="store_true")
-    parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
-    return parser
-
-
-if __name__ == "__main__":
-
-    # commandline parser
-    parser = plot_mspec_parser()
-    args = parser.parse_args()
-
+def get_starnames(filelist):
     # get the names of the stars
-    f = open(args.filelist, "r")
+    f = open(filelist, "r")
     file_lines = list(f)
     starnames = []
     spslopes = []
@@ -65,6 +51,26 @@ if __name__ == "__main__":
     # sort starnames by UV slope
     starnames = np.array(starnames)
     starnames = starnames[np.argsort(spslopes)]
+    return starnames
+
+
+def plot_mspec_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("filelist", help="file with list of stars to plot")
+    parser.add_argument("--path", help="path to star files", default="DAT_Files/")
+    parser.add_argument("--scol", help="single column", action="store_true")
+    parser.add_argument("--png", help="save figure as a png file", action="store_true")
+    parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
+    return parser
+
+
+if __name__ == "__main__":
+
+    # commandline parser
+    parser = plot_mspec_parser()
+    args = parser.parse_args()
+
+    starnames = get_starnames(args.filelist)
 
     # plotting setup for easier to read plots
     fontsize = 14
@@ -78,7 +84,13 @@ if __name__ == "__main__":
     mpl.rc("ytick.minor", width=2)
 
     # setup the plot
-    fig, ax = plt.subplots(ncols=2, figsize=(13, 10))
+    if args.scol:
+        ncols = 1
+        figsize = (8, 10)
+    else:
+        ncols = 2
+        figsize = (13, 10)
+    fig, max = plt.subplots(ncols=ncols, figsize=figsize)
 
     # plot the spectra in two columns
     half_num = len(starnames) // 2 + 1
@@ -100,12 +112,19 @@ if __name__ == "__main__":
         if cstarname in ["mr12-star09", "mr12-star10", "mr12-star11"]:
             starobs.data[bkey].rebin_constres([0.1, 0.34] * u.micron, 500.0)
 
-        if k // half_num > 0:
-            yoff = 2.5 ** (k - half_num)
-        else:
+        if args.scol:
             yoff = 2.5**k
+            ax = max
+        else:
+            if k // half_num > 0:
+                yoff = 2.5 ** (k - half_num)
+                ax = max[1]
+            else:
+                yoff = 2.5**k
+                ax = max[0]
+
         starobs.plot(
-            ax[k // half_num],
+            ax,
             norm_wave_range=[0.2, 0.3] * u.micron,
             yoffset=yoff,
             pcolor=col_vals[k % n_cols],
@@ -118,7 +137,13 @@ if __name__ == "__main__":
         )
 
     # finish configuring the plot
-    for i in range(2):
+    if args.scol:
+        ax = [max]
+        ng = 1
+    else:
+        ax = max
+        ng = 2
+    for i in range(ng):
         ax[i].set_xlim(0.1, 0.325)
         ylim = ax[i].get_ylim()
         ax[i].set_ylim(1e-1, ylim[1])
@@ -132,14 +157,15 @@ if __name__ == "__main__":
         ax[i].tick_params("both", length=10, width=2, which="major")
         ax[i].tick_params("both", length=5, width=1, which="minor")
 
-    ax[1].yaxis.tick_right()
-    ax[1].yaxis.set_label_position("right")
+    if not args.scol:
+        ax[1].yaxis.tick_right()
+        ax[1].yaxis.set_label_position("right")
 
     # use the whitespace better
     fig.tight_layout()
 
     # plot or save to a file
-    save_str = "Figs/smcext_uvspec"
+    save_str = args.filelist.replace(".dat", "")
     if args.png:
         fig.savefig(f"{save_str}.png")
     elif args.pdf:
