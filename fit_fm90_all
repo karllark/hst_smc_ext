@@ -11,6 +11,22 @@ while read -r line;
 do
   echo $line
   $fmfit fits/"$line"_ext.fits $extargs
+done < "data/smc_stars_iue.dat"
+
+while read -r line;
+do
+  echo $line
+  $fmfit fits/"$line"_ext.fits $extargs
 done < "data/smc_stars_stis1.dat"
 
-# $fmfit fits/2dfs0413_ext.fits $extargs
+while read -r line;
+do
+  echo $line
+  $fmfit fits/"$line"_ext.fits $extargs
+done < "data/smc_stars_stis2.dat"
+
+while read -r line;
+do
+  echo $line
+  $fmfit fits/"$line"_ext.fits $extargs
+done < "data/smc_stars_stis3.dat"
