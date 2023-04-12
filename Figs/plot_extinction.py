@@ -78,12 +78,12 @@ def plot_ext_stack(
                 bkey = "IUE"
 
             gvals1 = np.logical_and(
-                text.waves[bkey] > 0.17 * u.micron,
+                text.waves[bkey] > 0.14 * u.micron,
                 text.waves[bkey] < 0.20 * u.micron,
             )
             gvals1 = np.logical_and(gvals1, text.npts[bkey] > 0)
             gvals2 = np.logical_and(
-                text.waves[bkey] > 0.27 * u.micron,
+                text.waves[bkey] > 0.22 * u.micron,
                 text.waves[bkey] < 0.30 * u.micron,
             )
             gvals2 = np.logical_and(gvals2, text.npts[bkey] > 0)
@@ -109,6 +109,7 @@ def plot_ext_stack(
     # for k, cdata in enumerate(extdatas):
     for j in range(len(extdatas)):
         # k = slpsort[j]
+        # print(k)
         k = j
         cdata = extdatas[k]
 
@@ -118,6 +119,25 @@ def plot_ext_stack(
             rebinfac = 5
         else:
             rebinfac = None
+
+        # mask bad data (lines)
+        mask = [(8.4, 8.05),
+                (7.55, 7.45),
+                (7.75, 7.65),
+                (7.95, 7.9),
+                (6.5, 6.4),
+                (4.22, 4.17),
+                (4.28, 4.255),
+                (3.51, 3.49),
+                (3.59, 3.56),
+                (3.87, 3.82)]
+        mask = 1.0 / np.array(mask)
+        for region in mask:
+            for src in cdata.waves.keys():
+                cdata.npts[src][
+                    (cdata.waves[src].value >= region[0])
+                    & (cdata.waves[src].value <= region[1])
+                ] = 0
 
         # plot the extinction curves
         cdata.plot(
@@ -138,7 +158,7 @@ def plot_ext_stack(
 
     ax.set_yscale("linear")
 
-    ax.set_xlim(1.0 / 2.5, 10.5)
+    # ax.set_xlim(1.0 / 2.5, 10.5)
     ax.set_ylim(-5.0, 30.0 + offset_val * n_stars)
 
     ax.set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]")
@@ -146,8 +166,8 @@ def plot_ext_stack(
     ax.tick_params("both", length=10, width=2, which="major")
     ax.tick_params("both", length=5, width=1, which="minor")
 
-    ax.spines["right"].set_visible(False)
-    ax.spines["top"].set_visible(False)
+    # ax.spines["right"].set_visible(False)
+    # ax.spines["top"].set_visible(False)
 
 
 if __name__ == "__main__":
