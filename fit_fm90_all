@@ -7,37 +7,10 @@ fmfit="python utils/fit_uv_ext_fm90.py"
 
 rm -f fits/*FM90.h5
 
-$fmfit fits/2dfs0413_ext.fits $extargs
-$fmfit fits/2dfs0626_ext.fits $extargs
-$fmfit fits/2dfs0662_ext.fits $extargs
-$fmfit fits/2dfs0699_ext.fits $extargs
-$fmfit fits/2dfs3014_ext.fits $extargs
-$fmfit fits/2dfs3030_ext.fits $extargs
-$fmfit fits/2dfs3171_ext.fits $extargs
-$fmfit fits/azv4_ext.fits $extargs
-$fmfit fits/azv18_ext.fits $extargs
-$fmfit fits/azv23_ext.fits $extargs
-$fmfit fits/azv70_ext.fits $extargs
-$fmfit fits/azv86_ext.fits $extargs
-$fmfit fits/azv132_ext.fits $extargs
-# $fmfit fits/azv151_ext.fits $extargs
-$fmfit fits/azv214_ext.fits $extargs
-$fmfit fits/azv218_ext.fits $extargs
-$fmfit fits/azv289_ext.fits $extargs
-$fmfit fits/azv380_ext.fits $extargs
-$fmfit fits/azv398_ext.fits $extargs
-# $fmfit fits/azv404_ext.fits $extargs
-$fmfit fits/azv456_ext.fits $extargs
-$fmfit fits/azv462_ext.fits $extargs
-$fmfit fits/bbb-smc280_ext.fits $extargs
-$fmfit fits/mr12-09_ext.fits $extargs
-$fmfit fits/mr12-11_ext.fits $extargs
-$fmfit fits/ngc330-110_ext.fits $extargs
-$fmfit fits/ngc330-114_ext.fits $extargs
-$fmfit fits/ngc330-116_ext.fits $extargs
-# $fmfit fits/ngc346-056_ext.fits $extargs
-$fmfit fits/sk191_ext.fits $extargs
-$fmfit fits/smc5-000398_ext.fits $extargs
-$fmfit fits/smc5-003739_ext.fits $extargs
-$fmfit fits/smc5-079264_ext.fits $extargs
-$fmfit fits/smc5-082923_ext.fits $extargs
+while read -r line;
+do
+  echo $line
+  $fmfit fits/"$line"_ext.fits $extargs
+done < "data/smc_stars_stis1.dat"
+
+# $fmfit fits/2dfs0413_ext.fits $extargs

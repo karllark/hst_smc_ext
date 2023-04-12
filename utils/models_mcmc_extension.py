@@ -4,8 +4,8 @@ import numpy as np
 from astropy.modeling.fitting import (
     Fitter,
     _validate_model,
-    _fitter_to_model_params,
-    _model_to_fit_params,
+    fitter_to_model_params,
+    model_to_fit_params,
     _convert_input,
 )
 from astropy.modeling.optimizers import Optimization
@@ -296,7 +296,7 @@ class EmceeFitter(Fitter):
         model_copy = _validate_model(model, self._opt_method.supported_constraints)
         farg = _convert_input(x, y)
         farg = (model_copy, weights) + farg
-        p0, _ = _model_to_fit_params(model_copy)
+        p0, _, _ = model_to_fit_params(model_copy)
 
         fitparams, self.fit_info = self._opt_method(
             self.log_probability,
@@ -308,7 +308,7 @@ class EmceeFitter(Fitter):
         )
 
         # set the output model parameters to the "best fit" parameters
-        _fitter_to_model_params(model_copy, fitparams)
+        fitter_to_model_params(model_copy, fitparams)
 
         # get and set the symmetric and asymmetric uncertainties on each parameter
         model_copy = self._set_uncs_and_posterior(model_copy)

@@ -7,7 +7,7 @@ import warnings
 # using a Pool does not work in this setup it seems
 
 from astropy.modeling.fitting import LevMarLSQFitter
-from astropy.modeling.fitting import _fitter_to_model_params
+from astropy.modeling.fitting import fitter_to_model_params
 import astropy.units as u
 
 from models_mcmc_extension import EmceeFitter
@@ -174,7 +174,7 @@ if __name__ == "__main__":
     fm90_per_params = (fm90_fit3.param_names, list(fm90_per_param_vals))
 
     # save extinction and fit parameters
-    column_info = {"ebv": ext.columns["EBV"][0], "av": ext.columns["AV"]}
+    column_info = {"ebv": ext.columns["EBV"][0], "av": ext.columns["AV"][0]}
     ext.save(
         ofile,
         fm90_best_params=fm90_best_params,
@@ -207,7 +207,7 @@ if __name__ == "__main__":
     model_copy = fm90_fit3.copy()
     for ind in inds:
         sample = flat_samples[ind]
-        _fitter_to_model_params(model_copy, sample)
+        fitter_to_model_params(model_copy, sample)
         ax.plot(x, model_copy(x), "C1", alpha=0.05)
 
     ax.set_xlabel(r"$x$ [$\mu m^{-1}$]")
