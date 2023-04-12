@@ -1,17 +1,26 @@
 #!/bin/bash
 #
 
-extargs="--png --nsteps=10000 --burnfrac=0.4"
+extargs="--png --nsteps=1000 --burnfrac=0.4"
 # extargs="--png"
 fmfit="python utils/fit_uv_ext_fm90.py"
 
 rm -f fits/*FM90.h5
 
-while read -r line;
+for CLIST in iue stis1 stis2 stis3
 do
-  echo $line
-  $fmfit fits/"$line"_ext.fits $extargs
-done < "data/smc_stars_iue.dat"
+  cfile="data/smc_stars_${CLIST}.dat"
+  while read -r line;
+  do
+    echo $line
+    $fmfit fits/"$line"_ext.fits $extargs
+    $fmfit fits/"$line"_ext_forecor.fits $extargs
+  done < $cfile
+done
+
+exit
+
+
 
 while read -r line;
 do

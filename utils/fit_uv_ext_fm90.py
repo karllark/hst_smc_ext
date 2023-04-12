@@ -136,8 +136,8 @@ if __name__ == "__main__":
 
     fm90_init.C1.bounds = (-2.0, 3.0)
     fm90_init.C2.bounds = (-0.1, 1.0)
-    fm90_init.C3.bounds = (0.0, 2.5)
-    fm90_init.C4.bounds = (0.0, 1.0)
+    fm90_init.C3.bounds = (-0.5, 2.5)
+    fm90_init.C4.bounds = (-0.5, 1.0)
     fm90_init.xo.bounds = (4.5, 4.9)
     fm90_init.gamma.bounds = (0.6, 1.5)
 
