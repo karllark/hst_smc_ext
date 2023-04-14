@@ -17,17 +17,17 @@ $forecor 2dfs3030 0.210  0.043 $extargs
 $forecor 2dfs3171 0.141  0.063 $extargs
 #$forecor azv132 0.346  0.013 $extargs
 $forecor azv132 0.25  0.013 $extargs
-$forecor azv18 0.280  0.046 $extargs
-$forecor azv214 0.291  0.008 $extargs
+$forecor azv18 0.280  0.046 $extargs --prev prev/azv18_azv462_ext.fits
+$forecor azv214 0.291  0.008 $extargs --prev prev/azv214_azv380_ext.fits
 $forecor azv218 0.284  0.038 $extargs
-$forecor azv23 0.296  0.032 $extargs
+$forecor azv23 0.296  0.032 $extargs --prev prev/azv23_azv404_ext.fits
 #$forecor azv289 0.261  0.050 $extargs
 $forecor azv289 0.20  0.050 $extargs
 #$forecor azv380 0.220  0.042 $extargs
 $forecor azv380 0.18  0.042 $extargs
-$forecor azv398 0.126  0.077 $extargs
+$forecor azv398 0.126  0.077 $extargs --prev prev/azv398_azv289_ext.fits
 $forecor azv4 0.297  0.027 $extargs
-$forecor azv456 0.150  0.058 $extargs
+$forecor azv456 0.150  0.058 $extargs --prev prev/azv456_azv70_ext.fits
 $forecor azv462 0.114  0.096 $extargs
 #$forecor azv70 0.354  0.034 $extargs
 $forecor azv70 0.25  0.034 $extargs
