@@ -37,25 +37,21 @@ utils/convert_edidlsave_to_fits.py.
 Generate full list of extinction curves sightlines (in data dir).
 `cat smc_stars_reddened_good_highebv.dat smc_stars_reddened_good_lowebv.dat smc_stars_reddened_suspect.dat | sort > smc_stars_all.dat`
 
+Foreground correction done with Figs/plot_forecor_ext.py.  Script to do all the
+sightlines (including the adjusted versions) is forecor_all.
+
 Figures
 -------
 
 1. ?? (from proposal - revision needed)
 
-2. UV spectra of all program stars: Figs/plot_uv_mspec.py data/smc_stars_all.dat
+2. UV spectra of all program stars: Figs/plot_uv_mspec_byprog.py
 
 3. from Ralph Bohlin
 
 4. Figs/plot_smc_2panel.py
 
-5. Figs/model_contamination.py
-
-6. Figure showing the obspair, modelpair, and difference between them.
-   This is measuring the MW foreground extinction.
-   Figs/plot_old_new.py
-
-7. Figure showing the normalized MW foreground extinctions.
-   Fig/plot_mwforeground.py
+5. python Figs/plot_smc_2panel.py --suspect
 
 Tables
 ------

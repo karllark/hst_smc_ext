@@ -61,6 +61,7 @@ if __name__ == "__main__":
     parser.add_argument("extname", help="extinction curve name")
     parser.add_argument("forehi", help="foreground HI column [10^21]", type=float)
     parser.add_argument("forehi_unc", help="foreground HI column unc [10^21]", type=float)
+    parser.add_argument("--adjusted", help="foreground HI column has been adjusted", action="store_true")
     parser.add_argument("--prev", help="previous extinction")
     parser.add_argument("--png", help="save figure as a png file", action="store_true")
     parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
@@ -97,7 +98,10 @@ if __name__ == "__main__":
     # do foreground correction
     extmod = G23(Rv=3.1)
     ext_fc = foreground_correct_extinction(ext, args.forehi, args.forehi_unc, extmod)
-    ext_fc.save(f"fits/{args.extname}_ext_forecor.fits")
+    savename = f"fits/{args.extname}_ext_forecor.fits"
+    if args.adjusted:
+        savename = savename.replace(".fits", "_adjusted.fits")
+    ext_fc.save(savename)
 
     # make plots
     ext.plot(
@@ -162,6 +166,8 @@ if __name__ == "__main__":
     fig.tight_layout()
 
     save_str = f"fits/forecor_ext_{args.extname}"
+    if args.adjusted:
+        save_str = f"{save_str}_adjusted"
     if args.png:
         fig.savefig(f"{save_str}.png")
     elif args.pdf:

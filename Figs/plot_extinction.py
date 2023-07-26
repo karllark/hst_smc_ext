@@ -44,7 +44,7 @@ class ExtData(ExtDataStock):
 
 
 def plot_ext_stack(
-    filelist, ax, idlsave=False, locpath="./", fontsize=14, forecor=False
+    filelist, ax, idlsave=False, locpath="./", fontsize=14, forecor=False, adjusted=False,
 ):
 
     f = open(filelist, "r")
@@ -68,6 +68,8 @@ def plot_ext_stack(
                 filebase = locpath + starnames[-1] + "_ext"
                 if forecor:
                     filebase = f"{filebase}_forecor"
+                if adjusted:
+                    filebase = f"{filebase}_adjusted"
                 print(filebase)
                 text.read(f"{filebase}.fits")
             extdatas.append(text)
