@@ -19,11 +19,11 @@ if __name__ == "__main__":
         forecor1 = True
         forecor2 = True
         ptitle1 = "Good"
-        ptitle2 = "Forground adjusted"
+        ptitle2 = "Foreground adjusted"
     else:
         if args.suspect:
             file1 = "data/smc_stars_reddened_suspect.dat"
-            file3 = "data/smc_stars_reddened_suspect_adjusted.dat"
+            # file3 = "data/smc_stars_reddened_suspect_adjusted.dat"
         else:
             file1 = "data/smc_stars_reddened_good.dat"
         file2 = file1
@@ -49,10 +49,10 @@ if __name__ == "__main__":
     # ax.append(pyplot.subplot(gs[0:2, 0]))
     # ax.append(pyplot.subplot(gs[0:2, 1]))
     # ax.append(pyplot.subplot(gs[1, 1]))
-    if args.suspect:
-        fig, ax = pyplot.subplots(ncols=3, figsize=(19, 8))
-    else:
-        fig, ax = pyplot.subplots(ncols=2, figsize=(13, 8))
+    #if args.suspect:
+    #    fig, ax = pyplot.subplots(ncols=3, figsize=(19, 8))
+    #else:
+    fig, ax = pyplot.subplots(ncols=2, figsize=(13, 8))
 
     #    datapath = "/home/kgordon/Hubble/SMCExt/Ed/"
     datapath = "/home/kgordon/Python/hst_smc_ext/fits/"
@@ -94,26 +94,26 @@ if __name__ == "__main__":
         horizontalalignment="left",
     )
 
-    if args.suspect:
-        plot_ext_stack(
-            #  "data/smc_stars_reddened_good_lowebv.dat",
-            file2,
-            ax[2],
-            locpath=datapath,
-            fontsize=fontsize,
-            forecor=forecor2,
-            adjusted=True
-        )
-        ax[2].set_xlim(0.0, 9.0)
-        ylimits = ax[2].get_ylim()
-        xlimits = ax[2].get_xlim()
-        ax[2].text(
-            xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
-            ylimits[0] + 0.95 * (ylimits[1] - ylimits[0]),
-            "Adjusted Foreground",
-            fontsize=1.5 * fontsize,
-            horizontalalignment="left",
-        )
+    # if args.suspect:
+    #    plot_ext_stack(
+    #        #  "data/smc_stars_reddened_good_lowebv.dat",
+    #        file2,
+    #        ax[2],
+    #        locpath=datapath,
+    #        fontsize=fontsize,
+    #        forecor=forecor2,
+    #        adjusted=True
+    #    )
+    #    ax[2].set_xlim(0.0, 9.0)
+    #    ylimits = ax[2].get_ylim()
+    #    xlimits = ax[2].get_xlim()
+    #    ax[2].text(
+    #        xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
+    #        ylimits[0] + 0.95 * (ylimits[1] - ylimits[0]),
+    #        "Adjusted Foreground",
+    #        fontsize=1.5 * fontsize,
+    #        horizontalalignment="left",
+    #    )
 
     ax[0].set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]", fontsize=1.3 * fontsize)
     ax[0].set_ylabel(r"$E(\lambda - V)/E(B - V)$ + offset", fontsize=1.3 * fontsize)

@@ -36,7 +36,8 @@ $forecor azv86 0.302  0.035 $extargs
 $forecor azv86 0.20  0.035 $extargs -adjusted
 $forecor bbb-smc280 0.327  0.046 $extargs
 $forecor mr12-star09 0.325  0.004 $extargs
-$forecor mr12-star09 0.20  0.004 $extargs --adjusted
+# $forecor mr12-star09 0.20  0.004 $extargs --adjusted
+$forecor mr12-star10 0.325  0.004 $extargs
 $forecor mr12-star11 0.325  0.004 $extargs
 $forecor ngc330-110 0.307  0.025 $extargs
 $forecor ngc330-110 0.10  0.025 $extargs --adjusted

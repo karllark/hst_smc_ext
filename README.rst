@@ -60,10 +60,15 @@ Tables
 
 2. Manually - from Ralph
 
-3. Manually - from Ed
-
-4. Manually - from Ed
-
 5. Output as data/ancillary_samp_properties.tex
 
 6. Output as data/derived_samp_properties.tex
+
+
+Apendix 
+
+1. Manually - from Ed
+
+2. Manually - from Ed
+
+3. Manually - from Karl (TBD)
