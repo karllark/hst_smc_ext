@@ -24,13 +24,15 @@ if __name__ == "__main__":
         if args.suspect:
             file1 = "data/smc_stars_reddened_suspect.dat"
             # file3 = "data/smc_stars_reddened_suspect_adjusted.dat"
+            stitle = "Set B"
         else:
             file1 = "data/smc_stars_reddened_good.dat"
+            stitle = "Set A"
         file2 = file1
         forecor1 = False
         forecor2 = True
-        ptitle1 = "As measured"
-        ptitle2 = "Foreground corrected"
+        ptitle1 = f"{stitle}, as measured"
+        ptitle2 = f"{stitle}, foreground corrected"
 
     fontsize = 16
 
@@ -52,7 +54,7 @@ if __name__ == "__main__":
     #if args.suspect:
     #    fig, ax = pyplot.subplots(ncols=3, figsize=(19, 8))
     #else:
-    fig, ax = pyplot.subplots(ncols=2, figsize=(13, 8))
+    fig, ax = pyplot.subplots(ncols=2, figsize=(13, 8), sharex=True, sharey=True)
 
     #    datapath = "/home/kgordon/Hubble/SMCExt/Ed/"
     datapath = "/home/kgordon/Python/hst_smc_ext/fits/"
@@ -71,7 +73,7 @@ if __name__ == "__main__":
         xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
         ylimits[0] + 0.95 * (ylimits[1] - ylimits[0]),
         ptitle1,
-        fontsize=1.5 * fontsize,
+        fontsize=1.3 * fontsize,
         horizontalalignment="left",
     )
 
@@ -90,7 +92,7 @@ if __name__ == "__main__":
         xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
         ylimits[0] + 0.95 * (ylimits[1] - ylimits[0]),
         ptitle2,
-        fontsize=1.5 * fontsize,
+        fontsize=1.3 * fontsize,
         horizontalalignment="left",
     )
 
@@ -121,7 +123,8 @@ if __name__ == "__main__":
     # ax[0].set_ylim(-5, 100.0)
     # ax[1].set_ylim(-5, 100.0)
 
-    # ax[2].set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]", fontsize=1.3 * fontsize)
+    ax[1].set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]", fontsize=1.3 * fontsize)
+    ax[1].set_ylabel("")
 
     fig.tight_layout()
 

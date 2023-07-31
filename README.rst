@@ -60,9 +60,9 @@ Tables
 
 2. Manually - from Ralph
 
-5. Output as data/ancillary_samp_properties.tex
+3. Figs/plot_samp_prop.py: Output as data/ancillary_samp_properties.tex
 
-6. Output as data/derived_samp_properties.tex
+4. Figs/plot_samp_prop.py: Output as data/derived_samp_properties.tex
 
 
 Apendix 

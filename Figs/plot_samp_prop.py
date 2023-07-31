@@ -62,9 +62,9 @@ if __name__ == "__main__":
 
     # gfilename = "data/smc_stars_reddened_good_highebv.dat"
     # lfilename = "data/smc_stars_reddened_good_lowebv.dat"
-    # filename = "data/smc_stars_reddened_good.dat"
-    filename = "data/smc_stars_all.dat"
-    filename = "data/smc_stars_reddened_suspect.dat"
+    filename = "data/smc_stars_reddened_good.dat"
+    # filename = "data/smc_stars_all.dat"
+    # filename = "data/smc_stars_reddened_suspect.dat"
 
     avs, avs_unc, ebvs, ebvs_unc, rvs, rvs_unc, nhs, nhs_unc, names = get_props(
         filename
@@ -84,6 +84,8 @@ if __name__ == "__main__":
 
     nhs_forecor = np.copy(nhs)
     nhs_unc_forecor = np.copy(nhs_unc)
+    ebvs_forecor = np.copy(ebvs)
+    ebvs_unc_forecor = np.copy(ebvs_unc)
     avs_forecor = np.copy(avs)
     avs_unc_forecor = np.copy(avs_unc)
     nhs_mw = np.zeros(len(nhs))
@@ -101,6 +103,7 @@ if __name__ == "__main__":
         nhs_unc_forecor[k] = np.sqrt(nhs_unc[k] ** 2 + nhs_mw_unc[k] ** 2)
         ebvs_mw[k] = nhs_mw[k] / 5e21
         ebvs_mw_unc[k] = nhs_mw_unc[k] / 5e21
+        ebvs_forecor[k] -= ebvs_mw[k]
         avs_forecor[k] -= nhs_mw[k] / 1.55e21
         avs_unc_forecor[k] = np.sqrt(avs_unc_forecor[k] ** 2 + (nhs_mw_unc[k] / 1.55e21) ** 2)
 
@@ -130,6 +133,8 @@ if __name__ == "__main__":
     outtab["avs_unc"] = avs_unc
     outtab["nhs"] = nhs
     outtab["nhs_unc"] = nhs_unc
+    outtab["ebvs_forecor"] = ebvs_forecor
+    outtab["ebvs_unc_forecor"] = ebvs_unc_forecor
     outtab["avs_forecor"] = avs_forecor
     outtab["avs_unc_forecor"] = avs_unc_forecor
     outtab["nhs_forecor"] = nhs_forecor
@@ -154,13 +159,14 @@ if __name__ == "__main__":
     outfile2 = open("data/ancillary_samp_properties.tex", "w")
     for row in outtab:
         outline = f"{row['name']}"
-        if row["avs_forecor"] / row["avs"] < 0.5:
-            outline = f"{outline}*"
+        #if row["avs_forecor"] / row["avs"] < 0.5:
+        #    outline = f"{outline}*"
         outline = f"{outline} & ${row['ebvs']:.3f} \\pm {row['ebvs_unc']:.3f}$"
-        outline = f"{outline} & ${row['rvs']:.2f} \\pm {row['rvs_unc']:.2f}$"
-        outline = f"{outline} & ${row['avs']:.2f} \\pm {row['avs_unc']:.2f}$"
+        #outline = f"{outline} & ${row['rvs']:.2f} \\pm {row['rvs_unc']:.2f}$"
+        #outline = f"{outline} & ${row['avs']:.2f} \\pm {row['avs_unc']:.2f}$"
         outline = f"{outline} & ${row['nhs']:.2f} \\pm {row['nhs_unc']:.2f}$"
-        outline = f"{outline} & ${row['avs_forecor']:.2f} \\pm {row['avs_unc_forecor']:.2f}$"
+        outline = f"{outline} & ${row['ebvs_forecor']:.2f} \\pm {row['ebvs_unc_forecor']:.2f}$"
+        #outline = f"{outline} & ${row['avs_forecor']:.2f} \\pm {row['avs_unc_forecor']:.2f}$"
         outline = f"{outline} & ${row['nhs_forecor']:.2f} \\pm {row['nhs_unc_forecor']:.2f}$"
         outfile.write(f"{outline} \\\\ \n")
 
@@ -201,34 +207,36 @@ if __name__ == "__main__":
     ax[0].tick_params("both", length=10, width=2, which="major")
     ax[0].tick_params("both", length=5, width=1, which="minor")
 
-    # N(HI) versus A(V)
+    # N(HI) versus E(B-V)
     ax[1].errorbar(
-        avs,
+        ebvs,
         nhs,
-        xerr=avs_unc,
+        xerr=ebvs_unc,
         yerr=nhs_unc,
         fmt="go",
+        markerfacecolor="none",
+        alpha=0.5,
         # label="E(B-V) > 0.15",
     )
-    # ax[1].errorbar(
-    #     avs_forecor,
-    #     nhs_forecor,
-    #     xerr=avs_unc,
-    #     yerr=nhs_unc,
-    #     fmt="go",
-    #     alpha=0.3,
+    ax[1].errorbar(
+        ebvs_forecor,
+        nhs_forecor,
+        xerr=ebvs_unc_forecor,
+        yerr=nhs_unc,
+        fmt="go",
+        alpha=0.8,
     #     # label="E(B-V) > 0.15",
-    # )
-    ax[1].set_xlabel(r"$A(V)$")
+    )
+    ax[1].set_xlabel(r"$E(B-V)$")
     ax[1].set_ylabel(r"$N(HI)$")
     ax[1].tick_params("both", length=10, width=2, which="major")
     ax[1].tick_params("both", length=5, width=1, which="minor")
 
     # plot MW and SMC expected lines
     ax[1].plot(
-        [0.0, 1.5], [0.0, 13.18e21 * 1.5], "k--", label="SMC (Gordon et al. 2003)"
+        [0.0, .5], [0.0, 13.18e21 * 3.1 * .5], "k--", label="SMC (Gordon et al. 2003)"
     )
-    ax[1].plot([0.0, 1.5], [0.0, 1.55e21 * 1.5], "k:", label="MW (Bohlin et al. 1978+)")
+    ax[1].plot([0.0, .5], [0.0, 1.55e21 * 2.74 * .5], "k:", label="MW (Bohlin et al. 1978+)")
 
     # legends
     ax[0].legend(fontsize=0.8 * fontsize)

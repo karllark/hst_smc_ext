@@ -163,10 +163,21 @@ def plot_ext_stack(
     # ax.set_xlim(1.0 / 2.5, 10.5)
     ax.set_ylim(-5.0, 30.0 + offset_val * n_stars)
 
-    ax.set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]")
+    ax.set_xlabel(r"$1/\lambda$ [$\mu m^{-1}$]", fontsize=fontsize)
 
     ax.tick_params("both", length=10, width=2, which="major")
     ax.tick_params("both", length=5, width=1, which="minor")
+
+    # for 2nd x-axis with lambda values
+    axis_xs = np.array([0.12, 0.15, 0.2, 0.3, 0.5, 1.0])
+    new_ticks = 1 / axis_xs
+    print(new_ticks)
+    new_ticks_labels = ["%.2f" % z for z in axis_xs]
+    tax = ax.twiny()
+    tax.set_xlim(ax.get_xlim())
+    tax.set_xticks(new_ticks)
+    tax.set_xticklabels(new_ticks_labels, fontsize=0.8*fontsize)
+    tax.set_xlabel(r"$\lambda$ [$\mu$m]")
 
     # ax.spines["right"].set_visible(False)
     # ax.spines["top"].set_visible(False)
