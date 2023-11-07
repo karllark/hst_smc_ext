@@ -51,12 +51,23 @@ Figures
 
 4. Examples of foreground subtraction:
    Figs/plot_forecor_ext.py azv23 0.321  0.064 --prev prev/azv23_azv404_ext.fits
-   Figs/plot_forecor_ext.py
+   Figs/plot_forecor_ext.py azv456 0.267  0.031 --prev prev/azv456_azv70_ext.fits
 
-4. UV extinction curves for set A: Figs/plot_smc_2panel.py
+5. Comparion of new to old G03, MR12 UV curves: TBC
 
-4. UV extinction curves for set B: Figs/plot_smc_2panel.py --suspect
+6. UV extinction curves for set A: Figs/plot_smc_2panel.py
 
+7. UV extinction curves for set B: Figs/plot_smc_2panel.py --suspect
+
+8. FM90 parameters versus E(B-V): TBC
+   include MW comp, LMC (redo?)
+
+9. Bump versus position in SMC: TBC
+   use MIPS 24um as the image
+
+10. Bump versus q_PAH: TBC
+
+11. SMC Average (& Bump Average) curves versus MW/LMC: TBC 
 
 Tables
 ------
@@ -65,10 +76,21 @@ Tables
 
 2. Manually - from Ralph
 
-3. From Figs/plot_samp_prop.py
-   output as data/derivied_samp_properties.tex
+3. Stellar fit parameters: TBC
 
-Appendix:
+4. MW foreground HI and E(B-V) & q_PAH: From Figs/plot_samp_prop.py
+   output as data/ancillary_samp_properties.tex
+
+5. Sightline properties: TBC
+   E(B-V), A(V), R(V), N(HI), N(HI)/A(V) or N(HI)/E(B-V)
+   
+6. FM90 parameters: TBC
+   (maybe two tables) 
+
+7. SMC Average/Bump Average versus wavelength: TBC  
+
+Appendix Tables
+---------------
 
 1. Manually - from Ed
 
