@@ -89,7 +89,7 @@ if __name__ == "__main__":
     matplotlib.rc("ytick.minor", width=2)
 
     figsize = (8.0, 8.0)
-    fig, ax = plt.subplots(nrows=2, figsize=figsize, sharex=True)
+    fig, ax = plt.subplots(nrows=2, figsize=figsize)
 
     ext = ExtData(filename=f"fits/{args.extname}_ext.fits")
     tot_av = ext.columns["EBV"][0] * ext.columns["RV"][0]
@@ -110,14 +110,16 @@ if __name__ == "__main__":
         legend_key="IUE",
         legend_label="SMC+MW foreground",
         rebin_fac=rebinfac,
+        wavenum=True,
     )
 
     ext_fc.plot(
         ax[0],
         color="g",
         legend_key="IUE",
-        legend_label="SMC (forecor)",
+        legend_label="SMC only",
         rebin_fac=rebinfac,
+        wavenum=True,
     )
 
     ext.trans_elv_elvebv()
@@ -127,6 +129,7 @@ if __name__ == "__main__":
         legend_key="IUE",
         legend_label="SMC+MW foreground",
         rebin_fac=rebinfac,
+        wavenum=True,
     )
 
     ext_fc.trans_elv_elvebv()
@@ -136,6 +139,7 @@ if __name__ == "__main__":
         legend_key="IUE",
         legend_label="SMC only",
         rebin_fac=rebinfac,
+        wavenum=True,
     )
 
     if args.prev:
@@ -145,23 +149,40 @@ if __name__ == "__main__":
         else:
             legend_key = "STIS"
 
-        pext.plot(ax[0], color="m", legend_key=legend_key, legend_label="G03 SMC Bar")
+        pext.plot(ax[0], color="m", legend_key=legend_key, legend_label="G03", alpha=0.5, wavenum=True)
         pext.trans_elv_elvebv()
-        pext.plot(ax[1], color="m", legend_key=legend_key, legend_label="G03 SMC Bar")
+        pext.plot(ax[1], color="m", legend_key=legend_key, legend_label="G03", alpha=0.5, wavenum=True)
 
     # add in average MW with R(V) = 3.1
     mwaves = np.logspace(np.log10(0.1), np.log10(3.0), num=500) * u.micron
-    ax[1].plot(mwaves, (extmod(mwaves) - 1.0) * 3.1, "k-", label="G23 R(V)=3.1")
+    ax[1].plot(1.0 / mwaves, (extmod(mwaves) - 1.0) * 3.1, "k-", label="G23 R(V)=3.1")
 
+    ax[0].set_xlabel("")
+    ax[0].tick_params("both", length=10, width=2, which="major")
+    ax[0].tick_params("both", length=5, width=1, which="minor")
+
+    ax[0].set_xlim(0.0, 9.0)
+    ax[1].set_xlim(0.0, 9.0)
     ax[0].set_ylim(-1.0, 4.0)
     ax[0].set_ylabel(r"E($\lambda$ - V)")
 
     ax[1].set_ylim(-4.0, 18.0)
-    ax[1].set_xscale("log")
+    #ax[1].set_xscale("log")
 
     tot_ebv = ext.columns["EBV"][0]
-    ax[0].legend(title=f"{args.extname}\ntotal E(B-V)={tot_ebv}\nforeground E(B-V)={args.forehi / 5e21:.3f}")
-    ax[1].legend(title=rf"{args.extname}")
+    ax[0].legend(title=f"{args.extname}\ntotal E(B-V)={tot_ebv}\nforeground E(B-V)={args.forehi / 5e21:.3f}",
+                 fontsize=0.8*fontsize)
+    ax[1].legend(title=rf"{args.extname}", fontsize=0.8*fontsize)
+
+    # for 2nd x-axis with lambda values
+    axis_xs = np.array([0.12, 0.15, 0.2, 0.3, 0.5, 1.0, 2.0])
+    new_ticks = 1 / axis_xs
+    new_ticks_labels = ["%.2f" % z for z in axis_xs]
+    tax = ax[0].twiny()
+    tax.set_xlim(ax[0].get_xlim())
+    tax.set_xticks(new_ticks)
+    tax.set_xticklabels(new_ticks_labels, fontsize=0.8*fontsize)
+    tax.set_xlabel(r"$\lambda$ [$\mu$m]")
 
     fig.tight_layout()
 

@@ -76,7 +76,7 @@ Tables
 
 2. Manually - from Ralph
 
-3. Stellar fit parameters: TBC
+3. Stellar & HI column fit parameters: TBC
 
 4. MW foreground HI and E(B-V) & q_PAH: From Figs/plot_samp_prop.py
    output as data/ancillary_samp_properties.tex
