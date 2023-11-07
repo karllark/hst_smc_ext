@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 
-extargs="--png --nsteps=1000 --burnfrac=0.4"
+extargs="--png --nsteps=5000 --burnfrac=0.2"
 # extargs="--png"
 fmfit="python utils/fit_uv_ext_fm90.py"
 
@@ -17,25 +17,3 @@ do
     $fmfit fits/"$line"_ext_forecor.fits $extargs
   done < $cfile
 done
-
-exit
-
-
-
-while read -r line;
-do
-  echo $line
-  $fmfit fits/"$line"_ext.fits $extargs
-done < "data/smc_stars_stis1.dat"
-
-while read -r line;
-do
-  echo $line
-  $fmfit fits/"$line"_ext.fits $extargs
-done < "data/smc_stars_stis2.dat"
-
-while read -r line;
-do
-  echo $line
-  $fmfit fits/"$line"_ext.fits $extargs
-done < "data/smc_stars_stis3.dat"

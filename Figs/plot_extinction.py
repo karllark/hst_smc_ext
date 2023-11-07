@@ -9,6 +9,27 @@ import astropy.units as u
 from measure_extinction.extdata import ExtData as ExtDataStock
 
 
+def mask_bad(cdata):
+    # mask bad data (lines)
+    mask = [(8.4, 8.05),
+            (7.55, 7.45),
+            (7.75, 7.65),
+            (7.95, 7.9),
+            (6.5, 6.4),
+            (4.22, 4.17),
+            (4.28, 4.255),
+            (3.51, 3.49),
+            (3.59, 3.56),
+            (3.87, 3.82)]
+    mask = 1.0 / np.array(mask)
+    for region in mask:
+        for src in cdata.waves.keys():
+            cdata.npts[src][
+                (cdata.waves[src].value >= region[0])
+                & (cdata.waves[src].value <= region[1])
+            ] = 0
+    return cdata
+
 class ExtData(ExtDataStock):
     """
     Expand the stock ExtData to have a function to read in Ed Fitzpatrick's
