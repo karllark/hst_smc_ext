@@ -25,9 +25,15 @@ if __name__ == "__main__":
             file1 = "data/smc_stars_reddened_suspect.dat"
             # file3 = "data/smc_stars_reddened_suspect_adjusted.dat"
             stitle = "Set B"
+            adjusted = True
+            figsize = (13, 7)
+            textyval = 0.90
         else:
             file1 = "data/smc_stars_reddened_good.dat"
             stitle = "Set A"
+            adjusted = False
+            figsize = (13, 13)
+            textyval = 0.95
         file2 = file1
         forecor1 = False
         forecor2 = True
@@ -54,12 +60,11 @@ if __name__ == "__main__":
     #if args.suspect:
     #    fig, ax = pyplot.subplots(ncols=3, figsize=(19, 8))
     #else:
-    fig, ax = pyplot.subplots(ncols=2, figsize=(13, 8), sharex=True, sharey=True)
+    fig, ax = pyplot.subplots(ncols=2, figsize=figsize, sharex=True, sharey=True)
 
     #    datapath = "/home/kgordon/Hubble/SMCExt/Ed/"
     datapath = "/home/kgordon/Python/hst_smc_ext/fits/"
     plot_ext_stack(
-        #  "data/smc_stars_reddened_good_highebv.dat",
         file1,
         ax[0],
         locpath=datapath,
@@ -71,26 +76,26 @@ if __name__ == "__main__":
     xlimits = ax[0].get_xlim()
     ax[0].text(
         xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
-        ylimits[0] + 0.95 * (ylimits[1] - ylimits[0]),
+        ylimits[0] + textyval * (ylimits[1] - ylimits[0]),
         ptitle1,
         fontsize=1.3 * fontsize,
         horizontalalignment="left",
     )
 
     plot_ext_stack(
-        #  "data/smc_stars_reddened_good_lowebv.dat",
         file2,
         ax[1],
         locpath=datapath,
         fontsize=fontsize,
         forecor=forecor2,
+        adjusted=adjusted,
     )
     ax[1].set_xlim(0.0, 9.0)
     ylimits = ax[1].get_ylim()
     xlimits = ax[1].get_xlim()
     ax[1].text(
         xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
-        ylimits[0] + 0.95 * (ylimits[1] - ylimits[0]),
+        ylimits[0] + textyval * (ylimits[1] - ylimits[0]),
         ptitle2,
         fontsize=1.3 * fontsize,
         horizontalalignment="left",

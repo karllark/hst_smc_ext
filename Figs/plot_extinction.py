@@ -93,9 +93,6 @@ def plot_ext_stack(
                 np.median(text.exts[bkey][gvals1]) - np.median(text.exts[bkey][gvals2])
             )
 
-    print(1.0 / 0.17, 1.0 / 0.20)
-    print(1.0 / 0.27, 1.0 / 0.30)
-
     slpsort = np.argsort(spslopes)
 
     ann_wave_range = [15.0, 18.0]
@@ -171,7 +168,6 @@ def plot_ext_stack(
     # for 2nd x-axis with lambda values
     axis_xs = np.array([0.12, 0.15, 0.2, 0.3, 0.5, 1.0])
     new_ticks = 1 / axis_xs
-    print(new_ticks)
     new_ticks_labels = ["%.2f" % z for z in axis_xs]
     tax = ax.twiny()
     tax.set_xlim(ax.get_xlim())

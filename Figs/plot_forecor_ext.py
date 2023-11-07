@@ -134,13 +134,9 @@ if __name__ == "__main__":
         ax[1],
         color="g",
         legend_key="IUE",
-        legend_label="SMC (forecor)",
+        legend_label="SMC only",
         rebin_fac=rebinfac,
     )
-
-    # add in average MW with R(V) = 3.1
-    mwaves = np.logspace(np.log10(0.1), np.log10(3.0), num=500) * u.micron
-    ax[1].plot(mwaves, (extmod(mwaves) - 1.0) * 3.1, "k-", label="G23 R(V)=3.1")
 
     if args.prev:
         pext = ExtData(filename=args.prev)
@@ -149,9 +145,13 @@ if __name__ == "__main__":
         else:
             legend_key = "STIS"
 
-        pext.plot(ax[0], color="m", legend_key=legend_key, legend_label="G03")
+        pext.plot(ax[0], color="m", legend_key=legend_key, legend_label="G03 SMC Bar")
         pext.trans_elv_elvebv()
-        pext.plot(ax[1], color="m", legend_key=legend_key, legend_label="G03")
+        pext.plot(ax[1], color="m", legend_key=legend_key, legend_label="G03 SMC Bar")
+
+    # add in average MW with R(V) = 3.1
+    mwaves = np.logspace(np.log10(0.1), np.log10(3.0), num=500) * u.micron
+    ax[1].plot(mwaves, (extmod(mwaves) - 1.0) * 3.1, "k-", label="G23 R(V)=3.1")
 
     ax[0].set_ylim(-1.0, 4.0)
     ax[0].set_ylabel(r"E($\lambda$ - V)")

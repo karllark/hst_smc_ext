@@ -43,15 +43,20 @@ sightlines (including the adjusted versions) is forecor_all.
 Figures
 -------
 
-1. ?? (from proposal - revision needed)
+1. Figure of literature UV extinction curves: TBC
 
 2. UV spectra of all program stars: Figs/plot_uv_mspec_byprog.py
 
 3. from Ralph Bohlin
 
-4. Figs/plot_smc_2panel.py
+4. Examples of foreground subtraction:
+   Figs/plot_forecor_ext.py azv23 0.321  0.064 --prev prev/azv23_azv404_ext.fits
+   Figs/plot_forecor_ext.py
 
-5. python Figs/plot_smc_2panel.py --suspect
+4. UV extinction curves for set A: Figs/plot_smc_2panel.py
+
+4. UV extinction curves for set B: Figs/plot_smc_2panel.py --suspect
+
 
 Tables
 ------
@@ -60,15 +65,12 @@ Tables
 
 2. Manually - from Ralph
 
-3. Figs/plot_samp_prop.py: Output as data/ancillary_samp_properties.tex
+3. From Figs/plot_samp_prop.py
+   output as data/derivied_samp_properties.tex
 
-4. Figs/plot_samp_prop.py: Output as data/derived_samp_properties.tex
-
-
-Apendix 
+Appendix:
 
 1. Manually - from Ed
 
 2. Manually - from Ed
 
-3. Manually - from Karl (TBD)
