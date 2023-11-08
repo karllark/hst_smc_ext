@@ -62,9 +62,9 @@ if __name__ == "__main__":
 
     # gfilename = "data/smc_stars_reddened_good_highebv.dat"
     # lfilename = "data/smc_stars_reddened_good_lowebv.dat"
-    filename = "data/smc_stars_reddened_good.dat"
+    # filename = "data/smc_stars_reddened_good.dat"
     # filename = "data/smc_stars_all.dat"
-    # filename = "data/smc_stars_reddened_suspect.dat"
+    filename = "data/smc_stars_reddened_suspect.dat"
 
     avs, avs_unc, ebvs, ebvs_unc, rvs, rvs_unc, nhs, nhs_unc, names = get_props(
         filename
@@ -161,13 +161,15 @@ if __name__ == "__main__":
         outline = f"{row['name']}"
         #if row["avs_forecor"] / row["avs"] < 0.5:
         #    outline = f"{outline}*"
-        outline = f"{outline} & ${row['ebvs']:.3f} \\pm {row['ebvs_unc']:.3f}$"
         #outline = f"{outline} & ${row['rvs']:.2f} \\pm {row['rvs_unc']:.2f}$"
         #outline = f"{outline} & ${row['avs']:.2f} \\pm {row['avs_unc']:.2f}$"
         outline = f"{outline} & ${row['nhs']:.2f} \\pm {row['nhs_unc']:.2f}$"
-        outline = f"{outline} & ${row['ebvs_forecor']:.2f} \\pm {row['ebvs_unc_forecor']:.2f}$"
+        outline = f"{outline} & ${row['ebvs']:.3f} \\pm {row['ebvs_unc']:.3f}$"
+        outline = f"{outline} & ${row['nhs_mw']:.3f} \\pm {row['nhs_mw_unc']:.3f}$"
+        outline = f"{outline} & ${row['ebvs_mw']:.3f} \\pm {row['ebvs_mw_unc']:.3f}$"
         #outline = f"{outline} & ${row['avs_forecor']:.2f} \\pm {row['avs_unc_forecor']:.2f}$"
         outline = f"{outline} & ${row['nhs_forecor']:.2f} \\pm {row['nhs_unc_forecor']:.2f}$"
+        outline = f"{outline} & ${row['ebvs_forecor']:.3f} \\pm {row['ebvs_unc_forecor']:.3f}$"
         outfile.write(f"{outline} \\\\ \n")
 
         outline2 = f"{row['name']}"

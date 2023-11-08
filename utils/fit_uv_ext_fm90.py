@@ -12,7 +12,7 @@ import astropy.units as u
 
 from models_mcmc_extension import EmceeFitter
 
-from dust_extinction.shapes import FM90
+from dust_extinction.shapes import FM90_B3
 
 # from measure_extinction.extdata import ExtData
 from measure_extinction.extdata import ExtData as ExtDataStock
@@ -121,6 +121,10 @@ if __name__ == "__main__":
     ofile = file.replace(".fits", "_FM90.fits")
     ext = ExtData(filename=file)
 
+    # get the extinction curve in alav - (using K band to extrapolate for A(V))
+    #ext.trans_elv_alav()
+    ext.trans_elv_elvebv()
+
     wave, y, y_unc = ext.get_fitdata(
         ["IUE"],
         remove_uvwind_region=True,
@@ -128,18 +132,20 @@ if __name__ == "__main__":
     )
     x = 1.0 / wave.value
 
-    # get the extinction curve in alav - (using K band to extrapolate for A(V))
-    ext.trans_elv_alav()
-
     # initialize the model
-    fm90_init = FM90()
+    fm90_init = FM90_B3()
 
-    fm90_init.C1.bounds = (-2.0, 3.0)
-    fm90_init.C2.bounds = (-0.1, 1.0)
-    fm90_init.C3.bounds = (-0.5, 2.5)
-    fm90_init.C4.bounds = (-0.5, 1.0)
+    #fm90_init.C1.bounds = (-2.0, 3.0)
+    #fm90_init.C2.bounds = (-0.1, 1.0)
+    #fm90_init.C3.bounds = (-0.5, 2.5)
+    #fm90_init.C4.bounds = (-0.5, 1.0)
     fm90_init.xo.bounds = (4.5, 4.9)
-    fm90_init.gamma.bounds = (0.6, 1.5)
+    fm90_init.gamma.bounds = (0.6, 1.7)
+
+    # fix xo and gamma unless it is one of the "strong" bump stars
+    if ("azv456" not in args.extfile) and ("star11" not in args.extfile):
+        fm90_init.xo.fixed = True
+        fm90_init.gamma.fixed = True
 
     # Set up the backend to save the samples for the emcee runs
     emcee_samples_file = ofile.replace(".fits", ".h5")
@@ -160,8 +166,21 @@ if __name__ == "__main__":
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=UserWarning)
         fm90_fit = fit(fm90_init, x, y, weights=weights)
-        print(fm90_fit.param_names)
-        print(fm90_fit.parameters)
+        #print(fm90_fit.param_names)
+        #print(fm90_fit.parameters)
+
+        # empirically determine the uncertainties based on the best fit
+        # noise generally different for IUE between NUV and FUV
+        # not true for STIS, but fine to split
+        dev = y - fm90_fit(x)
+        estd_nuv = np.std(dev[x < 5.2])
+        estd_fuv = np.std(dev[x >= 5.2])
+
+        print(f"empirically noise (NUV/FUV): {estd_nuv} / {estd_fuv}")
+
+        weights[x < 5.2] = weights[x < 5.2] * 0.0 + 1.0 / estd_nuv
+        weights[x >= 5.2] = weights[x >= 5.2] * 0.0 + 1.0 / estd_fuv
+
         fm90_fit3 = fit3(fm90_fit, x, y, weights=weights)
 
     print("autocorr tau = ", fit3.fit_info["sampler"].get_autocorr_time(quiet=True))
@@ -174,6 +193,8 @@ if __name__ == "__main__":
     fm90_per_params = (fm90_fit3.param_names, list(fm90_per_param_vals))
 
     # save extinction and fit parameters
+    if "AV" not in ext.columns.keys():
+        ext.calc_AV()
     column_info = {"ebv": ext.columns["EBV"][0], "av": ext.columns["AV"][0]}
     ext.save(
         ofile,
@@ -211,7 +232,8 @@ if __name__ == "__main__":
         ax.plot(x, model_copy(x), "C1", alpha=0.05)
 
     ax.set_xlabel(r"$x$ [$\mu m^{-1}$]")
-    ax.set_ylabel(r"$A(\lambda)/A(V)$")
+    ax.set_ylabel(r"$E(\lambda - V)/E(B - V)$")
+    ax.set_ylim(0, 20)
 
     ax.set_title(file)
 
@@ -221,7 +243,7 @@ if __name__ == "__main__":
     ax = fax[1]
     ax.plot(x, np.zeros((len(x))), "k--")
     ax.plot(x, y - fm90_fit(x))
-    ax.set_ylim(np.array([-1.0, 1.0]) * 0.5)
+    ax.set_ylim(np.array([-1.0, 1.0]) * 1.0)
 
     plt.tight_layout()
 
