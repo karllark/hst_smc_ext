@@ -46,7 +46,7 @@ if __name__ == "__main__":
     
     g03_labels = ["AzV 456", "AzV 214", "AzV 18", "AzV 23", "AzV 398"]
 
-    offval = 10.0
+    offval = 12.0
     for k, cg03 in enumerate(g03):
         pext = ExtData(filename=cg03)
         pext = mask_bad(pext)
@@ -55,17 +55,22 @@ if __name__ == "__main__":
         else:
             legend_key = "STIS"
 
+        if k % 2:
+            ccol = "b"
+        else:
+            ccol = "g"
+
         pext2 = ExtData(filename=g24[k])
         pext2 = mask_bad(pext2)
 
         pext2.trans_elv_elvebv()
         pext2.plot(ax, 
-                  yoffset=k * offval, alpha=0.5, wavenum=True, color="b")
+                   yoffset=k * offval, alpha=0.8, wavenum=True, color=ccol)
 
         pext.trans_elv_elvebv()
         pext.plot(ax,
                   yoffset=k * offval, 
-                  alpha=0.8, 
+                  alpha=0.5, 
                   wavenum=True, 
                   color="k",
                   annotate_text=g03_labels[k],
@@ -77,12 +82,13 @@ if __name__ == "__main__":
     # now the MR12 curves
     x = np.arange(3.5,11.0,0.1)/u.micron
 
-    mr12 = ["MR12-08", "MR12-09", "MR12-10", "MR12-11"]
-    fm_params = [[-2.42, 1.58, 0.44, 4.14, 4.69, 0.53],
+    mr12 = [# "MR12-08", 
+            "MR12-09", "MR12-10", "MR12-11"]
+    fm_params = [# [-2.42, 1.58, 0.44, 4.14, 4.69, 0.53],
                  [0.13, 0.94, 0.32, 5.80, 4.78, 0.68],
                  [-1.51, 1.33, 0.04, 0.23, 4.65, 0.66],
                  [-1.80, 1.44, 1.76, 9.26, 4.76, 0.85]]
-    g24mr12 = [None,
+    g24mr12 = [# None,
                "fits/mr12-star09_ext_forecor.fits",
                "fits/mr12-star10_ext_forecor.fits",
                "fits/mr12-star11_ext_forecor.fits"]
@@ -90,7 +96,15 @@ if __name__ == "__main__":
     for m, cmr12 in enumerate(mr12):
         ext_model = FM90()
         ext_model.parameters = fm_params[m]
-        ax.plot(x,ext_model(x) + (k+m+1) * offval, color="k", alpha=0.5)
+        gvals = x >= 6.0 / u.micron
+        ax.plot(x[gvals], ext_model(x[gvals]) + (k+m+1) * offval, color="k", alpha=0.5, lw=2, ls="dashed")
+        gvals = x < 6.0 / u.micron
+        ax.plot(x[gvals], ext_model(x[gvals]) + (k+m+1) * offval, color="k", alpha=0.5, lw=2)        
+
+        if m % 2:
+            ccol = "g"
+        else:
+            ccol = "b"
 
         if g24mr12[m] is not None:
             mext = ExtData(filename=g24mr12[m])
@@ -99,16 +113,28 @@ if __name__ == "__main__":
             mext.trans_elv_elvebv()
             mext.plot(ax,
                       yoffset=(k+m+1) * offval, 
-                      alpha=0.5, 
+                      alpha=0.8, 
                       wavenum=True, 
-                      color="b",
+                      color=ccol,
                       annotate_text=cmr12,
                       annotate_key="BAND",
                       annotate_wave_range=np.array([0.3, 1.0]) * u.micron,
                       annotate_rotation=20.0,
                       annotate_yoffset=1.5)
 
-    ax.set_ylim(-5, 100)
+    ax.set_xlim(0.0, 9.0)
+    ax.set_ylim(-5, 120)
+    ax.set_ylabel(r"E($\lambda$ - V)/E(B - V) + const")
+
+    # for 2nd x-axis with lambda values
+    axis_xs = np.array([0.12, 0.15, 0.2, 0.3, 0.5, 1.0, 3.0])
+    new_ticks = 1 / axis_xs
+    new_ticks_labels = ["%.2f" % z for z in axis_xs]
+    tax = ax.twiny()
+    tax.set_xlim(ax.get_xlim())
+    tax.set_xticks(new_ticks)
+    tax.set_xticklabels(new_ticks_labels, fontsize=0.8*fontsize)
+    tax.set_xlabel(r"$\lambda$ [$\mu$m]")
 
     # ax.legend()
 
