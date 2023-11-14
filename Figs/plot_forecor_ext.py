@@ -17,7 +17,9 @@ def foreground_correct_extinction(ext, forehi, forehi_unc, foremod):
     # foreground corrected extinction
     ext_fc = copy.deepcopy(ext)
     foreebv = forehi / 5e21
+    foreebv_unc = foreebv * (forehi_unc / forehi)
     foreax = foreebv * 3.1
+    foreax_unc = foreax * (forehi_unc / forehi)
 
     for src in ext.waves.keys():
         # get foreground ext in A(l)/A(V)
@@ -27,28 +29,32 @@ def foreground_correct_extinction(ext, forehi, forehi_unc, foremod):
             ext_fc.exts[src] -= foreext_elv
             ext_fc.columns["AV"] = (
                 ext.columns["AV"][0] - foreax,
-                ext_fc.columns["AV"][1],
+                np.sqrt(ext_fc.columns["AV"][1] ** 2 + foreax_unc ** 2),
             )
             ext_fc.columns["EBV"] = (
                 ext.columns["EBV"][0] - foreebv,
-                ext_fc.columns["EBV"][1],
+                np.sqrt(ext_fc.columns["EBV"][1] ** 2 + foreebv_unc ** 2),
             )
-            ext_fc.columns["RV"] = (
-                ext_fc.columns["AV"][0] / ext_fc.columns["EBV"][0],
-                ext_fc.columns["RV"][0]
-            )
+            rv = ext_fc.columns["AV"][0] / ext_fc.columns["EBV"][0]
+            rv_unc = ((ext_fc.columns["AV"][1] / ext_fc.columns["AV"][0]) ** 2
+                      + (ext_fc.columns["EBV"][1] / ext_fc.columns["EBV"][0]) ** 2)
+            rv_unc = rv * np.sqrt(rv_unc)
+            ext_fc.columns["RV"] = (rv, rv_unc)
             if ext.columns["LOGHI"][0] > 0.0:
                 hi = 10 ** ext.columns["LOGHI"][0] - forehi
+                hi_up = 10 ** (ext.columns["LOGHI"][0] + ext.columns["LOGHI"][1]) + forehi_unc
+                hi_down = 10 ** (ext.columns["LOGHI"][0] - ext.columns["LOGHI"][1]) - forehi_unc
                 if hi > 0:
-                    loghi = np.log10(10 ** ext.columns["LOGHI"][0] - forehi)
+                    loghi = np.log10(hi)
+                    loghi_unc = (np.log10(hi_up) - np.log10(hi_down)) / 2.
                 else:
                     loghi = 0.0
+                    loghi_unc = 0.0
             else:
                 loghi = 0.0
-            ext_fc.columns["LOGHI"] = (
-                loghi,
-                ext_fc.columns["LOGHI"][1],
-            )
+                loghi_unc = 0.0
+
+            ext_fc.columns["LOGHI"] = (loghi, loghi_unc)
         else:
             print(f"{ext.type} not supported.")
             exit()
@@ -92,8 +98,8 @@ if __name__ == "__main__":
     fig, ax = plt.subplots(nrows=2, figsize=figsize)
 
     ext = ExtData(filename=f"fits/{args.extname}_ext.fits")
-    tot_av = ext.columns["EBV"][0] * ext.columns["RV"][0]
-    ext.columns["AV"] = (tot_av, 0.0)
+    #tot_av = ext.columns["EBV"][0] * ext.columns["RV"][0]
+    #ext.columns["AV"] = (tot_av, 0.0)
 
     # do foreground correction
     extmod = G23(Rv=3.1)

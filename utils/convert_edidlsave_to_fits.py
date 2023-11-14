@@ -87,6 +87,7 @@ if __name__ == "__main__":
             # save
             text.columns = {
                 "EBV": (ebv, ebv_unc),
+                "AV": (av, av_unc),
                 "RV": (rv, rv_unc),
                 "LOGHI": (loghi, loghi_unc),
             }
