@@ -43,31 +43,30 @@ sightlines (including the adjusted versions) is forecor_all.
 Figures
 -------
 
-1. Figure of literature UV extinction curves: TBC
+1. UV spectra of all program stars: Figs/plot_uv_mspec_byprog.py
 
-2. UV spectra of all program stars: Figs/plot_uv_mspec_byprog.py
+2. from Ralph Bohlin
 
-3. from Ralph Bohlin
-
-4. Examples of foreground subtraction:
+3. Examples of foreground subtraction:
    Figs/plot_forecor_ext.py azv23 0.321  0.064 --prev prev/azv23_azv404_ext.fits
    Figs/plot_forecor_ext.py azv456 0.267  0.031 --prev prev/azv456_azv70_ext.fits
 
-5. Comparion of new to old G03, MR12 UV curves: TBC
+4. Comparison of new to previous G03, MR12 UV curves:
+   Figs/plot_prev_and_new_curves.py
 
-6. UV extinction curves for set A: Figs/plot_smc_2panel.py
+5. UV extinction curves for set A: Figs/plot_smc_2panel.py
 
-7. UV extinction curves for set B: Figs/plot_smc_2panel.py --suspect
+6. UV extinction curves for set B: Figs/plot_smc_2panel.py --suspect
 
-8. FM90 parameters versus E(B-V): TBC
+7. FM90 parameters versus E(B-V): TBC
    include MW comp, LMC (redo?)
 
-9. Bump versus position in SMC: TBC
+8. Bump versus position in SMC: TBC
    use MIPS 24um as the image
 
-10. Bump versus q_PAH: TBC
+9. Bump versus q_PAH: TBC
 
-11. SMC Average (& Bump Average) curves versus MW/LMC: TBC 
+10. SMC Average (& Bump Average) curves versus MW/LMC: TBC 
 
 Tables
 ------

@@ -192,6 +192,9 @@ if __name__ == "__main__":
     )
     fm90_per_params = (fm90_fit3.param_names, list(fm90_per_param_vals))
 
+    print(fm90_per_params)
+    exit()
+
     # save extinction and fit parameters
     if "AV" not in ext.columns.keys():
         ext.calc_AV()

@@ -35,7 +35,7 @@ def plot_sspec(starnames, ax):
         nvals = starobs.data[bkey].fluxes < 0
         starobs.data[bkey].npts[nvals] = 0
 
-        if cstarname in ["mr12-star09", "mr12-star10", "mr12-star11"]:
+        if cstarname in ["mr12-star08", "mr12-star09", "mr12-star10", "mr12-star11"]:
             starobs.data[bkey].rebin_constres([0.1, 0.34] * u.micron, 500.0)
 
         starobs.plot(
@@ -76,8 +76,8 @@ if __name__ == "__main__":
     ax = []
     ax.append(plt.subplot(gs[0:12, 0]))
     ax.append(plt.subplot(gs[12:20, 0]))
-    ax.append(plt.subplot(gs[0:15, 1]))
-    ax.append(plt.subplot(gs[15:20, 1]))
+    ax.append(plt.subplot(gs[0:14, 1]))
+    ax.append(plt.subplot(gs[14:20, 1]))
 
     # fig, max = plt.subplots(nrows=2, ncols=2, figsize=(10, 10))
     # ax = [max[0, 0], max[0, 1], max[1, 0], max[0, 0]]
