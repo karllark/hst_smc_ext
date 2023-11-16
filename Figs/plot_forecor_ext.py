@@ -14,6 +14,9 @@ def foreground_correct_extinction(ext, forehi, forehi_unc, foremod):
     """
     Correct an extinction curve for foreground extinction
     """
+    if "AV" not in ext.columns.keys():
+        ext.columns["AV"] = (ext.columns["EBV"][0] * ext.columns["RV"][0], 0.0)
+
     # foreground corrected extinction
     ext_fc = copy.deepcopy(ext)
     foreebv = forehi / 5e21
