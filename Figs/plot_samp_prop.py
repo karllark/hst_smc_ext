@@ -62,9 +62,9 @@ if __name__ == "__main__":
 
     # gfilename = "data/smc_stars_reddened_good_highebv.dat"
     # lfilename = "data/smc_stars_reddened_good_lowebv.dat"
-    # filename = "data/smc_stars_reddened_good.dat"
+    filename = "data/smc_stars_reddened_good.dat"
     # filename = "data/smc_stars_all.dat"
-    filename = "data/smc_stars_reddened_suspect.dat"
+    # filename = "data/smc_stars_reddened_suspect.dat"
 
     avs, avs_unc, ebvs, ebvs_unc, rvs, rvs_unc, nhs, nhs_unc, names = get_props(
         filename
