@@ -58,11 +58,11 @@ Figures
 
 6. UV extinction curves for set B: Figs/plot_smc_2panel.py --suspect
 
-7. FM90 parameters versus E(B-V): TBC
+7. FM90 parameters versus E(B-V): TBD
    include MW comp, LMC (redo?)
 
-8. Bump versus position in SMC: TBC
-   use MIPS 24um as the image
+8. Bump/NoBump versus position in SMC: Figs/plot_positions_mips24.py
+   Plot the bump/nobump samples over the MIPS 24um image
 
 9. Bump versus q_PAH: TBC
 
