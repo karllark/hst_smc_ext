@@ -192,18 +192,15 @@ if __name__ == "__main__":
     )
     fm90_per_params = (fm90_fit3.param_names, list(fm90_per_param_vals))
 
-    print(fm90_per_params)
-    exit()
-
     # save extinction and fit parameters
-    if "AV" not in ext.columns.keys():
-        ext.calc_AV()
-    column_info = {"ebv": ext.columns["EBV"][0], "av": ext.columns["AV"][0]}
+    #if "AV" not in ext.columns.keys():
+    #    ext.calc_AV()
+    #column_info = {"ebv": ext.columns["EBV"][0], "av": ext.columns["AV"][0]}
     ext.save(
         ofile,
         fm90_best_params=fm90_best_params,
         fm90_per_params=fm90_per_params,
-        column_info=column_info,
+    #    column_info=column_info,
     )
 
     # make the standard mcmc plots
