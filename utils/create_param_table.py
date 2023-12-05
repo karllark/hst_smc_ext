@@ -7,8 +7,9 @@ from astropy.table import QTable
 
 from measure_extinction.extdata import ExtData
 
-# read in the Valencic et al. 2004 data and write the common format table
+
 if __name__ == "__main__":
+
     for ctype in ["", "_forecor"]:
         file1 = "data/smc_stars_reddened_good.dat"
 
