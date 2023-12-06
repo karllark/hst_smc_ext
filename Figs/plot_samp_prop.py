@@ -154,8 +154,7 @@ if __name__ == "__main__":
     outtab["ebvs_mw_unc"] = ebvs_mw_unc
     outtab["q_pahs"] = qpahs
 
-    np.argsort(outtab["name"])
-    outtab = outtab[np.argsort(outtab["name"])]
+    # outtab = outtab[np.argsort(outtab["name"])]
     outtab["nhs"] /= 1e20
     outtab["nhs_unc"] /= 1e20
     outtab["nhs_mw"] /= 1e20
@@ -164,8 +163,8 @@ if __name__ == "__main__":
     outtab["nhs_unc_forecor"] /= 1e20
 
     # loop over and write as a custom formatted latex table
-    outfile = open("data/derived_samp_properties.tex", "w")
-    outfile2 = open("data/ancillary_samp_properties.tex", "w")
+    outfile = open("tables/derived_samp_properties.tex", "w")
+    outfile2 = open("tables/ancillary_samp_properties.tex", "w")
     for row in outtab:
         outline = f"{row['name']}"
         #if row["avs_forecor"] / row["avs"] < 0.5:

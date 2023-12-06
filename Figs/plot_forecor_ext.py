@@ -9,6 +9,8 @@ import astropy.units as u
 from measure_extinction.extdata import ExtData
 from dust_extinction.parameter_averages import G23
 
+from plot_extinction import mask_bad
+
 
 def foreground_correct_extinction(ext, forehi_orig, forehi_orig_unc, foremod):
     """
@@ -18,6 +20,8 @@ def foreground_correct_extinction(ext, forehi_orig, forehi_orig_unc, foremod):
     """
     if "AV" not in ext.columns.keys():
         ext.columns["AV"] = (ext.columns["EBV"][0] * ext.columns["RV"][0], 0.0)
+
+    assumed_forehi = 3.5e20
 
     # get foreground ext in A(l)/A(V)
     if ext.type != "elx":
@@ -33,10 +37,10 @@ def foreground_correct_extinction(ext, forehi_orig, forehi_orig_unc, foremod):
             forehi_unc = forehi_orig_unc
 
             # foreground corrected extinction
-            foreebv = forehi / 5e21
-            foreebv_unc = foreebv * (forehi_unc / forehi)
+            foreebv = forehi / 8.3e21
+            foreebv_unc = forehi_unc / 8.3e21
             foreax = foreebv * 3.1
-            foreax_unc = foreax * (forehi_unc / forehi)
+            foreax_unc = foreebv_unc * 3.1
 
             ext_fc = copy.deepcopy(ext)
 
@@ -62,13 +66,17 @@ def foreground_correct_extinction(ext, forehi_orig, forehi_orig_unc, foremod):
             rv_unc = rv * np.sqrt(rv_unc)
             ext_fc.columns["RV"] = (rv, rv_unc)
             if ext.columns["LOGHI"][0] > 0.0:
-                hi = 10 ** ext.columns["LOGHI"][0] - forehi
+                hi = 10 ** ext.columns["LOGHI"][0] + assumed_forehi - forehi
                 hi_up = (
                     10 ** (ext.columns["LOGHI"][0] + ext.columns["LOGHI"][1])
+                    + assumed_forehi
+                    - forehi
                     + forehi_unc
                 )
                 hi_down = (
                     10 ** (ext.columns["LOGHI"][0] - ext.columns["LOGHI"][1])
+                    + assumed_forehi
+                    - forehi
                     - forehi_unc
                 )
                 if hi > 0:
@@ -93,6 +101,9 @@ if __name__ == "__main__":
     parser.add_argument("forehi", help="foreground HI column [10^21]", type=float)
     parser.add_argument(
         "forehi_unc", help="foreground HI column unc [10^21]", type=float
+    )
+    parser.add_argument(
+        "--showunc", help="show foreground subtraction uncs", action="store_true"
     )
     parser.add_argument(
         "--adjusted", help="foreground HI column has been adjusted", action="store_true"
@@ -127,6 +138,7 @@ if __name__ == "__main__":
     fig, ax = plt.subplots(nrows=2, figsize=figsize)
 
     ext = ExtData(filename=f"fits/{args.extname}_ext.fits")
+    ext = mask_bad(ext)
     # tot_av = ext.columns["EBV"][0] * ext.columns["RV"][0]
     # ext.columns["AV"] = (tot_av, 0.0)
 
@@ -191,26 +203,27 @@ if __name__ == "__main__":
         wavenum=True,
     )
 
-    # curves foreground HI +/- foreground HI unc
-    for i in range(1, 3):
-        ext_fc_all[i].plot(
-            ax[0],
-            color="k",
-            alpha=0.5,
-            legend_key="IUE",
-            legend_label="SMC only",
-            rebin_fac=rebinfac,
-            wavenum=True,
-        )
+    if args.showunc:
+        # curves foreground HI +/- foreground HI unc
+        for i in range(1, 3):
+            ext_fc_all[i].plot(
+                ax[0],
+                color="k",
+                alpha=0.5,
+                # legend_key="IUE",
+                # legend_label="SMC only",
+                rebin_fac=rebinfac,
+                wavenum=True,
+            )
 
-        ext_fc_all[i].trans_elv_elvebv()
-        ext_fc_all[i].plot(
-            ax[1],
-            color="k",
-            alpha=0.5,
-            rebin_fac=rebinfac,
-            wavenum=True,
-        )
+            ext_fc_all[i].trans_elv_elvebv()
+            ext_fc_all[i].plot(
+                ax[1],
+                color="k",
+                alpha=0.5,
+                rebin_fac=rebinfac,
+                wavenum=True,
+            )
 
     if args.prev:
         pext = ExtData(filename=args.prev)
@@ -255,8 +268,7 @@ if __name__ == "__main__":
 
     tot_ebv = ext.columns["EBV"][0]
     ax[0].legend(
-        title=f"{args.extname}\ntotal E(B-V)={tot_ebv}\nforeground E(B-V)={args.forehi / 5e21:.3f}",
-           # +/- {args.forehi_unc / 5e21:.3f}",
+        title=f"{args.extname}\ntotal E(B-V)={tot_ebv}\nforeground E(B-V)={args.forehi / 8.3e21:.3f}",
         fontsize=0.8 * fontsize,
     )
     ax[1].legend(title=rf"{args.extname}", fontsize=0.8 * fontsize)

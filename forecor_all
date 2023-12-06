@@ -5,52 +5,37 @@ forecor="python Figs/plot_forecor_ext.py"
 
 # exttags=""
 # extargs="--pdf"
-extargs="--png"
+extargs="--png --showunc"
 
-$forecor 2dfs0413 0.324 0.079 $extargs
-$forecor 2dfs0413 0.250 0.079 $extargs --adjusted
+$forecor 2dfs0413 0.323 0.079 $extargs
 $forecor 2dfs0626 0.318  0.087 $extargs
 $forecor 2dfs0662 0.318  0.060 $extargs
 $forecor 2dfs0699 0.353  0.045 $extargs
 $forecor 2dfs3014 0.249  0.035 $extargs
 $forecor 2dfs3030 0.236  0.069 $extargs
 $forecor 2dfs3171 0.237  0.063 $extargs
-$forecor azv132 0.313  0.062 $extargs
-$forecor azv132 0.250  0.062 $extargs --adjusted
+$forecor azv4 0.350  0.035 $extargs
 $forecor azv18 0.318  0.087 $extargs --prev prev/azv18_azv462_ext.fits
+$forecor azv23 0.321  0.064 $extargs --prev prev/azv23_azv404_ext.fits
+$forecor azv70 0.362  0.048 $extargs
+$forecor azv86 0.316  0.030 $extargs
+$forecor azv132 0.313  0.062 $extargs
 $forecor azv214 0.302  0.061 $extargs --prev prev/azv214_azv380_ext.fits
 $forecor azv218 0.318  0.071 $extargs
-$forecor azv23 0.321  0.064 $extargs --prev prev/azv23_azv404_ext.fits
 $forecor azv289 0.302  0.035 $extargs
-$forecor azv289 0.267  0.050 $extargs --adjusted
 $forecor azv380 0.258  0.036 $extargs
-$forecor azv380 0.222  0.036 $extargs --adjusted
 $forecor azv398 0.291  0.050 $extargs --prev prev/azv398_azv289_ext.fits
-$forecor azv4 0.350  0.035 $extargs
-$forecor azv4 0.315  0.035 $extargs --adjusted
 $forecor azv456 0.267  0.031 $extargs --prev prev/azv456_azv70_ext.fits
 $forecor azv462 0.277  0.029 $extargs
-$forecor azv70 0.362  0.048 $extargs
-$forecor azv70 0.314  0.048 $extargs --adjusted
-$forecor azv86 0.316  0.030 $extargs
-$forecor azv86 0.286  0.030 $extargs --adjusted
-$forecor bbb-smc280 0.318  0.027 $extargs
+$forecor bbb-smc280 0.318  0.061 $extargs
 $forecor mr12-star09 0.319  0.032 $extargs
-# $forecor mr12-star09 0.20  0.004 $extargs --adjusted
 $forecor mr12-star10 0.318  0.032 $extargs
-$forecor mr12-star10 0.286  0.032 $extargs --adjusted
 $forecor mr12-star11 0.318  0.032 $extargs
 $forecor ngc330-110 0.326  0.044 $extargs
-$forecor ngc330-110 0.282  0.044 $extargs --adjusted
-$forecor ngc330-114 0.325  0.037 $extargs
-$forecor ngc330-114 0.288  0.037 $extargs --adjusted
+$forecor ngc330-114 0.325  0.038 $extargs
 $forecor ngc330-116 0.327  0.046 $extargs
-$forecor ngc330-116 0.281  0.046 $extargs --adjusted
 $forecor sk191 0.344  0.046 $extargs
-$forecor sk191 0.298  0.046 $extargs --adjusted
 $forecor smc5-000398 0.334  0.046 $extargs
-$forecor smc5-000398 0.288  0.046 $extargs --adjusted
 $forecor smc5-003739 0.318  0.043 $extargs
 $forecor smc5-079264 0.321  0.037 $extargs
 $forecor smc5-082923 0.324 0.052 $extargs
-$forecor smc5-082923 0.272 0.052 $extargs --adjusted

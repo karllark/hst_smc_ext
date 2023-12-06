@@ -48,8 +48,8 @@ Figures
 2. from Ralph Bohlin
 
 3. Examples of foreground subtraction:
-   Figs/plot_forecor_ext.py azv23 0.321  0.064 --prev prev/azv23_azv404_ext.fits
-   Figs/plot_forecor_ext.py azv456 0.267  0.031 --prev prev/azv456_azv70_ext.fits
+   Figs/plot_forecor_ext.py azv23 0.321  0.064
+   Figs/plot_forecor_ext.py azv456 0.267  0.031
 
 4. Comparison of new to previous G03, MR12 UV curves:
    Figs/plot_prev_and_new_curves.py
@@ -75,10 +75,10 @@ Tables
 
 2. Manually - from Ralph
 
-3. Stellar & HI column fit parameters: TBC
-
-4. MW foreground HI and E(B-V) & q_PAH: From Figs/plot_samp_prop.py
+3. MW foreground HI and E(B-V) & q_PAH: From Figs/plot_samp_prop.py
    output as data/ancillary_samp_properties.tex
+
+4. Stellar fit parameters: utils/create_stellar_param_table.py
 
 5. Sightline properties: TBC
    E(B-V), A(V), R(V), N(HI), N(HI)/A(V) or N(HI)/E(B-V)
