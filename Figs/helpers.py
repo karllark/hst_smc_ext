@@ -14,6 +14,8 @@ def prettyname(name):
         pname = name.replace("mr12-star", "MR12 ")
     if "ngc330" in name:
         pname = name.replace("ngc330-", "NGC330 ELS ")
+    if "ngc346" in name:
+        pname = name.replace("ngc346-", "NGC330 ELS ")
     if "sk" in name:
         pname = name.replace("sk", "SK ")
     if "smc5" in name:

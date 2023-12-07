@@ -14,6 +14,7 @@ from measure_extinction.stardata import StarData
 from measure_extinction.utils.helpers import get_full_starfile
 
 from plot_uv_mspec import get_starnames
+from helpers import prettyname
 
 
 def plot_sspec(starnames, ax):
@@ -45,9 +46,10 @@ def plot_sspec(starnames, ax):
             pcolor=col_vals[k % n_cols],
             annotate_key=bkey,
             annotate_wave_range=[0.25, 0.27] * u.micron,
-            annotate_text=cstarname,
+            annotate_text=prettyname(cstarname),
             annotate_rotation=-10.0,
             annotate_yoffset=0.0,
+            annotate_color=col_vals[k % n_cols],
             fontsize=12,
         )
 

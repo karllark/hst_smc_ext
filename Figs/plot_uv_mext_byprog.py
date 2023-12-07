@@ -10,6 +10,7 @@ import matplotlib.gridspec as gridspec
 
 from plot_extinction import plot_ext_stack
 
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
