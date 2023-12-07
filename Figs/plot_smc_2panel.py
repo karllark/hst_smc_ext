@@ -14,13 +14,14 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.both:
+        file0 = "data/smc_stars_reddened_good_highebv_bumps.dat"
         file2 = "data/smc_stars_reddened_good_lowebv.dat"
         file1 = "data/smc_stars_reddened_good_highebv.dat"
         forecor1 = True
         forecor2 = True
         ptitle1 = r"$E(B-V)_\mathrm{SMC} \geq 0.1$"
         ptitle2 = r"$E(B-V)_\mathrm{SMC} < 0.1$"
-        figsize = (13, 13)
+        figsize = (13, 10)
         textyval = 0.90
         adjusted = False
     else:
@@ -44,7 +45,7 @@ if __name__ == "__main__":
         ptitle1 = f"{stitle}, as measured"
         ptitle2 = f"{stitle}, foreground corrected"
 
-    fontsize = 16
+    fontsize = 14
 
     font = {"size": fontsize}
 
@@ -64,29 +65,43 @@ if __name__ == "__main__":
     #if args.suspect:
     #    fig, ax = pyplot.subplots(ncols=3, figsize=(19, 8))
     #else:
-    fig, ax = pyplot.subplots(ncols=2, figsize=figsize, sharex=True, sharey=False)
+    fig, ax = pyplot.subplots(ncols=2, figsize=figsize, sharex=False, sharey=False)
 
     #    datapath = "/home/kgordon/Hubble/SMCExt/Ed/"
     datapath = "/home/kgordon/Python/hst_smc_ext/fits/"
+
     plot_ext_stack(
         file1,
         ax[0],
         locpath=datapath,
         fontsize=fontsize,
         forecor=forecor1,
+        exoffset=0.
     )
-    ax[0].set_xlim(0.0, 9.0)
-    ax[0].set_ylim(-5, 140)
+    ax[0].set_xlim(0.0, 10.0)
+    ax[0].set_ylim(-5, 120)
     ylimits = ax[0].get_ylim()
     xlimits = ax[0].get_xlim()
-    ax[0].text(
-        xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
-        ylimits[0] + textyval * (ylimits[1] - ylimits[0]),
-        ptitle1,
-        fontsize=1.3 * fontsize,
-        horizontalalignment="left",
-    )
+    # ax[0].text(
+    #     xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
+    #     ylimits[0] + textyval * (ylimits[1] - ylimits[0]),
+    #     ptitle1,
+    #     fontsize=1.3 * fontsize,
+    #     horizontalalignment="left",
+    # )
+    ax[0].text(1., 100., ptitle1, fontsize=1.1*fontsize, horizontalalignment="left")
+    ax[0].text(9.25, 55.0, "Weak/Absent Bumps", rotation=270., fontsize=0.9*fontsize,
+               horizontalalignment="center", verticalalignment="center")
 
+    plot_ext_stack(
+        file0,
+        ax[1],
+        locpath=datapath,
+        fontsize=fontsize,
+        forecor=forecor1,
+        exoffset=80.,
+        topxaxis=False,
+    )
     plot_ext_stack(
         file2,
         ax[1],
@@ -95,17 +110,23 @@ if __name__ == "__main__":
         forecor=forecor2,
         adjusted=adjusted,
     )
-    ax[1].set_ylim(-5, 140)
-    ax[1].set_xlim(0.0, 9.0)
+    ax[1].set_ylim(-5, 120)
+    ax[1].set_xlim(0.0, 10.0)
     ylimits = ax[1].get_ylim()
     xlimits = ax[1].get_xlim()
-    ax[1].text(
-        xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
-        ylimits[0] + textyval * (ylimits[1] - ylimits[0]),
-        ptitle2,
-        fontsize=1.3 * fontsize,
-        horizontalalignment="left",
-    )
+    # ax[1].text(
+    #     xlimits[0] + 0.05 * (xlimits[1] - xlimits[0]),
+    #     ylimits[0] + textyval * (ylimits[1] - ylimits[0]),
+    #     ptitle2,
+    #     fontsize=1.3 * fontsize,
+    #     horizontalalignment="left",
+    # )
+    ax[1].text(1., 110., ptitle1, fontsize=1.1*fontsize, horizontalalignment="left")
+    ax[1].text(9.25, 100.0, "Significant Bumps", rotation=270., fontsize=0.9*fontsize,
+               horizontalalignment="center", verticalalignment="center")
+    ax[1].text(1., 65., ptitle2, fontsize=1.1*fontsize, horizontalalignment="left")
+    ax[1].text(9.25, 35.0, "Weak/Absent Bumps", rotation=270., fontsize=0.9*fontsize,
+               horizontalalignment="center", verticalalignment="center")
 
     # if args.suspect:
     #    plot_ext_stack(
@@ -139,7 +160,7 @@ if __name__ == "__main__":
 
     fig.tight_layout()
 
-    filebase = "smc_ext_before_after_foreground"
+    filebase = "smc_mext"
     if args.suspect:
         filebase = f"{filebase}_suspect"
     if args.both:

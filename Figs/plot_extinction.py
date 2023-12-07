@@ -6,7 +6,10 @@ import matplotlib
 from scipy.io.idl import readsav
 import astropy.units as u
 
+from dust_extinction.shapes import FM90_B3
 from measure_extinction.extdata import ExtData as ExtDataStock
+
+from helpers import prettyname
 
 
 def mask_bad(cdata):
@@ -66,6 +69,7 @@ class ExtData(ExtDataStock):
 
 def plot_ext_stack(
     filelist, ax, idlsave=False, locpath="./", fontsize=14, forecor=False, adjusted=False,
+    offset_val=5.0, exoffset=0.0, topxaxis=True,
 ):
 
     f = open(filelist, "r")
@@ -81,43 +85,46 @@ def plot_ext_stack(
             filebase = locpath + starnames[-1] + "_ext"
             if forecor:
                 filebase = f"{filebase}_forecor"
+            filebase = f"{filebase}_FM90"
             print(filebase)
             text.read(f"{filebase}.fits")
-            text.trans_elv_elvebv()
+            #text.trans_elv_elvebv()
             extdatas.append(text)
 
-            if "IUE" not in text.waves.keys():
-                bkey = "STIS"
-            else:
-                bkey = "IUE"
+            # if "IUE" not in text.waves.keys():
+            #     bkey = "STIS"
+            # else:
+            #     bkey = "IUE"
 
-            gvals1 = np.logical_and(
-                text.waves[bkey] > 0.14 * u.micron,
-                text.waves[bkey] < 0.20 * u.micron,
-            )
-            gvals1 = np.logical_and(gvals1, text.npts[bkey] > 0)
-            gvals2 = np.logical_and(
-                text.waves[bkey] > 0.22 * u.micron,
-                text.waves[bkey] < 0.30 * u.micron,
-            )
-            gvals2 = np.logical_and(gvals2, text.npts[bkey] > 0)
-            spslopes.append(
-                np.median(text.exts[bkey][gvals1]) - np.median(text.exts[bkey][gvals2])
-            )
+            # gvals1 = np.logical_and(
+            #     text.waves[bkey] > 0.14 * u.micron,
+            #     text.waves[bkey] < 0.20 * u.micron,
+            # )
+            # gvals1 = np.logical_and(gvals1, text.npts[bkey] > 0)
+            # gvals2 = np.logical_and(
+            #     text.waves[bkey] > 0.22 * u.micron,
+            #     text.waves[bkey] < 0.30 * u.micron,
+            # )
+            # gvals2 = np.logical_and(gvals2, text.npts[bkey] > 0)
+            # spslopes.append(
+            #     np.median(text.exts[bkey][gvals1]) - np.median(text.exts[bkey][gvals2])
+            # )
+            spslopes.append(text.fm90_best_fit["C2"])
 
     slpsort = np.argsort(spslopes)
 
-    ann_wave_range = [15.0, 18.0]
+    # ann_wave_range = [15.0, 18.0]
     col_vals = ["b", "g", "c"]
     # lin_vals = ["--", ":", "-."]
     n_cols = len(col_vals)
 
-    ann_wave_range = 1.0 / np.array([0.3, 0.25]) / u.micron
-    ann_wave_range = np.array([0.3, 3.0]) / u.micron
+    # ann_wave_range = 1.0 / np.array([0.3, 0.25]) / u.micron
+    ann_wave_range = np.array([1./3, 1/1.]) / u.micron
     n_stars = len(starnames)
     offset_val = 5.0
 
     # for k, cdata in enumerate(extdatas):
+    fm90_y = FM90_B3()
     for j in range(len(extdatas)):
         k = slpsort[j]
         # k = j
@@ -132,21 +139,29 @@ def plot_ext_stack(
         cdata = mask_bad(cdata)
 
         # plot the extinction curves
+        yoffset = j * offset_val + exoffset
         cdata.plot(
             ax,
             color=col_vals[j % n_cols],
-            yoffset=j * offset_val,
+            yoffset=yoffset,
             alpha=0.5,
             fontsize=0.75 * fontsize,
             wavenum=True,
-            annotate_text=starnames[k],
+            annotate_text=prettyname(starnames[k]),
             annotate_key="BAND",
             annotate_wave_range=ann_wave_range,
             annotate_rotation=10.0,
             annotate_yoffset=1.5,
+            annotate_color=col_vals[j % n_cols],
             model=False,
             rebin_fac=rebinfac,
         )
+
+        # plot the FM90 model
+        fp = cdata.fm90_best_fit
+        fm90_x = np.arange(1/0.30, 1/0.1150, 0.01)
+        fm90_y.parameters = [fp["C1"], fp["C2"], fp["B3"], fp["C4"], fp["XO"], fp["GAMMA"]]
+        ax.plot(fm90_x, fm90_y(fm90_x) + yoffset, "k:", alpha=0.5)
 
     ax.set_yscale("linear")
 
@@ -158,15 +173,16 @@ def plot_ext_stack(
     ax.tick_params("both", length=10, width=2, which="major")
     ax.tick_params("both", length=5, width=1, which="minor")
 
-    # for 2nd x-axis with lambda values
-    axis_xs = np.array([0.12, 0.15, 0.2, 0.3, 0.5, 1.0])
-    new_ticks = 1 / axis_xs
-    new_ticks_labels = ["%.2f" % z for z in axis_xs]
-    tax = ax.twiny()
-    tax.set_xlim(ax.get_xlim())
-    tax.set_xticks(new_ticks)
-    tax.set_xticklabels(new_ticks_labels, fontsize=0.8*fontsize)
-    tax.set_xlabel(r"$\lambda$ [$\mu$m]")
+    if topxaxis:
+        # for 2nd x-axis with lambda values
+        axis_xs = np.array([0.12, 0.15, 0.2, 0.3, 0.5, 1.0])
+        new_ticks = 1 / axis_xs
+        new_ticks_labels = ["%.2f" % z for z in axis_xs]
+        tax = ax.twiny()
+        tax.set_xlim(ax.get_xlim())
+        tax.set_xticks(new_ticks)
+        tax.set_xticklabels(new_ticks_labels, fontsize=0.8*fontsize)
+        tax.set_xlabel(r"$\lambda$ [$\mu$m]")
 
     # ax.spines["right"].set_visible(False)
     # ax.spines["top"].set_visible(False)
