@@ -51,12 +51,12 @@ Figures
    Figs/plot_forecor_ext.py azv23 0.321  0.064
    Figs/plot_forecor_ext.py azv456 0.267  0.031
 
-4. Comparison of new to previous G03, MR12 UV curves:
+4. UV extinction curves for set A: Figs/plot_smc_2panel.py
+
+5. UV extinction curves for set B: Figs/plot_smc_2panel.py --suspect
+
+6. Comparison of new to previous G03, MR12 UV curves:
    Figs/plot_prev_and_new_curves.py
-
-5. UV extinction curves for set A: Figs/plot_smc_2panel.py
-
-6. UV extinction curves for set B: Figs/plot_smc_2panel.py --suspect
 
 7. FM90 parameters versus E(B-V): TBD
    include MW comp, LMC (redo?)

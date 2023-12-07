@@ -14,22 +14,26 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.both:
-        file2 = "data/smc_stars_reddened_suspect.dat"
-        file1 = "data/smc_stars_reddened_good.dat"
+        file2 = "data/smc_stars_reddened_good_lowebv.dat"
+        file1 = "data/smc_stars_reddened_good_highebv.dat"
         forecor1 = True
         forecor2 = True
-        ptitle1 = "Good"
-        ptitle2 = "Foreground adjusted"
+        ptitle1 = r"$E(B-V)_\mathrm{SMC} \geq 0.1$"
+        ptitle2 = r"$E(B-V)_\mathrm{SMC} < 0.1$"
+        figsize = (13, 13)
+        textyval = 0.90
+        adjusted = False
     else:
         if args.suspect:
             file1 = "data/smc_stars_reddened_suspect.dat"
             # file3 = "data/smc_stars_reddened_suspect_adjusted.dat"
             stitle = "Set B"
-            adjusted = True
+            adjusted = False
             figsize = (13, 7)
             textyval = 0.90
         else:
             file1 = "data/smc_stars_reddened_good.dat"
+            file1 = "data/smc_stars_all.dat"
             stitle = "Set A"
             adjusted = False
             figsize = (13, 13)
@@ -60,7 +64,7 @@ if __name__ == "__main__":
     #if args.suspect:
     #    fig, ax = pyplot.subplots(ncols=3, figsize=(19, 8))
     #else:
-    fig, ax = pyplot.subplots(ncols=2, figsize=figsize, sharex=True, sharey=True)
+    fig, ax = pyplot.subplots(ncols=2, figsize=figsize, sharex=True, sharey=False)
 
     #    datapath = "/home/kgordon/Hubble/SMCExt/Ed/"
     datapath = "/home/kgordon/Python/hst_smc_ext/fits/"
@@ -72,6 +76,7 @@ if __name__ == "__main__":
         forecor=forecor1,
     )
     ax[0].set_xlim(0.0, 9.0)
+    ax[0].set_ylim(-5, 140)
     ylimits = ax[0].get_ylim()
     xlimits = ax[0].get_xlim()
     ax[0].text(
@@ -90,6 +95,7 @@ if __name__ == "__main__":
         forecor=forecor2,
         adjusted=adjusted,
     )
+    ax[1].set_ylim(-5, 140)
     ax[1].set_xlim(0.0, 9.0)
     ylimits = ax[1].get_ylim()
     xlimits = ax[1].get_xlim()

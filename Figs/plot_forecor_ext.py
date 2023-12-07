@@ -79,6 +79,8 @@ def foreground_correct_extinction(ext, forehi_orig, forehi_orig_unc, foremod):
                     - forehi
                     - forehi_unc
                 )
+                if hi_down < 0.:
+                    hi_down = 1e19
                 if hi > 0:
                     loghi = np.log10(hi)
                     loghi_unc = (np.log10(hi_up) - np.log10(hi_down)) / 2.0

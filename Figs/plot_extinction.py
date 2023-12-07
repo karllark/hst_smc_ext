@@ -78,21 +78,12 @@ def plot_ext_stack(
             name = line.rstrip()
             starnames.append(name)
             text = ExtData()
-            if idlsave:
-                text.read_ext_data_idlsave(
-                    locpath
-                    + starnames[-1].upper()
-                    + "_EXTCURVE.save"
-                    #                    locpath + "FITSPEC_" + starnames[-1].upper() + "_ATLAS.save"
-                )
-            else:
-                filebase = locpath + starnames[-1] + "_ext"
-                if forecor:
-                    filebase = f"{filebase}_forecor"
-                if adjusted:
-                    filebase = f"{filebase}_adjusted"
-                print(filebase)
-                text.read(f"{filebase}.fits")
+            filebase = locpath + starnames[-1] + "_ext"
+            if forecor:
+                filebase = f"{filebase}_forecor"
+            print(filebase)
+            text.read(f"{filebase}.fits")
+            text.trans_elv_elvebv()
             extdatas.append(text)
 
             if "IUE" not in text.waves.keys():
@@ -128,42 +119,23 @@ def plot_ext_stack(
 
     # for k, cdata in enumerate(extdatas):
     for j in range(len(extdatas)):
-        # k = slpsort[j]
-        # print(k)
-        k = j
-        cdata = extdatas[k]
+        k = slpsort[j]
+        # k = j
 
-        cdata.trans_elv_elvebv()
+        cdata = extdatas[k]
 
         if "mr12" in starnames[k]:
             rebinfac = 5
         else:
             rebinfac = None
 
-        # mask bad data (lines)
-        mask = [(8.4, 8.05),
-                (7.55, 7.45),
-                (7.75, 7.65),
-                (7.95, 7.9),
-                (6.5, 6.4),
-                (4.22, 4.17),
-                (4.28, 4.255),
-                (3.51, 3.49),
-                (3.59, 3.56),
-                (3.87, 3.82)]
-        mask = 1.0 / np.array(mask)
-        for region in mask:
-            for src in cdata.waves.keys():
-                cdata.npts[src][
-                    (cdata.waves[src].value >= region[0])
-                    & (cdata.waves[src].value <= region[1])
-                ] = 0
+        cdata = mask_bad(cdata)
 
         # plot the extinction curves
         cdata.plot(
             ax,
-            color=col_vals[k % n_cols],
-            yoffset=k * offset_val,
+            color=col_vals[j % n_cols],
+            yoffset=j * offset_val,
             alpha=0.5,
             fontsize=0.75 * fontsize,
             wavenum=True,

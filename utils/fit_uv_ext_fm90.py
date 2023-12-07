@@ -115,11 +115,12 @@ if __name__ == "__main__":
     parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
     args = parser.parse_args()
 
-    # get a saved extnction curve
+    # get a saved extinction curve
     file = args.extfile
     # file = '/home/kgordon/Python_git/spitzer_mir_ext/fits/hd147889_hd064802_ext.fits'
     ofile = file.replace(".fits", "_FM90.fits")
     ext = ExtData(filename=file)
+    print(file)
 
     # get the extinction curve in alav - (using K band to extrapolate for A(V))
     #ext.trans_elv_alav()
