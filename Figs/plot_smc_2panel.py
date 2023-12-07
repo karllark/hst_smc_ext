@@ -79,7 +79,7 @@ if __name__ == "__main__":
         exoffset=0.
     )
     ax[0].set_xlim(0.0, 10.0)
-    ax[0].set_ylim(-5, 120)
+    ax[0].set_ylim(-5, 110)
     ylimits = ax[0].get_ylim()
     xlimits = ax[0].get_xlim()
     # ax[0].text(
@@ -89,8 +89,8 @@ if __name__ == "__main__":
     #     fontsize=1.3 * fontsize,
     #     horizontalalignment="left",
     # )
-    ax[0].text(1., 100., ptitle1, fontsize=1.1*fontsize, horizontalalignment="left")
-    ax[0].text(9.25, 55.0, "Weak/Absent Bumps", rotation=270., fontsize=0.9*fontsize,
+    ax[0].text(1., 90., ptitle1, fontsize=1.1*fontsize, horizontalalignment="left")
+    ax[0].text(9.25, 50.0, "Weak/Absent Bump", rotation=270., fontsize=0.9*fontsize,
                horizontalalignment="center", verticalalignment="center")
 
     plot_ext_stack(
@@ -99,7 +99,7 @@ if __name__ == "__main__":
         locpath=datapath,
         fontsize=fontsize,
         forecor=forecor1,
-        exoffset=80.,
+        exoffset=70.,
         topxaxis=False,
     )
     plot_ext_stack(
@@ -110,7 +110,7 @@ if __name__ == "__main__":
         forecor=forecor2,
         adjusted=adjusted,
     )
-    ax[1].set_ylim(-5, 120)
+    ax[1].set_ylim(-5, 110)
     ax[1].set_xlim(0.0, 10.0)
     ylimits = ax[1].get_ylim()
     xlimits = ax[1].get_xlim()
@@ -121,11 +121,11 @@ if __name__ == "__main__":
     #     fontsize=1.3 * fontsize,
     #     horizontalalignment="left",
     # )
-    ax[1].text(1., 110., ptitle1, fontsize=1.1*fontsize, horizontalalignment="left")
-    ax[1].text(9.25, 100.0, "Significant Bumps", rotation=270., fontsize=0.9*fontsize,
+    ax[1].text(1., 100., ptitle1, fontsize=1.1*fontsize, horizontalalignment="left")
+    ax[1].text(9.25, 90.0, "Significant Bump", rotation=270., fontsize=0.9*fontsize,
                horizontalalignment="center", verticalalignment="center")
-    ax[1].text(1., 65., ptitle2, fontsize=1.1*fontsize, horizontalalignment="left")
-    ax[1].text(9.25, 35.0, "Weak/Absent Bumps", rotation=270., fontsize=0.9*fontsize,
+    ax[1].text(1., 55., ptitle2, fontsize=1.1*fontsize, horizontalalignment="left")
+    ax[1].text(9.25, 30.0, "Weak/Absent Bump", rotation=270., fontsize=0.9*fontsize,
                horizontalalignment="center", verticalalignment="center")
 
     # if args.suspect:
