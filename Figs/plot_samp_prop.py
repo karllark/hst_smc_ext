@@ -96,7 +96,7 @@ if __name__ == "__main__":
     nhs_mw_unc = np.zeros(len(nhs))
     ebvs_mw = np.zeros(len(nhs))
     ebvs_mw_unc = np.zeros(len(nhs))
-    qpahs = np.zeros(len(nhs))
+    qpahs = np.full((len(nhs)), np.NaN)
     for k, cname in enumerate(names):
         pname = prettyname(cname)
         pnames.append(pname)
@@ -153,6 +153,8 @@ if __name__ == "__main__":
     outtab["ebvs_mw"] = ebvs_mw
     outtab["ebvs_mw_unc"] = ebvs_mw_unc
     outtab["q_pahs"] = qpahs
+    outtab.write(f"tables/samp_as_measured_ensemble_params.dat", format="ascii.ipac", overwrite=True)
+    
 
     # outtab = outtab[np.argsort(outtab["name"])]
     outtab["nhs"] /= 1e20

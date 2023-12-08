@@ -19,7 +19,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     filename = '~/Spitzer/SAGE-SMC/delivery/smc_e0_e1_e2_24_all_20jan09.cal.delivery.fits'
-    # filename = "data/smc_dl07_fixedbeta_06sep18_1sig_qPAH.fits.gz"
+    filename_qpah = "data/smc_dl07_fixedbeta_06sep18_1sig_qPAH.fits.gz"
+    #filename = filename_qpah
 
     hdu = fits.open(filename)[0]
     data = hdu.data
@@ -30,6 +31,17 @@ if __name__ == "__main__":
     cutout = Cutout2D(data, coord, (3.0 * u.deg, 5.0 * u.deg), wcs=wcs)
     data = cutout.data
     wcs = cutout.wcs
+
+    # qpah images
+    data_qpah = []
+    hdu_qpah = fits.open(filename_qpah)[0]
+    data_qpah.append(hdu_qpah.data)
+    wcs_qpah = WCS(hdu_qpah.header)
+    # p16 and p84 for uncs
+    hdu_qpah_p = fits.open(filename_qpah.replace("qPAH", "qPAH_84th"))[0]
+    data_qpah.append(hdu_qpah_p.data)
+    hdu_qpah_m = fits.open(filename_qpah.replace("qPAH", "qPAH_16th"))[0]
+    data_qpah.append(hdu_qpah_m.data)
 
     fontsize = 14
 
@@ -46,7 +58,7 @@ if __name__ == "__main__":
 
     ax = plt.subplot(projection=wcs)
     fig = plt.gcf()
-    fig.set_size_inches(8.5, 6)
+    fig.set_size_inches(8.5, 5.25)
 
     norm = ImageNormalize(vmin=0.0, vmax=3.0, stretch=SqrtStretch())
 
@@ -57,57 +69,43 @@ if __name__ == "__main__":
     ax.set_xlabel("RA")
     ax.set_ylabel("DEC")
 
-    # read in the low ebv stars and overplot
-    ptab = QTable.read("data/smc_positions_lowebv.dat", format="ascii.commented_header")
-    for k in range(len(ptab)):
-        coord = SkyCoord(
-            ptab["ra"][k],
-            ptab["dec"][k],
-            unit=(u.hourangle, u.deg),
-        )
-        ax.scatter(coord.ra.degree, coord.dec.degree, transform=ax.get_transform('fk5'), s=45,
-                   edgecolor='tab:brown', facecolor='none', linewidth=2, alpha=0.75, marker="v")
-        if args.names:
-            ax.annotate(ptab["name"][k], wcs.world_to_pixel(coord), color="tab:brown")
+    fnames = ["lowebv", "nobump", "flat", "bump"]
+    fsyms = ["v", "o", "s", "P"]
+    fcols = ["tab:brown", "b", "c", "r"]
 
-    # read in the nobump stars and overplot
-    ptab = QTable.read("data/smc_positions_nobump.dat", format="ascii.commented_header")
-    for k in range(len(ptab)):
-        coord = SkyCoord(
-            ptab["ra"][k],
-            ptab["dec"][k],
-            unit=(u.hourangle, u.deg),
-        )
-        ax.scatter(coord.ra.degree, coord.dec.degree, transform=ax.get_transform('fk5'), s=65,
-                   edgecolor='blue', facecolor='none', linewidth=2, alpha=0.75)
-        if args.names:
-            ax.annotate(ptab["name"][k], wcs.world_to_pixel(coord), color="b")
+    names = []
+    qpahs = []
+    qpahs_unc = []
+    for cname, csym, ccol in zip(fnames, fsyms, fcols):
+        ptab = QTable.read(f"data/smc_positions_{cname}.dat", format="ascii.commented_header")
+        for k in range(len(ptab)):
+            coord = SkyCoord(
+                ptab["ra"][k],
+                ptab["dec"][k],
+                unit=(u.hourangle, u.deg),
+            )
+            ax.scatter(coord.ra.degree, coord.dec.degree, transform=ax.get_transform('fk5'), s=45,
+                    edgecolor=ccol, facecolor='none', linewidth=2, alpha=0.75, marker=csym)
+            if args.names:
+                ax.annotate(ptab["name"][k], wcs.world_to_pixel(coord), color=ccol)
+            # get the qpah values from the map
+            pix_qpah = wcs_qpah.world_to_pixel(coord)
+            if ((pix_qpah[1] >= 0)
+                & (pix_qpah[1] < data_qpah[0].shape[0] - 1)
+                & (pix_qpah[0] >= 0)
+                & (pix_qpah[0] < data_qpah[0].shape[1] - 1)):
+                names.append(ptab["name"].data[k])
+                qpahs.append(data_qpah[0][int(pix_qpah[1]), int(pix_qpah[0])])
+                qpahs_unc.append(0.5 * (data_qpah[1][int(pix_qpah[1]), int(pix_qpah[0])] - data_qpah[2][int(pix_qpah[1]), int(pix_qpah[0])]))
+            else:
+                print(ptab["name"].data[k], " not in qpah image")
 
-    # read in the flat stars and overplot
-    ptab = QTable.read("data/smc_positions_flat.dat", format="ascii.commented_header")
-    for k in range(len(ptab)):
-        coord = SkyCoord(
-            ptab["ra"][k],
-            ptab["dec"][k],
-            unit=(u.hourangle, u.deg),
-        )
-        ax.scatter(coord.ra.degree, coord.dec.degree, transform=ax.get_transform('fk5'), s=55,
-                   edgecolor='cyan', facecolor='none', linewidth=2, alpha=0.75, marker="s")
-        if args.names:
-            ax.annotate(ptab["name"][k], wcs.world_to_pixel(coord), color="c")
-
-    # read in the bump stars and overplot
-    ptab = QTable.read("data/smc_positions_bump.dat", format="ascii.commented_header")
-    for k in range(len(ptab)):
-        coord = SkyCoord(
-            ptab["ra"][k],
-            ptab["dec"][k],
-            unit=(u.hourangle, u.deg),
-        )
-        ax.scatter(coord.ra.degree, coord.dec.degree, transform=ax.get_transform('fk5'), s=65,
-                   edgecolor='red', facecolor='none', linewidth=2, alpha=0.75, marker="P")
-        if args.names:
-            ax.annotate(ptab["name"][k], wcs.world_to_pixel(coord), color="r")
+    # output qpah values
+    otab = QTable()
+    otab["name"] = names
+    otab["qpah"] = qpahs
+    otab["qpah_unc"] = qpahs_unc
+    otab.write("tables/qpah_from_image.dat", format="ascii.ipac", overwrite=True)
 
     legend_elements = [Line2D([0], [0], marker='o', markerfacecolor="none", color="none", label='Weak/absent 2175 A bump', 
                               markeredgecolor='b', markersize=10),

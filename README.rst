@@ -51,22 +51,20 @@ Figures
    Figs/plot_forecor_ext.py azv23 0.321  0.064
    Figs/plot_forecor_ext.py azv456 0.267  0.031
 
-4. UV extinction curves for set A: Figs/plot_smc_2panel.py
+4. UV extinction curves for set A: Figs/plot_smc_2panel.py --both
 
-5. UV extinction curves for set B: Figs/plot_smc_2panel.py --suspect
-
-6. Comparison of new to previous G03, MR12 UV curves:
+5. Comparison of new to previous G03, MR12 UV curves:
    Figs/plot_prev_and_new_curves.py
+
+6. Group type versus position in SMC: Figs/plot_positions_mips24.py
+   Plot the bump/nobump/flat/lowebv samples over the MIPS 24um image 
 
 7. FM90 parameters versus E(B-V): TBD
    include MW comp, LMC (redo?)
 
-8. Bump/NoBump versus position in SMC: Figs/plot_positions_mips24.py
-   Plot the bump/nobump samples over the MIPS 24um image
+8. Bump versus q_PAH: TBC
 
-9. Bump versus q_PAH: TBC
-
-10. SMC Average (& Bump Average) curves versus MW/LMC: TBC 
+9. SMC Average (& Bump Average) curves versus MW/LMC: TBC 
 
 Tables
 ------
@@ -80,13 +78,10 @@ Tables
 
 4. Stellar fit parameters: utils/create_stellar_param_table.py
 
-5. Sightline properties: TBC
-   E(B-V), A(V), R(V), N(HI), N(HI)/A(V) or N(HI)/E(B-V)
+5. Sightline properties: utils/create_param_table.py
+   E(B-V), R(V), N(HI), FM90 parameters
    
-6. FM90 parameters: TBC
-   (maybe two tables) 
-
-7. SMC Average/Bump Average versus wavelength: TBC  
+6. SMC Average/Bump Average versus wavelength: TBC  
 
 Appendix Tables
 ---------------
