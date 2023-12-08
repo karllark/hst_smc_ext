@@ -25,8 +25,8 @@ if __name__ == "__main__":
     wcs = WCS(hdu.header)
 
     # make a smaller image
-    coord = SkyCoord("01:02:00", "-72:40:00", unit=(u.hourangle, u.deg))
-    cutout = Cutout2D(data, coord, (3.0 * u.deg, 4.0 * u.deg), wcs=wcs)
+    coord = SkyCoord("01:11:00", "-72:40:00", unit=(u.hourangle, u.deg))
+    cutout = Cutout2D(data, coord, (3.0 * u.deg, 5.0 * u.deg), wcs=wcs)
     data = cutout.data
     wcs = cutout.wcs
 
@@ -56,6 +56,19 @@ if __name__ == "__main__":
     ax.set_xlabel("RA")
     ax.set_ylabel("DEC")
 
+    # read in the low ebv stars and overplot
+    ptab = QTable.read("data/smc_positions_lowebv.dat", format="ascii.commented_header")
+    for k in range(len(ptab)):
+        coord = SkyCoord(
+            ptab["ra"][k],
+            ptab["dec"][k],
+            unit=(u.hourangle, u.deg),
+        )
+        ax.scatter(coord.ra.degree, coord.dec.degree, transform=ax.get_transform('fk5'), s=45,
+                   edgecolor='tab:brown', facecolor='none', linewidth=2, alpha=0.75, marker="v")
+        if args.names:
+            ax.annotate(ptab["name"][k], wcs.world_to_pixel(coord), color="tab:brown")
+
     # read in the nobump stars and overplot
     ptab = QTable.read("data/smc_positions_nobump.dat", format="ascii.commented_header")
     for k in range(len(ptab)):
@@ -64,10 +77,23 @@ if __name__ == "__main__":
             ptab["dec"][k],
             unit=(u.hourangle, u.deg),
         )
-        ax.scatter(coord.ra.degree, coord.dec.degree, transform=ax.get_transform('fk5'), s=85,
+        ax.scatter(coord.ra.degree, coord.dec.degree, transform=ax.get_transform('fk5'), s=65,
                    edgecolor='blue', facecolor='none', linewidth=2, alpha=0.75)
         if args.names:
             ax.annotate(ptab["name"][k], wcs.world_to_pixel(coord), color="b")
+
+    # read in the flat stars and overplot
+    ptab = QTable.read("data/smc_positions_flat.dat", format="ascii.commented_header")
+    for k in range(len(ptab)):
+        coord = SkyCoord(
+            ptab["ra"][k],
+            ptab["dec"][k],
+            unit=(u.hourangle, u.deg),
+        )
+        ax.scatter(coord.ra.degree, coord.dec.degree, transform=ax.get_transform('fk5'), s=55,
+                   edgecolor='cyan', facecolor='none', linewidth=2, alpha=0.75, marker="s")
+        if args.names:
+            ax.annotate(ptab["name"][k], wcs.world_to_pixel(coord), color="c")
 
     # read in the bump stars and overplot
     ptab = QTable.read("data/smc_positions_bump.dat", format="ascii.commented_header")
@@ -77,15 +103,19 @@ if __name__ == "__main__":
             ptab["dec"][k],
             unit=(u.hourangle, u.deg),
         )
-        ax.scatter(coord.ra.degree, coord.dec.degree, transform=ax.get_transform('fk5'), s=55,
+        ax.scatter(coord.ra.degree, coord.dec.degree, transform=ax.get_transform('fk5'), s=65,
                    edgecolor='red', facecolor='none', linewidth=2, alpha=0.75, marker="P")
         if args.names:
             ax.annotate(ptab["name"][k], wcs.world_to_pixel(coord), color="r")
 
     legend_elements = [Line2D([0], [0], marker='o', markerfacecolor="none", color="none", label='Weak/absent 2175 A bump', 
                               markeredgecolor='b', markersize=10),
-                       Line2D([0], [0], marker='P', markerfacecolor="none", color="none", label='Strong 2175 A bump', 
-                              markeredgecolor='r', markersize=10)]
+                       Line2D([0], [0], marker='P', markerfacecolor="none", color="none", label='Significant 2175 A bump', 
+                              markeredgecolor='r', markersize=10),
+                       Line2D([0], [0], marker='s', markerfacecolor="none", color="none", label='Flat', 
+                              markeredgecolor='c', markersize=10),
+                       Line2D([0], [0], marker='v', markerfacecolor="none", color="none", label=r'$E(B-V)_\mathrm{SMC} < 0.1$', 
+                              markeredgecolor='tab:brown', markersize=10)]
     ax.legend(handles=legend_elements, loc="upper left", fontsize=0.8*fontsize)
 
     ax.annotate(r"MIPS 24 $\mu$m", (100, 100))

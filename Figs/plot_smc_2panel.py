@@ -17,6 +17,7 @@ if __name__ == "__main__":
         file0 = "data/smc_stars_reddened_good_highebv_bumps.dat"
         file2 = "data/smc_stars_reddened_good_lowebv.dat"
         file1 = "data/smc_stars_reddened_good_highebv.dat"
+        file3 = "data/smc_stars_reddened_good_highebv_flat.dat"
         forecor1 = True
         forecor2 = True
         ptitle1 = r"$E(B-V)_\mathrm{SMC} \geq 0.1$"
@@ -71,12 +72,21 @@ if __name__ == "__main__":
     datapath = "/home/kgordon/Python/hst_smc_ext/fits/"
 
     plot_ext_stack(
-        file1,
+        file3,
         ax[0],
         locpath=datapath,
         fontsize=fontsize,
         forecor=forecor1,
         exoffset=0.
+    )
+
+    plot_ext_stack(
+        file1,
+        ax[0],
+        locpath=datapath,
+        fontsize=fontsize,
+        forecor=forecor1,
+        exoffset=15.
     )
     ax[0].set_xlim(0.0, 10.0)
     ax[0].set_ylim(-5, 110)
@@ -89,8 +99,10 @@ if __name__ == "__main__":
     #     fontsize=1.3 * fontsize,
     #     horizontalalignment="left",
     # )
-    ax[0].text(1., 90., ptitle1, fontsize=1.1*fontsize, horizontalalignment="left")
-    ax[0].text(9.25, 50.0, "Weak/Absent Bump", rotation=270., fontsize=0.9*fontsize,
+    ax[0].text(1., 100., ptitle1, fontsize=1.1*fontsize, horizontalalignment="left")
+    ax[0].text(9.25, 65.0, "Steep w/ Weak/Absent Bump", rotation=270., fontsize=0.9*fontsize,
+               horizontalalignment="center", verticalalignment="center")
+    ax[0].text(9.25, 10.0, "Flat", rotation=270., fontsize=0.9*fontsize,
                horizontalalignment="center", verticalalignment="center")
 
     plot_ext_stack(
