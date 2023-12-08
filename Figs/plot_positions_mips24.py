@@ -19,6 +19,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     filename = '~/Spitzer/SAGE-SMC/delivery/smc_e0_e1_e2_24_all_20jan09.cal.delivery.fits'
+    # filename = "data/smc_dl07_fixedbeta_06sep18_1sig_qPAH.fits.gz"
 
     hdu = fits.open(filename)[0]
     data = hdu.data
