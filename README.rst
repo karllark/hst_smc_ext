@@ -75,6 +75,7 @@ Tables
 
 3. MW foreground HI and E(B-V) & q_PAH: From Figs/plot_samp_prop.py
    output as data/ancillary_samp_properties.tex
+   qpah numbers table created when running Figs/plot_positions_mips24.py
 
 4. Stellar fit parameters: utils/create_stellar_param_table.py
 

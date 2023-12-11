@@ -81,8 +81,9 @@ if __name__ == "__main__":
 
     # get the IR information
     irtab = QTable.read(
-#        "data/forgordon_fit_param_smc.txt", format="ascii.commented_header"
-        "data/forkarl_los_smc_fitprms_08mar23.txt", format="ascii.commented_header"
+        # "data/forgordon_fit_param_smc.txt", format="ascii.commented_header"
+        # "data/forkarl_los_smc_fitprms_08mar23.txt", format="ascii.commented_header"
+        "tables/qpah_from_image.dat", format="ipac"
     )
 
     pnames = []
@@ -97,6 +98,7 @@ if __name__ == "__main__":
     ebvs_mw = np.zeros(len(nhs))
     ebvs_mw_unc = np.zeros(len(nhs))
     qpahs = np.full((len(nhs)), np.NaN)
+    qpahs_unc = np.full((len(nhs)), np.NaN)
     for k, cname in enumerate(names):
         pname = prettyname(cname)
         pnames.append(pname)
@@ -116,11 +118,12 @@ if __name__ == "__main__":
         avs_forecor[k] -= ebvs_mw[k] * 3.1
         avs_unc_forecor[k] = np.sqrt(avs_unc_forecor[k] ** 2 + (ebvs_mw_unc[k] * 3.1) ** 2)
 
-        (mindx,) = np.where(pname.replace(" ", "") == irtab["Name"])
+        (mindx,) = np.where(pname.replace(" ", "_") == irtab["name"])
         if len(mindx) == 0:
             print(f"{cname} not found in IR properties file")
         else:
-            qpahs[k] = irtab["q_PAH"][mindx[0]]  # in percentage terms
+            qpahs[k] = irtab["qpah"][mindx[0]]  # in percentage terms
+            qpahs_unc[k] = irtab["qpah_unc"][mindx[0]]
 
     # print out the names of low A(V) sightlines after MW foreground correction
     # names = np.array(names)
@@ -153,6 +156,7 @@ if __name__ == "__main__":
     outtab["ebvs_mw"] = ebvs_mw
     outtab["ebvs_mw_unc"] = ebvs_mw_unc
     outtab["q_pahs"] = qpahs
+    outtab["q_pahs_unc"] = qpahs_unc
     outtab.write(f"tables/samp_as_measured_ensemble_params.dat", format="ascii.ipac", overwrite=True)
     
 
@@ -186,7 +190,7 @@ if __name__ == "__main__":
         outline2 = f"{outline2} & ${row['nhs_mw']:.3f} \\pm {row['nhs_mw_unc']:.3f}$"
         outline2 = f"{outline2} & ${row['ebvs_mw']:.3f} \\pm {row['ebvs_mw_unc']:.4f}$"
         if row["q_pahs"] > 0.0:
-            outline2 = f"{outline2} & ${row['q_pahs']:.2f}$"
+            outline2 = f"{outline2} & ${row['q_pahs']:.2f} \\pm {row['q_pahs_unc']:.2f}$"
         else:
             outline2 = f"{outline2} & \\nodata"
         outfile2.write(f"{outline2} \\\\ \n")
