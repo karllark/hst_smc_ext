@@ -59,10 +59,10 @@ Figures
 6. Group type versus position in SMC: Figs/plot_positions_mips24.py
    Plot the bump/nobump/flat/lowebv samples over the MIPS 24um image 
 
-7. FM90 parameters versus E(B-V): TBD
-   include MW comp, LMC (redo?)
+7. FM90 parameters versus E(B-V) etc: TBR
+   all these done with extinction_ensemble_parameters repository
 
-8. Bump versus q_PAH: TBC
+8. Bump versus q_PAH: Figs/plot_bump_vs_qpah.py
 
 9. SMC Average (& Bump Average) curves versus MW/LMC: TBC 
 

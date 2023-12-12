@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
 
     ax.set_ylabel(r"B3 = 2175 $\mathrm{\AA}$ bump height")
-    ax.set_xlabel(r"$q_\mathrm{PAH}$ = mass fraction of PAH grains")
+    ax.set_xlabel(r"$q_\mathrm{PAH}$ = % dust mass in PAH grains")
 
     ax.legend()
 

@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
         otab = QTable(
             # fmt: off
-            names=("name", "AV", "AV_unc", "EBV", "EBV_unc", "RV", "RV_unc", "LOGHI", "LOGHI_unc",
+            names=("name", "AV", "AV_unc", "EBV", "EBV_unc", "RV", "RV_unc", "NHI", "NHI_unc",
                    "C1", "C1_unc", "C2", "C2_unc", "B3", "B3_unc", "C4", "C4_unc",
                    "x0", "x0_unc", "gamma", "gamma_unc"),
             dtype=("S", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f",
@@ -33,12 +33,13 @@ if __name__ == "__main__":
             # fmt:on
         )
 
-        colnames = ["AV", "EBV", "RV", "LOGHI"]
+        colnames = ["AV", "EBV", "RV", "NHI"]
         fm90names = ["C1", "C2", "B3", "C4", "XO", "GAMMA"]
 
-        files = ["highebv_bumps", "highebv", "lowebv"]
-        tags = [r"$E(B-V)_\mathrm{SMC} \geq 0.1, Significant Bump",
-                r"$E(B-V)_\mathrm{SMC} \geq 0.1, Weak/Absent Bump",
+        files = ["highebv", "highebv_bumps", "highebv_flat", "lowebv"]
+        tags = [r"$E(B-V)_\mathrm{SMC} \geq 0.1, Steep with Weak/Absent Bump",
+                r"$E(B-V)_\mathrm{SMC} \geq 0.1, Significant Bump",
+                r"$E(B-V)_\mathrm{SMC} \geq 0.1, Flat",
                 r"$E(B-V)_\mathrm{SMC} < 0.1, Weak/Absent Bump"]
         for cfile, ctag in zip(files, tags):
 
@@ -54,7 +55,6 @@ if __name__ == "__main__":
             # starnames = np.sort(starnames)
 
             for cname in starnames:
-                print(cname)
                 cfile = f"fits/{cname}_ext{ctype}_FM90.fits"
 
                 edata = ExtData(filename=cfile)
@@ -67,12 +67,19 @@ if __name__ == "__main__":
                     av_unc = av * np.sqrt(av_unc)
                     edata.columns["AV"] = (av, av_unc)
 
+                if "NHI" not in edata.columns:
+                    hip = 10 ** (edata.columns["LOGHI"][0] + edata.columns["LOGHI"][1])
+                    him = 10 ** (edata.columns["LOGHI"][0] - edata.columns["LOGHI"][1])
+                    edata.columns["NHI"] = (10 ** edata.columns["LOGHI"][0], 0.5 * (hip - him))
+                    # print(edata.columns["HI"], hip, him)
+
                 # get foreground subtraction plus / minus fits
                 if ctype == "_forecor":
                     pedata = ExtData(filename=cfile.replace("forecor", "forecor_plus"))
                     medata = ExtData(filename=cfile.replace("forecor", "forecor_minus"))
-                    dav = 0.5 * abs(medata.columns["AV"][0] - pedata.columns["AV"][0])
-                    # print(cname, edata.columns["AV"], dav)
+                    if "HI" not in pedata.columns:
+                        pedata.columns["NHI"] = (10 ** pedata.columns["LOGHI"][0], 0.0)
+                        medata.columns["NHI"] = (10 ** medata.columns["LOGHI"][0], 0.0)
 
                 rdata = []
                 rdata_lat = []
@@ -85,7 +92,7 @@ if __name__ == "__main__":
                     if ctype == "_forecor":
                         # fmt: off
                         unc = np.sqrt((unc ** 2) 
-                                    + (np.absolute(medata.columns[ccol][0] - pedata.columns[ccol][0])) ** 2)
+                                    + ((0.5 * np.absolute(medata.columns[ccol][0] - pedata.columns[ccol][0]))) ** 2)
                         # fmt: on
                     rdata.append(val)
                     rdata.append(unc)
@@ -98,7 +105,7 @@ if __name__ == "__main__":
                     if ctype == "_forecor":
                         # fmt: off
                         unc = np.sqrt((unc ** 2) 
-                                    + (np.absolute(medata.fm90_p50_fit[ccol][0] - pedata.fm90_p50_fit[ccol][0])) ** 2)
+                                    + ((0.5 * np.absolute(medata.fm90_p50_fit[ccol][0] - pedata.fm90_p50_fit[ccol][0]))) ** 2)
                         # fmt: on
                     rdata.append(val)
                     rdata.append(unc)
