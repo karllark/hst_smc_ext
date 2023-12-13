@@ -141,10 +141,12 @@ if __name__ == "__main__":
     #fm90_init.C3.bounds = (-0.5, 2.5)
     #fm90_init.C4.bounds = (-0.5, 1.0)
     fm90_init.xo.bounds = (4.5, 4.9)
+    fm90_init.xo = 4.59
     fm90_init.gamma.bounds = (0.6, 1.7)
+    fm90_init.gamma = 0.95
 
     # fix xo and gamma unless it is one of the "strong" bump stars
-    if ("azv456" not in args.extfile) and ("star11" not in args.extfile):
+    if any(x in args.extfile for x in ("3030", "azv456", "star10", "star11")):
         fm90_init.xo.fixed = True
         fm90_init.gamma.fixed = True
 
