@@ -64,7 +64,8 @@ Figures
 
 8. Bump versus q_PAH: Figs/plot_bump_vs_qpah.py
 
-9. SMC Average (& Bump Average) curves versus MW/LMC: TBC 
+9. SMC Average (& Bump Average) curves versus MW/LMC: Figs/plot_smcave.py
+   add `--bumps` to get the average of the sightlines with bumps
 
 Tables
 ------

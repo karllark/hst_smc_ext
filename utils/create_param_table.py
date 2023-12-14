@@ -97,6 +97,9 @@ if __name__ == "__main__":
                     rdata.append(val)
                     rdata.append(unc)
                     if ccol != "AV":
+                        if ccol == "NHI":
+                            val /= 1e21
+                            unc /= 1e21
                         rdata_lat.append(fr"${val:.2f} \pm {unc:.2f}$")
 
                 for ccol in fm90names:
