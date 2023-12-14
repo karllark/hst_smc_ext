@@ -33,6 +33,14 @@ if __name__ == "__main__":
             # fmt:on
         )
 
+
+        otab_lat2 = QTable(
+            # fmt: off
+            names=("Name", "$x_o$", "$\gamma$"),
+            dtype=("S", "S", "S")
+            # fmt:on
+        )
+
         colnames = ["AV", "EBV", "RV", "NHI"]
         fm90names = ["C1", "C2", "B3", "C4", "XO", "GAMMA"]
 
@@ -83,9 +91,11 @@ if __name__ == "__main__":
 
                 rdata = []
                 rdata_lat = []
+                rdata_lat2 = []
                 rdata.append(cname)
                 pcname = prettyname(cname)
                 rdata_lat.append(pcname)
+                rdata_lat2.append(pcname)
                 for ccol in colnames:
                     val = edata.columns[ccol][0]
                     unc = edata.columns[ccol][1]
@@ -114,9 +124,12 @@ if __name__ == "__main__":
                     rdata.append(unc)
                     if ccol not in ["XO", "GAMMA"]:
                         rdata_lat.append(fr"${val:.2f} \pm {unc:.2f}$")
+                    if ccol in ["XO", "GAMMA"]:
+                        rdata_lat2.append(fr"${val:.2f} \pm {unc:.2f}$")
 
                 otab.add_row(rdata)
                 otab_lat.add_row(rdata_lat)
+                otab_lat2.add_row(rdata_lat2)
 
         otab.write(
             f"tables/gor24_smc{ctype}_ensemble_params.dat", format="ascii.ipac", overwrite=True
@@ -128,6 +141,16 @@ if __name__ == "__main__":
             col_align="lcccc",
             latexdict={
                 "caption": r"Extinction Parameters \label{tab_ext_col_param}",
+            },
+            overwrite=True,
+        )
+
+        otab_lat2.write(
+            f"tables/gor24_smc{ctype}_ensemble_bump_params.tex",
+            format="aastex",
+            col_align="lcc",
+            latexdict={
+                "caption": r"Detailed Bump Parameters \label{tab_ext_bump_params}",
             },
             overwrite=True,
         )
