@@ -68,8 +68,6 @@ if __name__ == "__main__":
             name2 = names[1]  # name in CSV file
             name3 = names[2]  # homogenized name for paper
 
-            print(name1)
-
             # E(B-V)
             mindx = name2 == sdata["name"]
             ebv = float(sdata["ebv"][mindx].data[0])
@@ -103,7 +101,7 @@ if __name__ == "__main__":
             text.columns["EBV"] = (ebv, ebv_unc)
             text.calc_RV()
 
-            # print("RV Ed, Karl", name3, rv, rv_unc, text.columns["RV"])
+            print("RV Ed, Karl", name3, rv, rv_unc, text.columns["RV"])
 
             # save
             text.columns["LOGHI"] = (loghi, loghi_unc)

@@ -88,10 +88,14 @@ if __name__ == "__main__":
                  [0.13, 0.94, 0.32, 5.80, 4.78, 0.68],
                  [-1.51, 1.33, 0.04, 0.23, 4.65, 0.66],
                  [-1.80, 1.44, 1.76, 9.26, 4.76, 0.85]]
+    # g24mr12 = [# None,
+    #            "fits/mr12-star09_ext_forecor.fits",
+    #            "fits/mr12-star10_ext_forecor.fits",
+    #            "fits/mr12-star11_ext_forecor.fits"]
     g24mr12 = [# None,
-               "fits/mr12-star09_ext_forecor.fits",
-               "fits/mr12-star10_ext_forecor.fits",
-               "fits/mr12-star11_ext_forecor.fits"]
+               "fits/mr12-star09_ext.fits",
+               "fits/mr12-star10_ext.fits",
+               "fits/mr12-star11_ext.fits"]
 
     for m, cmr12 in enumerate(mr12):
         ext_model = FM90()

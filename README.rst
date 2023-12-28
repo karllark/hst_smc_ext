@@ -26,16 +26,13 @@ Extinction Curves
 
 External packages used include `dust_extintion`, `measure_extinction`, and
 `extstar_data`.  The basic information on each star is given in `extstar_data`
-including (TBD) the STIS spectra.  `dust_extinction` provides the
-fitting curves shapes (FM90, AxAvToExv).  `measure_extinction` gives the routines
+including the STIS spectra.  `dust_extinction` provides the
+fitting curves shapes (FM90_B3).  `measure_extinction` gives the routines
 to read the data and extinction curves.
 
 Extinction curves measured by Ed Fitzpatrick using his custom IDL routines.
 These curves were converted to the standard `measure_extinction` format using
 utils/convert_edidlsave_to_fits.py.
-
-Generate full list of extinction curves sightlines (in data dir).
-`cat smc_stars_reddened_good_highebv.dat smc_stars_reddened_good_lowebv.dat smc_stars_reddened_suspect.dat | sort > smc_stars_all.dat`
 
 Foreground correction done with Figs/plot_forecor_ext.py.  Script to do all the
 sightlines (including the adjusted versions) is forecor_all.
