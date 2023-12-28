@@ -18,8 +18,11 @@ def foreground_correct_extinction(ext, forehi_orig, forehi_orig_unc, foremod):
     extinction curves computed with the 1st giving the curve for the input
     foreground HI and the next two +/- the foreground uncertainty.
     """
+    print(ext.columns.keys())
     if "AV" not in ext.columns.keys():
         ext.columns["AV"] = (ext.columns["EBV"][0] * ext.columns["RV"][0], 0.0)
+
+    exit()
 
     assumed_forehi = 3.5e20
 

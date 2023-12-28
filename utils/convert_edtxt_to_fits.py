@@ -5,6 +5,8 @@ import numpy as np
 import astropy.units as u
 from astropy.table import Table
 
+from measure_extinction.stardata import StarData
+from measure_extinction.utils.helpers import get_full_starfile
 from measure_extinction.extdata import ExtData as ExtDataStock
 
 
@@ -26,22 +28,12 @@ class ExtData(ExtDataStock):
         ptab = Table.read(f"{ext_filename}_parms.txt", format="ascii.commented_header", header_start=1)
         ebv = ptab["E(44-55)"][0]
         ebv_unc = 0.0
-        rv = ptab["R(55)"][0]
-        rv_unc = 0.0
         loghi = ptab["log(NHI)"][0]
         loghi_unc = 0.0
-
-        # compute the av
-        av = rv * ebv
-        if (rv_unc / rv) ** 2 > (ebv_unc / ebv) ** 2:
-            av_unc = av * np.sqrt((rv_unc / rv) ** 2 + (ebv_unc / ebv) ** 2)
-        else:
-            av_unc = av * ebv_unc / ebv
 
         # save
         self.columns = {
             "EBV": (ebv, ebv_unc),
-            "RV": (rv, rv_unc),
             "LOGHI": (loghi, loghi_unc),
         }
         # extcols = {"loghi": loghi, "loghi_unc": loghi_unc}
@@ -78,14 +70,35 @@ if __name__ == "__main__":
     for line in file_lines:
         if (line.find("#") != 0) & (len(line) > 0):
             names = line.split()
-            name = names[0]
-            print(name)
+            name1 = names[0]
+            name2 = names[1]
+            print(name1)
 
             # read
             text = ExtData()
-            text.read_ext_data_edtxt(f"{datapath}{name.upper()}")
+            text.read_ext_data_edtxt(f"{datapath}{name1.upper()}")
 
-            savefile = f"fits/{names[1]}_ext.fits"
+            # compute the av
+            # add estimate uncertainties (not provided by Ed)
+            # get the star file to obtain the observed JHK uncs
+            fstarname, file_path = get_full_starfile(name2)
+            starobs = StarData(fstarname, path=file_path)
+            
+            cmags = ["J", "H", "K"]
+            cwaves = np.array([1.25, 1.6, 2.2]) * u.micron
+            for cmag, cwave in zip(cmags, cwaves):
+                exv_unc = np.sqrt(starobs.data["BAND"].bands[cmag][1]**2
+                                + starobs.data["BAND"].bands["V"][1]**2)
+                dwaves = np.absolute(text.waves["BAND"] - cwave)
+                kindx = dwaves.argmin()
+                if dwaves[kindx] < 0.1 * u.micron:
+                    text.uncs["BAND"][kindx] = exv_unc
+
+            text.calc_AV_JHK()
+            text.calc_RV()
+            print(text.columns)
+
+            savefile = f"fits/{name2}_ext.fits"
             text.save(savefile)
 
             # check the file can be read
