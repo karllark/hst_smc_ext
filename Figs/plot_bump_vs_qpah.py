@@ -1,4 +1,5 @@
 import argparse
+import math
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,7 +15,7 @@ if __name__ == "__main__":
     parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
     args = parser.parse_args()
 
-    fontsize = 12
+    fontsize = 16
 
     font = {"size": fontsize}
 
@@ -51,8 +52,11 @@ if __name__ == "__main__":
             qpah_unc.append(tab1["qpah_unc"].data[mindx][0])
 
             mindx = np.where(cname == tab2["name"])
-            B3.append(tab2["B3"].data[mindx][0])
-            B3_unc.append(tab2["B3_unc"].data[mindx][0])
+            area = 0.5 * math.pi * tab2["B3"].data[mindx][0] * tab2["gamma"].data[mindx][0]
+            area_unc = area * np.sqrt((tab2["B3_unc"].data[mindx][0] / tab2["B3"].data[mindx][0])**2
+                                      + (tab2["gamma_unc"].data[mindx][0] / tab2["gamma"].data[mindx][0])**2)
+            B3.append(area)
+            B3_unc.append(area_unc)
 
         qpah = np.array(qpah)
         qpah_unc = np.array(qpah_unc)
@@ -87,18 +91,18 @@ if __name__ == "__main__":
                 gamma = tab2["gamma"].value[mindx][0]
                 gamma_unc = tab2["gamma_unc"].value[mindx][0]
 
-                cB3 = C3 / gamma**2
-                cB3_unc = cB3 * np.sqrt((C3_unc / C3)**2 + 2.*((gamma_unc / gamma)**2))
-                B3.append(cB3)
-                B3_unc.append(cB3_unc)
+                area = 0.5 * math.pi * C3 / gamma
+                area_unc = area * np.sqrt((C3_unc / C3)**2 + 2.*((gamma_unc / gamma)**2))
+                B3.append(area)
+                B3_unc.append(area_unc)
 
             qpah = np.array(qpah)
             qpah_unc = np.array(qpah_unc)
             B3 = np.array(B3)
             B3_unc = np.array(B3_unc)
-            ax.errorbar(qpah, B3, xerr=qpah_unc, yerr=B3_unc, fmt=cfmt, label=cleg)
+            ax.errorbar(qpah, B3, xerr=qpah_unc, yerr=B3_unc, fmt=cfmt, label=cleg, alpha=0.4)
 
-    ax.set_ylabel(r"B3 = 2175 $\mathrm{\AA}$ bump height")
+    ax.set_ylabel(r"$\pi B_3 \gamma$ / 2 = 2175 $\mathrm{\AA}$ bump area")
     ax.set_xlabel(r"$q_\mathrm{PAH}$ = % dust mass in PAH grains")
 
     ax.legend()
