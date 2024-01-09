@@ -19,7 +19,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     #filename = '~/Spitzer/SAGE-SMC/delivery/smc_e0_e1_e2_24_all_20jan09.cal.delivery.fits'
-    filename_qpah = "data/lmc_dl07_fixedbeta_06sep18_qPAH.fits.gz"
+    # filename_qpah = "data/lmc_dl07_fixedbeta_06sep18_qPAH.fits.gz"
+    filename_qpah = "data/ir_images/lmc_dl07_fixedbeta_06sep18_1sig_qPAH.fits"
     filename = filename_qpah
 
     hdu = fits.open(filename)[0]
@@ -34,14 +35,16 @@ if __name__ == "__main__":
 
     # qpah images
     data_qpah = []
-    hdu_qpah = fits.open(filename_qpah)[0]
-    data_qpah.append(hdu_qpah.data)
-    wcs_qpah = WCS(hdu_qpah.header)
+    hdu_qpah_all = fits.open(filename_qpah)
+    data_qpah.append(hdu_qpah_all[0].data)
+    wcs_qpah = WCS(hdu_qpah_all[0].header)
     # p16 and p84 for uncs
-    hdu_qpah_p = fits.open(filename_qpah.replace("qPAH", "qPAH_84th"))[0]
-    data_qpah.append(hdu_qpah_p.data)
-    hdu_qpah_m = fits.open(filename_qpah.replace("qPAH", "qPAH_16th"))[0]
-    data_qpah.append(hdu_qpah_m.data)
+    # hdu_qpah_p = fits.open(filename_qpah.replace("qPAH", "qPAH_84th"))[0]
+    # data_qpah.append(hdu_qpah_p.data)
+    # hdu_qpah_m = fits.open(filename_qpah.replace("qPAH", "qPAH_16th"))[0]
+    # data_qpah.append(hdu_qpah_m.data)
+    data_qpah.append(hdu_qpah_all[2].data)
+    data_qpah.append(hdu_qpah_all[1].data)
 
     fontsize = 14
 

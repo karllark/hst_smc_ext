@@ -3,9 +3,13 @@ import math
 
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.optimize as op
 from astropy.table import QTable
+from astropy.modeling import models, fitting
+from astropy.stats import sigma_clip
 
 from helpers import prettyname
+from fit_full2dcor import lnlike_correlated
 
 
 if __name__ == "__main__":
@@ -39,6 +43,7 @@ if __name__ == "__main__":
     fmts = ["bo", "rP"]  # , "cs"]  # , "vy"]
     legs = ["Weak/absent 2175 A bump", "Significant 2175 A bump"]  # , "Flat"]  # , r'$E(B-V)_\mathrm{SMC} < 0.1$']
 
+    xvals = None
     for cname, cfmt, cleg in zip(fname, fmts, legs):
 
         ptab = QTable.read(f"data/smc_stars_reddened_good_{cname}.dat", format="ascii", names=["name"], data_start=0)
@@ -63,6 +68,17 @@ if __name__ == "__main__":
         B3 = np.array(B3)
         B3_unc = np.array(B3_unc)
         ax.errorbar(qpah, B3, xerr=qpah_unc, yerr=B3_unc, fmt=cfmt, label=cleg)
+
+        if xvals is not None:
+            xvals = np.concatenate((xvals, qpah))
+            xvals_unc = np.concatenate((xvals_unc, qpah_unc))
+            yvals = np.concatenate((yvals, B3))
+            yvals_unc = np.concatenate((yvals_unc, B3_unc))
+        else:
+            xvals = qpah
+            xvals_unc = qpah_unc
+            yvals = B3
+            yvals_unc = B3_unc
 
 
     if args.inclmc:
@@ -102,10 +118,63 @@ if __name__ == "__main__":
             B3_unc = np.array(B3_unc)
             ax.errorbar(qpah, B3, xerr=qpah_unc, yerr=B3_unc, fmt=cfmt, label=cleg, alpha=0.4)
 
+            xvals = np.concatenate((xvals, qpah))
+            xvals_unc = np.concatenate((xvals_unc, qpah_unc))
+            yvals = np.concatenate((yvals, B3))
+            yvals_unc = np.concatenate((yvals_unc, B3_unc))
+
     ax.set_ylabel(r"$\pi B_3 \gamma$ / 2 = 2175 $\mathrm{\AA}$ bump area")
     ax.set_xlabel(r"$q_\mathrm{PAH}$ = % dust mass in PAH grains")
 
-    ax.legend()
+    fitline = True
+    if fitline:
+
+        # now fit a line to the data
+        npts = len(xvals)
+        covs = np.zeros((npts, 2, 2))
+        for k in range(npts):
+            covs[k, 0, 0] = xvals_unc[k]
+            covs[k, 0, 1] = 0.0
+            covs[k, 1, 0] = 0.0
+            covs[k, 1, 1] = yvals_unc[k]
+
+        intinfo = [-5.0, 15.0, 0.1]
+
+        def nll(*args):
+            return -lnlike_correlated(*args)
+
+        line_orig = models.Linear1D(slope=1.0, intercept=0.0)
+        fit = fitting.LinearLSQFitter()
+        or_fit = fitting.FittingWithOutlierRemoval(fit, sigma_clip, niter=3, sigma=3.0)
+        fitted_line, mask = or_fit(line_orig, xvals, yvals, weights=1/yvals_unc)
+        print(fitted_line)
+
+        #result = op.minimize(nll, fitted_line.parameters, args=(yvals, fitted_line, covs, intinfo, xvals))
+        #nparams = result["x"]
+        #print(nparams)
+
+        #fitted_line2 = models.Linear1D(slope=nparams[0], intercept=nparams[1])
+
+        # plot the model
+        x = np.arange(0.0, 7., 0.1)
+        #plt.plot(x, line_orig(x), "k:", label="Linear Fit")
+        ax.plot(x, fitted_line(x), "k-", label="Linear Fit")
+
+        masked_data = np.ma.masked_array(yvals, mask=~mask)
+        ax.plot(xvals, masked_data, "ko", fillstyle="none", ms=10, label="Masked in Fit")
+
+        #plt.plot(x, fitted_line(x), "k--", label="Linear Fit2")
+
+        #get handles and labels
+        handles, labels = plt.gca().get_legend_handles_labels()
+
+        #specify order of items in legend
+        order = [2, 3, 4, 5, 0, 1]
+
+        #add legend to plot
+        ax.legend([handles[idx] for idx in order],[labels[idx] for idx in order], fontsize=0.8*fontsize)
+    else:
+        ax.legend(fontsize=0.8*fontsize)
 
     fig.tight_layout()
 
