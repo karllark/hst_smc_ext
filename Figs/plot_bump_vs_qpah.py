@@ -61,7 +61,7 @@ if __name__ == "__main__":
             area_unc = area * np.sqrt((tab2["B3_unc"].data[mindx][0] / tab2["B3"].data[mindx][0])**2
                                       + (tab2["gamma_unc"].data[mindx][0] / tab2["gamma"].data[mindx][0])**2)
             B3.append(area)
-            B3_unc.append(area_unc)
+            B3_unc.append(np.absolute(area_unc))
 
         qpah = np.array(qpah)
         qpah_unc = np.array(qpah_unc)
@@ -137,7 +137,9 @@ if __name__ == "__main__":
             covs[k, 0, 1] = 0.0
             covs[k, 1, 0] = 0.0
             covs[k, 1, 1] = yvals_unc[k]
-
+            if not np.all(np.linalg.eigvals(covs[k, :, :]) > 0):
+                print(k, np.all(np.linalg.eigvals(covs[k, :, :]) > 0))
+                print(covs[k, :, :])
         intinfo = [-5.0, 15.0, 0.1]
 
         def nll(*args):
@@ -147,29 +149,26 @@ if __name__ == "__main__":
         fit = fitting.LinearLSQFitter()
         or_fit = fitting.FittingWithOutlierRemoval(fit, sigma_clip, niter=3, sigma=3.0)
         fitted_line, mask = or_fit(line_orig, xvals, yvals, weights=1/yvals_unc)
+
+        x = np.arange(0.0, 7., 0.1)
+        # ax.plot(x, fitted_line(x), "k-", label="Linear Fit")
+        masked_data = np.ma.masked_array(yvals, mask=~mask)
+        ax.plot(xvals, masked_data, "ko", fillstyle="none", ms=10, label="Not used in fit")
         print(fitted_line)
 
-        #result = op.minimize(nll, fitted_line.parameters, args=(yvals, fitted_line, covs, intinfo, xvals))
-        #nparams = result["x"]
-        #print(nparams)
+        result = op.minimize(nll, fitted_line.parameters, args=(yvals[~mask], fitted_line, covs, intinfo, xvals[~mask]))
+        nparams = result["x"]
+        print(nparams)
 
-        #fitted_line2 = models.Linear1D(slope=nparams[0], intercept=nparams[1])
+        fitted_line2 = models.Linear1D(slope=nparams[0], intercept=nparams[1])
 
-        # plot the model
-        x = np.arange(0.0, 7., 0.1)
-        #plt.plot(x, line_orig(x), "k:", label="Linear Fit")
-        ax.plot(x, fitted_line(x), "k-", label="Linear Fit")
-
-        masked_data = np.ma.masked_array(yvals, mask=~mask)
-        ax.plot(xvals, masked_data, "ko", fillstyle="none", ms=10, label="Masked in Fit")
-
-        #plt.plot(x, fitted_line(x), "k--", label="Linear Fit2")
+        ax.plot(x, fitted_line2(x), "k--", label="Linear Fit")
 
         #get handles and labels
         handles, labels = plt.gca().get_legend_handles_labels()
 
         #specify order of items in legend
-        order = [2, 3, 4, 5, 0, 1]
+        order = [2, 3, 4, 5, 1, 0]
 
         #add legend to plot
         ax.legend([handles[idx] for idx in order],[labels[idx] for idx in order], fontsize=0.8*fontsize)
