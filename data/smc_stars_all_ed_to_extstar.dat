@@ -1,30 +1,30 @@
-# name1      name2
-2dfs0413     2dfs0413
-2dfs0626     2dfs0626
-2dfs0662     2dfs0662
-2dfs0699     2dfs0699
-2dfs3014     2dfs3014
-2dfs3030     2dfs3030
-2dfs3171     2dfs3171
-azv_004	     azv4
-azv_018	     azv18
-azv_023	     azv23
-azv_070	     azv70
-azv_086	     azv86
-azv_132	     azv132
-azv_214	     azv214
-azv_218	     azv218
-azv_289	     azv289
-azv_380	     azv380
-azv_398	     azv398
-azv_456	     azv456
-azv_462	     azv462
-bbb_smc280   bbb-smc280
-ngc330_110   ngc330-110
-ngc330_114   ngc330-114
-ngc330_116   ngc330-116
-sk_191	     sk191
-smc5_000398  smc5-000398
-smc5_003739  smc5-003739
-smc5_079264  smc5-079264
-smc5_082923  smc5-082923
+# name1      name2        name3
+2dfs0413     2dFS_413     2dfs0413
+2dfs0626     2dFS_626     2dfs0626
+2dfs0662     2dFS_662     2dfs0662
+2dfs0699     2dFS_699     2dfs0699
+2dfs3014     2dFS_3014     2dfs3014
+2dfs3030     2dFS_3030     2dfs3030
+2dfs3171     2dFS_3171     2dfs3171
+azv_004	     AzV_4	     azv4
+azv_018	     AzV_18	     azv18
+azv_023	     AzV_23	     azv23
+azv_070	     AzV_70	     azv70
+azv_086	     AzV_86	     azv86
+azv_132	     AzV_132	     azv132
+azv_214	     AzV_214	     azv214
+azv_218	     AzV_218	     azv218
+azv_289	     AzV_289	     azv289
+azv_380	     AzV_380	     azv380
+azv_398	     AzV_398	     azv398
+azv_456	     AzV_456	     azv456
+azv_462	     AzV_462	     azv462
+bbb_smc280   BBB_SMC280   bbb-smc280
+ngc330_110   NGC330_ELS_110   ngc330-110
+ngc330_114   NGC330_ELS_114   ngc330-114
+ngc330_116   NGC330_ELS_116   ngc330-116
+sk_191	     SK_191	     sk191
+smc5_000398  SMC5-398  smc5-000398
+smc5_003739  SMC5-3739  smc5-003739
+smc5_079264  SMC5-79264  smc5-079264
+smc5_082923  SMC5-82923  smc5-082923

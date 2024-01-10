@@ -27,9 +27,9 @@ if __name__ == "__main__":
         otab_lat = QTable(
             # fmt: off
             names=("Name", 
-                   "$E(B-V)$", "$R(V)$", "$N_\mathrm{SMC}(HI)$",
+                   "$E(B-V)$", "$A(V)$", "$R(V)$", "$N_\mathrm{SMC}(HI)$",
                    "$C_1$", "$C_2$", "$B_3$", "$C_4$"),
-            dtype=("S", "S", "S", "S", "S", "S", "S", "S")
+            dtype=("S", "S", "S", "S", "S", "S", "S", "S", "S")
             # fmt:on
         )
 
@@ -106,11 +106,10 @@ if __name__ == "__main__":
                         # fmt: on
                     rdata.append(val)
                     rdata.append(unc)
-                    if ccol != "AV":
-                        if ccol == "NHI":
-                            val /= 1e21
-                            unc /= 1e21
-                        rdata_lat.append(fr"${val:.2f} \pm {unc:.2f}$")
+                    if ccol == "NHI":
+                        val /= 1e21
+                        unc /= 1e21
+                    rdata_lat.append(fr"${val:.2f} \pm {unc:.2f}$")
 
                 for ccol in fm90names:
                     val = edata.fm90_p50_fit[ccol][0]
