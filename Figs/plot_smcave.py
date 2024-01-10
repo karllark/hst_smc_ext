@@ -50,6 +50,7 @@ if __name__ == "__main__":
     extdatas = []
     spslopes = []
     rebinfac = None
+    rebinfac = 5
     for line in file_lines:
         if (line.find("#") != 0) & (len(line) > 0):
             name = line.rstrip()
