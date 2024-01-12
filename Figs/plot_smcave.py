@@ -20,7 +20,7 @@ if __name__ == "__main__":
     parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
     args = parser.parse_args()
 
-    fontsize = 12
+    fontsize = 16
 
     font = {"size": fontsize}
 
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     extdatas = []
     spslopes = []
     rebinfac = None
-    rebinfac = 5
+    # rebinfac = 5
     for line in file_lines:
         if (line.find("#") != 0) & (len(line) > 0):
             name = line.rstrip()
@@ -106,7 +106,6 @@ if __name__ == "__main__":
     print(f"Average has R(V) = {rv:.2f}")
     #aveext.exts["BAND"] = aveext.exts["BAND"] / rv + 1
     #aveext.exts["STIS"] = aveext.exts["STIS"] / rv + 1
-    aveext.plot(ax, color="b", rebin_fac=rebinfac, wavenum=True, legend_key="STIS", legend_label=klabel)
 
     ax.plot(G03_SMCBar.obsdata_x, (G03_SMCBar.obsdata_axav - 1)*G03_SMCBar.Rv, 'ko',
         label="G03 SMCBar")
@@ -117,8 +116,11 @@ if __name__ == "__main__":
     mod_y = (mwmod(mod_x) - 1) * 3.1
     ax.plot(mod_x, mod_y, "g--", alpha=0.75, label="Milky Way: G23 R(V)=3.1", linewidth=3.0)
 
+    aveext.plot(ax, color="b", rebin_fac=rebinfac, wavenum=True, legend_key="STIS",
+                legend_label=f"{klabel}: R(V) = {rv:.2f}")
+
     ax.set_ylim(-5.0, 20.0)
-    ax.legend()
+    ax.legend(loc="upper left")
 
     fig.tight_layout()
 
