@@ -146,8 +146,8 @@ if __name__ == "__main__":
     ax.set_ylabel(r"$\pi B_3 \gamma$ / 2 = 2175 $\mathrm{\AA}$ bump area")
     ax.set_xlabel(r"$q_\mathrm{PAH}$ = % dust mass in PAH grains")
 
-    ax2.yaxis.tick_right()
-    ax2.yaxis.set_label_position("right")
+    #ax2.yaxis.tick_right()
+    #ax2.yaxis.set_label_position("right")
     ax2.set_ylabel(r"C4 = FUV curvature amplitude")
     ax2.set_xlabel(r"$q_\mathrm{PAH}$ = % dust mass in PAH grains")
 
@@ -159,15 +159,15 @@ if __name__ == "__main__":
         covs = np.zeros((npts, 2, 2))
         covs2 = np.zeros((npts, 2, 2))
         for k in range(npts):
-            covs[k, 0, 0] = xvals_unc[k]
+            covs[k, 0, 0] = xvals_unc[k]** 2
             covs[k, 0, 1] = 0.0
             covs[k, 1, 0] = 0.0
-            covs[k, 1, 1] = yvals_unc[k]
+            covs[k, 1, 1] = yvals_unc[k]**2
 
-            covs2[k, 0, 0] = xvals_unc[k]
+            covs2[k, 0, 0] = xvals_unc[k]**2
             covs2[k, 0, 1] = 0.0
             covs2[k, 1, 0] = 0.0
-            covs2[k, 1, 1] = yvals2_unc[k]
+            covs2[k, 1, 1] = yvals2_unc[k]**2
             if not np.all(np.linalg.eigvals(covs[k, :, :]) > 0):
                 print(k, np.all(np.linalg.eigvals(covs[k, :, :]) > 0))
                 print(covs[k, :, :])

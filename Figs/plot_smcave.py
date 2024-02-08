@@ -49,8 +49,8 @@ if __name__ == "__main__":
     starnames = []
     extdatas = []
     spslopes = []
-    rebinfac = None
-    # rebinfac = 5
+    # rebinfac = None
+    rebinfac = 10
     for line in file_lines:
         if (line.find("#") != 0) & (len(line) > 0):
             name = line.rstrip()
@@ -108,13 +108,13 @@ if __name__ == "__main__":
     #aveext.exts["STIS"] = aveext.exts["STIS"] / rv + 1
 
     ax.plot(G03_SMCBar.obsdata_x, (G03_SMCBar.obsdata_axav - 1)*G03_SMCBar.Rv, 'ko',
-        label="G03 SMCBar")
+        label="G03 SMCBar; $R(V) = 2.74$")
     aveext.save(ofilename)
 
     mod_x = np.arange(0.5, 9.0, 0.1)
-    mwmod = G23()
+    mwmod = G23(Rv=rv)
     mod_y = (mwmod(mod_x) - 1) * 3.1
-    ax.plot(mod_x, mod_y, "g--", alpha=0.75, label="Milky Way: G23 R(V)=3.1", linewidth=3.0)
+    ax.plot(mod_x, mod_y, "g--", alpha=0.75, label=f"Milky Way: G23 R(V)={rv:.2f}", linewidth=3.0)
 
     aveext.plot(ax, color="b", rebin_fac=rebinfac, wavenum=True, legend_key="STIS",
                 legend_label=f"{klabel}: R(V) = {rv:.2f}")
