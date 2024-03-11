@@ -103,6 +103,7 @@ if __name__ == "__main__":
     # calculates R(V) as E(lambda-V)/E(B-V) is input
     aveext.calc_AV_JHK()
     rv = aveext.columns["AV"][0]
+    aveext.columns["RV"] = aveext.columns.pop("AV")
     print(f"Average has R(V) = {rv:.2f}")
     #aveext.exts["BAND"] = aveext.exts["BAND"] / rv + 1
     #aveext.exts["STIS"] = aveext.exts["STIS"] / rv + 1
