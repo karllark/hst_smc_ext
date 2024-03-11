@@ -21,5 +21,9 @@ def prettyname(name):
     if "smc5" in name:
         pname = name.replace("smc5-", "SMC5-")
         pname = pname.replace("0", "")
+    if "smcave" in name:
+        pname = "SMC Average"
+    if "smcave_bumps" in name:
+        pname = "SMC Bumps"
 
     return pname

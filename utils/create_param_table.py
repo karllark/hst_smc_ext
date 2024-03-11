@@ -64,9 +64,16 @@ if __name__ == "__main__":
             # starnames = np.sort(starnames)
 
             for cname in starnames:
+                if "smcave" in cname:
+                    ctype = ""
                 cfile = f"fits/{cname}_ext{ctype}_FM90.fits"
 
                 edata = ExtData(filename=cfile)
+                if "LOGHI" not in edata.columns:
+                    print(edata.columns)
+                    edata.columns["NHI"] = (0.0, 0.0)
+                    edata.columns["AV"] = (0.0, 0.0)
+                    edata.columns["EBV"] = (0.0, 0.0)
                 if "AV" not in edata.columns:
                     av = edata.columns["EBV"][0] * edata.columns["RV"][0]
                     # fmt: off
@@ -80,7 +87,6 @@ if __name__ == "__main__":
                     hip = 10 ** (edata.columns["LOGHI"][0] + edata.columns["LOGHI"][1])
                     him = 10 ** (edata.columns["LOGHI"][0] - edata.columns["LOGHI"][1])
                     edata.columns["NHI"] = (10 ** edata.columns["LOGHI"][0], 0.5 * (hip - him))
-                    # print(edata.columns["HI"], hip, him)
 
                 # get foreground subtraction plus / minus fits
                 if ctype == "_forecor":
@@ -95,6 +101,7 @@ if __name__ == "__main__":
                 rdata_lat2 = []
                 rdata.append(cname)
                 pcname = prettyname(cname)
+                print(cname, pcname)
                 rdata_lat.append(pcname)
                 rdata_lat2.append(pcname)
                 for ccol in colnames:
