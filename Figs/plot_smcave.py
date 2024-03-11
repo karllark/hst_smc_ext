@@ -104,35 +104,8 @@ if __name__ == "__main__":
     aveext.calc_AV_JHK()
     rv = aveext.columns["AV"][0]
     aveext.columns["RV"] = aveext.columns.pop("AV")
-    print(f"Average has R(V) = {rv:.2f}")
     #aveext.exts["BAND"] = aveext.exts["BAND"] / rv + 1
     #aveext.exts["STIS"] = aveext.exts["STIS"] / rv + 1
-
-    # save to a simple data file: useful for DGFit
-    waves = []
-    exts = []
-    uncs = []
-    otypes = []
-    for ckey in aveext.exts.keys():
-        gvals = np.isfinite(aveext.uncs[ckey])
-        waves = np.concatenate((waves, aveext.waves[ckey][gvals]))
-        exts = np.concatenate((exts, aveext.exts[ckey][gvals]))
-        uncs = np.concatenate((uncs, aveext.uncs[ckey][gvals]))
-        if ckey == "BAND":
-            otypes = np.concatenate((otypes,  np.array(aveext.names[ckey])[gvals]))
-        else:
-            otypes = np.concatenate((otypes, np.full(np.sum(gvals), "spec")))
-    dgtab = QTable()
-    sindxs = np.argsort(waves)
-    dgtab["wave"] = waves[sindxs]
-    dgtab["A(l)/A(V)"] = (exts[sindxs] / rv) + 1.0
-    dgtab["unc"] = uncs[sindxs] / rv
-    dgtab["type"] = otypes[sindxs]
-    if args.bumps:
-        dgfname = "SMC_Bumps_Gordon24_ext.dat"
-    else:
-        dgfname = "SMC_Average_Gordon24_ext.dat"
-    dgtab.write(dgfname, format="ascii.commented_header", overwrite=True)
 
     if not args.bumps:
         ax.plot(G03_SMCBar.obsdata_x, (G03_SMCBar.obsdata_axav - 1)*G03_SMCBar.Rv, 'ko',
@@ -146,6 +119,37 @@ if __name__ == "__main__":
 
     aveext.plot(ax, color="b", rebin_fac=rebinfac, wavenum=True, legend_key="STIS",
                 legend_label=f"{klabel}: R(V) = {rv:.2f}")
+
+    # rebin to a constant resolution for the tables
+    # save to a simple data file: useful for DGFit
+    aveext.rebin_constres("STIS", np.array([1100., 3200.]) * u.AA, 25)
+    waves = []
+    exts = []
+    uncs = []
+    otypes = []
+    for ckey in aveext.exts.keys():
+        gvals = np.isfinite(aveext.uncs[ckey])
+        waves = np.concatenate((waves, aveext.waves[ckey][gvals]))
+        exts = np.concatenate((exts, aveext.exts[ckey][gvals]))
+        uncs = np.concatenate((uncs, aveext.uncs[ckey][gvals]))
+        if ckey == "BAND":
+            otypes = np.concatenate((otypes,  np.array(aveext.names[ckey])[gvals]))
+        else:
+            otypes = np.concatenate((otypes, np.full(np.sum(gvals), "spec")))
+
+    dgtab = QTable()
+    sindxs = np.argsort(waves)
+    dgtab["wave"] = waves[sindxs]
+    dgtab["A(l)/A(V)"] = (exts[sindxs] / rv) + 1.0
+    dgtab["unc"] = uncs[sindxs] / rv
+    dgtab["type"] = otypes[sindxs]
+    if args.bumps:
+        dgfname = "SMC_Bumps_Gordon24_ext.dat"
+    else:
+        dgfname = "SMC_Average_Gordon24_ext.dat"
+    dgtab.write(dgfname, format="ascii.commented_header", overwrite=True)
+
+    aveext.save(ofilename.replace(".fits", "res25.fits"))
 
     ax.set_ylim(-5.0, 20.0)
     ax.legend(loc="upper left")
