@@ -44,11 +44,12 @@ if __name__ == "__main__":
         colnames = ["AV", "EBV", "RV", "NHI"]
         fm90names = ["C1", "C2", "B3", "C4", "XO", "GAMMA"]
 
-        files = ["highebv", "highebv_bumps", "highebv_flat", "lowebv"]
+        files = ["highebv", "highebv_bumps", "highebv_flat", "lowebv", "aves"]
         tags = [r"$E(B-V)_\mathrm{SMC} \geq 0.1, Steep with Weak/Absent Bump",
                 r"$E(B-V)_\mathrm{SMC} \geq 0.1, Significant Bump",
                 r"$E(B-V)_\mathrm{SMC} \geq 0.1, Flat",
-                r"$E(B-V)_\mathrm{SMC} < 0.1, Weak/Absent Bump"]
+                r"$E(B-V)_\mathrm{SMC} < 0.1, Weak/Absent Bump",
+                r"Averages"]
         for cfile, ctag in zip(files, tags):
 
             filename = f"data/smc_stars_reddened_good_{cfile}.dat"
