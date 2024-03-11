@@ -56,12 +56,21 @@ Figures
 6. Group type versus position in SMC: Figs/plot_positions_mips24.py
    Plot the bump/nobump/flat/lowebv samples over the MIPS 24um image 
 
-7. FM90 parameters versus E(B-V) etc: TBR
-   all these done with extinction_ensemble_parameters repository
+7. R(V) versus A(V) and N(HI) versus A(V): extinction_ensemble_parameters repository
+   plot_param_vs_param.py --datasets gor09 gor03_lmc gor24_smc_nobump gor24_smc_bump gor24_smc_flat --spropsav
 
-8. Bump versus q_PAH: Figs/plot_bump_vs_qpah.py
+8. FM90 parameters versus A(V): extinction_ensemble_parameters repository
+   plot_param_vs_param.py --datasets gor09 gor03_lmc gor24_smc_nobump gor24_smc_bump gor24_smc_flat --av
 
-9. SMC Average (& Bump Average) curves versus MW/LMC: Figs/plot_smcave.py
+9. FM90 parameters versus each other: extinction_ensemble_parameters repository
+   plot_param_vs_param.py --datasets gor09 gor03_lmc gor24_smc_nobump gor24_smc_bump --fm90main --fit
+
+10. A(V) and FM90 versus N(HI)/A(V): extinction_ensemble_parameters repository
+     plot_param_vs_param.py --datasets gor09 gor03_lmc gor24_smc_nobump gor24_smc_bump --gdprops
+
+11. Bump versus q_PAH: Figs/plot_bump_vs_qpah.py
+
+12. SMC Average (& Bump Average) curves versus MW/LMC: Figs/plot_smcave.py
    add `--bumps` to get the average of the sightlines with bumps
 
 Tables

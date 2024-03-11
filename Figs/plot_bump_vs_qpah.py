@@ -148,7 +148,7 @@ if __name__ == "__main__":
 
     #ax2.yaxis.tick_right()
     #ax2.yaxis.set_label_position("right")
-    ax2.set_ylabel(r"C4 = FUV curvature amplitude")
+    ax2.set_ylabel(r"C4 = FUV rise amplitude")
     ax2.set_xlabel(r"$q_\mathrm{PAH}$ = % dust mass in PAH grains")
 
     fitline = True
