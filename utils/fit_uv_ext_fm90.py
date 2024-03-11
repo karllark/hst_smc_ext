@@ -152,7 +152,7 @@ if __name__ == "__main__":
     fm90_init.gamma.fixed = True
 
     # fix xo and gamma unless it is one of the "strong" bump stars
-    if any(x in args.extfile for x in ("3030", "azv456", "star10", "star11")):
+    if any(x in args.extfile for x in ("3030", "azv456", "star10", "star11", "smcave_bumps")):
         fm90_init.xo.fixed = False
         fm90_init.gamma.fixed = False
 

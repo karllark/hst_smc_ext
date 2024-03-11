@@ -40,10 +40,10 @@ if __name__ == "__main__":
     if args.bumps:
         filelist = filelist.replace(".dat", "_bumps.dat")
         klabel = "SMC Bumps"
-        ofilename = "fits/smcave_bumps.fits"
+        ofilename = "fits/smcave_bumps_ext.fits"
     else:
         klabel = "SMC Average"
-        ofilename = "fits/smcave.fits"
+        ofilename = "fits/smcave_ext.fits"
     f = open(filelist, "r")
     file_lines = list(f)
     starnames = []
