@@ -127,10 +127,15 @@ if __name__ == "__main__":
     dgtab["A(l)/A(V)"] = (exts[sindxs] / rv) + 1.0
     dgtab["unc"] = uncs[sindxs] / rv
     dgtab["type"] = otypes[sindxs]
-    dgtab.write("SMC_Average_Gordon24_ext.dat", format="ascii.commented_header", overwrite=True)
+    if args.bumps:
+        dgfname = "SMC_Bumps_Gordon24_ext.dat"
+    else:
+        dgfname = "SMC_Average_Gordon24_ext.dat"
+    dgtab.write(dgfname, format="ascii.commented_header", overwrite=True)
 
-    ax.plot(G03_SMCBar.obsdata_x, (G03_SMCBar.obsdata_axav - 1)*G03_SMCBar.Rv, 'ko',
-        label="G03 SMCBar; $R(V) = 2.74$")
+    if not args.bumps:
+        ax.plot(G03_SMCBar.obsdata_x, (G03_SMCBar.obsdata_axav - 1)*G03_SMCBar.Rv, 'ko',
+            label="G03 SMCBar; $R(V) = 2.74$")
     aveext.save(ofilename)
 
     mod_x = np.arange(0.5, 9.0, 0.1)

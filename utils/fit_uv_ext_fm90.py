@@ -120,14 +120,18 @@ if __name__ == "__main__":
     # file = '/home/kgordon/Python_git/spitzer_mir_ext/fits/hd147889_hd064802_ext.fits'
     ofile = file.replace(".fits", "_FM90.fits")
     ext = ExtData(filename=file)
-    print(file)
+    if "IUE" in ext.exts.keys():
+        spectype = "IUE"
+    else:
+        spectype = "STIS"
 
     # get the extinction curve in alav - (using K band to extrapolate for A(V))
     #ext.trans_elv_alav()
-    ext.trans_elv_elvebv()
+    if ext.type == "elx":
+        ext.trans_elv_elvebv()
 
     wave, y, y_unc = ext.get_fitdata(
-        ["IUE"],
+        [spectype],
         remove_uvwind_region=True,
         remove_lya_region=True,
     )
