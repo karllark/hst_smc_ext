@@ -89,12 +89,15 @@ Tables
 5. Sightline properties: utils/create_param_table.py
    E(B-V), R(V), N(HI), FM90 parameters
    
-6. SMC Average/Bump Average versus wavelength: TBC  
+6. SMC Average/Bump Average versus wavelength: utils/create_aveext_table.py
+   Uses ASCII files created by Figs/plot_smcave.py
 
 Appendix Tables
 ---------------
 
-1. Manually - from Ed
+1. UVB photometry: Manually - from Ed
 
-2. Manually - from Ed
+2. griz and JHK_S photometry: Manually - from Ed
+
+3. MR12 HST photometry: utils/create_mr12_photom_table.py
 

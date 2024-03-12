@@ -57,8 +57,8 @@ if __name__ == "__main__":
             table_lat.add_row(
                 (
                     pname,
-                    f"{teff:.0f} +/- {teff_unc:.0f}",
-                    f"{logg:.3f} +/- {logg_unc:.3f}",
+                    f"${teff:.0f} \pm {teff_unc:.0f}$",
+                    f"${logg:.3f} \pm {logg_unc:.3f}$",
                 )
             )
 
