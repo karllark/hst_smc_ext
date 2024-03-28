@@ -132,7 +132,7 @@ if __name__ == "__main__":
     # print(lnames[lavs_forecor < 0.2])
 
     print("E(B-V)_SMC", min(ebvs), max(ebvs), np.average(ebvs))
-    print("E(B-V)_MW", min(ebvs_mw), max(ebvs_mw), np.average(ebvs_mw))
+    print("E(B-V)_MW", min(ebvs_mw), max(ebvs_mw), np.average(ebvs_mw), np.std(ebvs_mw))
 
     # output a table of the sample properties
     outtab = QTable()
