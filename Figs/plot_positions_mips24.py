@@ -253,6 +253,9 @@ if __name__ == "__main__":
 
     ax.annotate(r"MIPS 24 $\mu$m", (100, 100))
 
+    ax.annotate(r"Wing", (3000, 500), fontsize=1.5*fontsize, alpha=0.5)
+    ax.annotate(r"Bar", (5000, 3800), fontsize=1.5*fontsize, alpha=0.5)
+
     plt.tight_layout()
 
     save_str = "smc_mips24_positions"
