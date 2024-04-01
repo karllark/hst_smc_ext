@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
     tab1 = QTable.read("tables/qpah_from_image.dat", format="ascii.ipac")
     #tab1 = QTable.read("tables/samp_as_measured_ensemble_params.dat", format="ascii.ipac")
-    tab2 = QTable.read("tables/gor24_smc_forecor_ensemble_params.dat", format="ascii.ipac")
+    tab2 = QTable.read("tables/gor24_smc_ensemble_params.dat", format="ascii.ipac")
 
     fname = ["highebv", "highebv_bumps"]  # , "highebv_flat"]  # , "lowebv"]
     fmts = ["bo", "rP"]  # , "cs"]  # , "vy"]

@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
         otab = QTable(
             # fmt: off
-            names=("name", "AV", "AV_unc", "EBV", "EBV_unc", "RV", "RV_unc", "NHI", "NHI_unc",
+            names=("name", "EBV", "EBV_unc", "AV", "AV_unc", "RV", "RV_unc", "NHI", "NHI_unc",
                    "C1", "C1_unc", "C2", "C2_unc", "B3", "B3_unc", "C4", "C4_unc",
                    "x0", "x0_unc", "gamma", "gamma_unc"),
             dtype=("S", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f",

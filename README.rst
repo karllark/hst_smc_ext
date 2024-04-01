@@ -68,7 +68,7 @@ Figures
 10. A(V) and FM90 versus N(HI)/A(V): extinction_ensemble_parameters repository
      plot_param_vs_param.py --datasets gor09 gor03_lmc gor24_smc_nobump gor24_smc_bump --gdprops
 
-11. Bump versus q_PAH: Figs/plot_bump_vs_qpah.py
+11. Bump versus q_PAH: Figs/plot_bump_vs_qpah.py --inclmc
 
 12. SMC Average (& Bump Average) curves versus MW/LMC: Figs/plot_smcave.py
    add `--bumps` to get the average of the sightlines with bumps
@@ -86,10 +86,10 @@ Tables
 
 4. Stellar fit parameters: utils/create_stellar_param_table.py
 
-5. Sightline properties: utils/create_param_table.py
+5. & 6. Sightline properties: utils/create_param_table.py
    E(B-V), R(V), N(HI), FM90 parameters
    
-6. SMC Average/Bump Average versus wavelength: utils/create_aveext_table.py
+7. SMC Average/Bump Average versus wavelength: utils/create_aveext_table.py
    Uses ASCII files created by Figs/plot_smcave.py
 
 Appendix Tables
