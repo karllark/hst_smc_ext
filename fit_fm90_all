@@ -7,7 +7,8 @@ fmfit="python utils/fit_uv_ext_fm90.py"
 
 rm -f fits/*FM90.h5
 
-for CLIST in iue stis1 stis2 stis3
+#for CLIST in iue stis1 stis2 stis3
+for CLIST in stis3
 do
   cfile="data/smc_stars_${CLIST}.dat"
   while read -r line;

@@ -1,9 +1,12 @@
-# convert Ed Fitzpatrick's txt save format to the standard
+# convert Ed Fitzpatrick's FITS save format to the standard
 # measure_extincion fits format
 import numpy as np
 
 import astropy.units as u
 from astropy.table import Table
+from astropy.io import fits
+
+import matplotlib.pyplot as plt
 
 from measure_extinction.stardata import StarData
 from measure_extinction.utils.helpers import get_full_starfile
@@ -16,47 +19,58 @@ class ExtData(ExtDataStock):
     idl save files.
     """
 
-    def read_ext_data_edtxt(self, ext_filename):
+    def read_ext_data_edfits(self, ext_filename):
         """
-        Read the calculated extinction curve from a txt save file
-        In the process, convert the elvebv curves to elv (more fundemental measurement)
+        Read the calculated extinction curve from a fits save file
+        In the process, convert the elvebv curves to elv (more fundamental measurement)
         """
         self.type = "elx"
         self.type_rel_band = "V"
 
         # parameters
-        ptab = Table.read(f"{ext_filename}_parms.txt", format="ascii.commented_header", header_start=1)
-        ebv = ptab["E(44-55)"][0]
-        ebv_unc = 0.0
-        loghi = ptab["log(NHI)"][0]
-        loghi_unc = 0.0
+        # hard coded from eds "FIt_*.out" files
+        if "MR12-9" in ext_filename:
+            ebv = 0.133
+            ebv_unc = 0.003
+            loghi = 21.918
+            loghi_unc = 0.062
+        elif "MR12-10" in ext_filename:
+            ebv = 0.249
+            ebv_unc = 0.003
+            loghi = 22.558
+            loghi_unc = 0.192
+        elif "MR12-11" in ext_filename:
+            ebv = 0.309
+            ebv_unc = 0.002
+            loghi = 22.003
+            loghi_unc = 0.109
 
         # save
         self.columns = {
             "EBV": (ebv, ebv_unc),
             "LOGHI": (loghi, loghi_unc),
         }
-        # extcols = {"loghi": loghi, "loghi_unc": loghi_unc}
 
         # UV curve
-        spec_dict = Table.read(f"{ext_filename}_uvcurv.txt", format="ascii.commented_header", header_start=1)
-
-        (indxs,) = np.where(np.isfinite(spec_dict["K(LAMBDA-55)"]))
-        ngood = len(indxs)
-        self.waves["IUE"] = spec_dict["LAMBDA"][indxs] * u.Angstrom
-        self.exts["IUE"] = spec_dict["K(LAMBDA-55)"][indxs] * ebv
+        edata = fits.getdata(f"{ext_filename}_SPECTROPHOT.fits")
+        gvals = np.isfinite(edata[5, :])
+        ngood = np.sum(gvals)
+        self.waves["IUE"] = edata[0, gvals] * u.Angstrom
+        self.exts["IUE"] = edata[5, gvals] * ebv
         self.npts["IUE"] = np.full((ngood), 1)
         self.uncs["IUE"] = np.full((ngood), 0.0)
 
-        # UV curve
-        spec_dict = Table.read(f"{ext_filename}_opircurv.txt", format="ascii.commented_header", header_start=1)
-
-        nphot = len(spec_dict["LAMBDA(EFF)"])
-        self.waves["BAND"] = spec_dict["LAMBDA(EFF)"] * u.Angstrom
-        self.exts["BAND"] = spec_dict["K(LAMBDA-55)"] * ebv
-        self.npts["BAND"] = np.full((nphot), 1)
-        self.uncs["BAND"] = np.full((nphot), 0.0)
-        self.names["BAND"] = ["WFC3_F336W", "ACS_F475W", "ACS_F550M", "ACS_F814W", "WFC3_F110W", "WFC3_F160W"]
+        # phot curve
+        edata = fits.getdata(f"{ext_filename}_FILTERPHOT.fits")
+        gvals = np.isfinite(edata[5, :])
+        ngood = np.sum(gvals)
+        self.waves["BAND"] = edata[0, gvals] * u.Angstrom
+        self.exts["BAND"] = edata[5, gvals] * ebv
+        self.npts["BAND"] = np.full((ngood), 1)
+        self.uncs["BAND"] = np.full((ngood), 0.0)
+        self.names["BAND"] = ["WFC3_F225W", "WFC3_F275W", "WFC3_F336W",
+                              "ACS_F475W", "ACS_F550M", "ACS_F814W",
+                              "WFC3_F110W", "WFC3_F160W"]
 
 
 if __name__ == "__main__":
@@ -64,7 +78,7 @@ if __name__ == "__main__":
     datapath = "/home/kgordon/Python/hst_smc_ext/MR12_ext/"
 
     # read and save the extinction curves
-    filelist = "data/smc_stars_ed_txt_to_extstar.dat"
+    filelist = "data/smc_stars_ed_fits_to_extstar.dat"
     f = open(filelist, "r")
     file_lines = list(f)
     for line in file_lines:
@@ -76,7 +90,7 @@ if __name__ == "__main__":
 
             # read
             text = ExtData()
-            text.read_ext_data_edtxt(f"{datapath}{name1.upper()}")
+            text.read_ext_data_edfits(f"{datapath}{name1.upper()}")
 
             # compute the av
             # add estimate uncertainties (not provided by Ed)

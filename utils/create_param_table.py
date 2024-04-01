@@ -41,7 +41,7 @@ if __name__ == "__main__":
             # fmt:on
         )
 
-        colnames = ["AV", "EBV", "RV", "NHI"]
+        colnames = ["EBV", "AV", "RV", "NHI"]
         fm90names = ["C1", "C2", "B3", "C4", "XO", "GAMMA"]
 
         files = ["highebv", "highebv_bumps", "highebv_flat", "lowebv", "aves"]

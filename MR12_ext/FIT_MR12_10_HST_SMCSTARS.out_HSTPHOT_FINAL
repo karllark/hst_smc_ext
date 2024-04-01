@@ -1,0 +1,50 @@
+ 
+          ********** FIT_MR12_10_HST_SMCSTARS **********
+ 
+ MODEL GRID: BOSZ
+ 
+ FINAL PARAMETERS:
+ 
+ Reduced Chi-squared =     1.0776
+ Total Chi-squared   =    1718.75
+ 
+ 
+ Initial Mass =     0.00 Msun
+ log Age      = 10^   0.000 years
+ 
+  log Teff                  14464.6 +/-        0.005
+  log g                       4.300 +/-       -0.000
+  [m/H]                      -0.700 +/-        0.000
+  [C/H]                      -0.750 +/-        0.000
+  [alpha/H]                  -0.250 +/-        0.000
+  V(microturbulence)          2.000 +/-        0.000
+  Vsini                     100.000 +/-        0.000
+  V(radial)                 120.000 +/-        0.000
+  N(H I)                     22.558 +/-        0.192
+  V(H I)                    120.000 +/-        0.000
+  FWHM PSF                    2.000 +/-        0.000
+  Distance (pc)               0.000 +/-        0.000
+  log(Scale Factor)         -23.345 +/-        0.005
+  E(44-55)                    0.249 +/-        0.003
+  R(55)                       3.051 +/-        0.044
+  Bump centroid               4.750 +/-       -0.000
+  Bump width                  0.801 +/-        0.210
+  Extinction intercept       -1.167 +/-        0.330
+  Extinction slope            1.125 +/-        0.075
+  Bump scale factor           1.638 +/-        0.668
+  FUV scale factor            0.592 +/-        0.901
+  FUV zero point              6.480 +/-        0.719
+  NUV spline point           99.990 +/-        0.000
+  U spline point             99.990 +/-        0.000
+ 
+ PHOTOMETRY RESULTS:
+ 
+                 STAR       MODEL     DELTA        SIGMA
+   F225W        18.803     18.840     -0.037      0.0090
+   F275W        18.648     18.636      0.012      0.0090
+   F336W        18.643     18.648     -0.005      0.0040
+   F475W        19.160     19.157      0.003      0.0010
+   F550M        19.005     19.043     -0.038      0.0030
+   F814W        18.880     18.878      0.002      0.0010
+   F110W        18.828     18.819      0.009      0.0020
+   F160W        18.740     18.758     -0.018      0.0030
