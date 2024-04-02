@@ -20,3 +20,7 @@ do
     $fmfit fits/"$line"_ext_forecor_minus.fits $extargs
   done < $cfile
 done
+
+# averages
+$fmfit fits/smcave_ext.fits $extargs
+$fmfit fits/smcave_bumps_ext.fits $extargs

@@ -9,13 +9,13 @@ if __name__ == "__main__":
     table_lat = QTable(
         names=(
             "Name",
-            "F336W", "F475W", "F550M", "F814W", "F110W", "F160W",
+            "F225W", "F275W", "F336W", "F475W", "F550M", "F814W", "F110W", "F160W",
         ),
-        dtype=("S", "S", "S", "S", "S", "S", "S"),
+        dtype=("S", "S", "S", "S", "S", "S", "S", "S", "S"),
     )
 
     names = ["MR12-09", "MR12-10", "MR12-11"]
-    bands = ["F336W", "F475W", "F550M", "F814W", "F110W", "F160W"]
+    bands = ["F225W", "F275W", "F336W", "F475W", "F550M", "F814W", "F110W", "F160W"]
 
     for k, cname in enumerate(names):
         rdata_lat = []
@@ -31,7 +31,7 @@ if __name__ == "__main__":
     table_lat.write(
         "tables/mr12_phot.tex",
         format="aastex",
-        col_align="lcccccc",
+        col_align="lccccccc",
         latexdict={
             "caption": r"Sample HST photometry \label{tab_hst}",
         },
