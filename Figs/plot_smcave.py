@@ -137,10 +137,16 @@ if __name__ == "__main__":
         else:
             otypes = np.concatenate((otypes, np.full(np.sum(gvals), "spec")))
 
+    # get the V band value to allow for explicit normalization to V band for A(l)/A(V)
+    # not exactly normalized as the E(B-V) values are those from the fits, so the
+    # E(lambda-V)/E(B-V) curves are such that V in not exactly 0 and B is not exactly 1
+    sindxs = np.argsort(np.absolute(waves - 0.55 * u.micron))
+    actual_av = (exts[sindxs[0]] / rv) + 1.0
+
     dgtab = QTable()
     sindxs = np.argsort(waves)
     dgtab["wave"] = waves[sindxs]
-    dgtab["A(l)/A(V)"] = (exts[sindxs] / rv) + 1.0
+    dgtab["A(l)/A(V)"] = ((exts[sindxs] / rv) + 1.0) / actual_av
     dgtab["unc"] = uncs[sindxs] / rv
     dgtab["type"] = otypes[sindxs]
     if args.bumps:
