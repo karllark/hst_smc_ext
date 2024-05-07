@@ -263,7 +263,7 @@ if __name__ == "__main__":
     ax[0].set_xlim(0.0, 9.0)
     ax[1].set_xlim(0.0, 9.0)
     ax[0].set_ylim(-1.0, 4.0)
-    ax[0].set_ylabel(r"E($\lambda$ - V)")
+    ax[0].set_ylabel(r"E($\lambda$ - V) [mag]")
 
     ax[1].set_ylim(-4.0, 18.0)
     # ax[1].set_xscale("log")

@@ -122,12 +122,12 @@ if __name__ == "__main__":
         ax[i].tick_params("both", length=5, width=1, which="minor")
 
     ax[0].set_ylabel(
-        r"$F(\lambda)/F(2600~\AA)$ + offset [$ergs\ cm^{-2}\ s\ \AA$]",
+        r"$F(\lambda)/F(2600~\AA)$ + offset [$ergs\ cm^{-2}\ s^{-1}\ \AA^{-1}$]",
         fontsize=1.3 * fontsize,
     )
 
     ax[2].set_ylabel(
-        r"$F(\lambda)/F(2600~\AA)$ + offset [$ergs\ cm^{-2}\ s\ \AA$]",
+        r"$F(\lambda)/F(2600~\AA)$ + offset [$ergs\ cm^{-2}\ s^{-1}\ \AA^{-1}$]",
         fontsize=1.3 * fontsize,
     )
 
