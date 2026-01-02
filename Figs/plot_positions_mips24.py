@@ -14,6 +14,9 @@ from astropy.visualization import SqrtStretch, ImageNormalize
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--names", help="annotate with star names", action="store_true")
+    parser.add_argument(
+        "--proposal", help="version for ALMA proposal", action="store_true"
+    )
     parser.add_argument("--png", help="save figure as a png file", action="store_true")
     parser.add_argument("--pdf", help="save figure as a pdf file", action="store_true")
     args = parser.parse_args()
@@ -34,6 +37,9 @@ if __name__ == "__main__":
     cutout = Cutout2D(data, coord, (3.0 * u.deg, 5.0 * u.deg), wcs=wcs)
     data = cutout.data
     wcs = cutout.wcs
+
+    # save cutout image
+    # fits.writeto("smc_cutout.fits", data)
 
     # qpah images
     data_qpah = []
@@ -67,6 +73,8 @@ if __name__ == "__main__":
 
     norm = ImageNormalize(vmin=0.0, vmax=3.0, stretch=SqrtStretch())
     norm2 = ImageNormalize(vmin=0.0, vmax=20.0, stretch=SqrtStretch())
+    norm3 = ImageNormalize(vmin=0.0, vmax=5.0, stretch=SqrtStretch())
+    norm4 = ImageNormalize(vmin=1.0, vmax=6.0, stretch=SqrtStretch())
 
     # ax.set_figsize((10, 6))
     # ax.imshow(data, vmin=-0.1, vmax=2, origin='lower', cmap="binary")
@@ -98,7 +106,7 @@ if __name__ == "__main__":
     ax.indicate_inset_zoom(axins, edgecolor="black")
     # add scale
     ax.annotate(
-        f'{2.*pixscale*chwidth:.0f}"', (6400.0, 4000.0), fontsize=0.8 * fontsize
+        "SMC B1-1", (6100.0, 4000.0), fontsize=0.8 * fontsize
     )
 
     # add 2nd zoom region
@@ -122,12 +130,92 @@ if __name__ == "__main__":
     ax.indicate_inset_zoom(axins2, edgecolor="black")
     # add scale
     ax.annotate(
-        f'{2.*pixscale*chwidth:.0f}"', (1300.0, 2900.0), fontsize=0.8 * fontsize
+        "N83", (1300.0, 2900.0), fontsize=0.8 * fontsize
     )
 
-    fnames = ["lowebv", "nobump", "flat", "bump"]
-    fsyms = ["v", "o", "s", "P"]
-    fcols = ["tab:brown", "b", "c", "r"]
+    all_axins = [axins, axins2]
+
+    if args.proposal:
+        # add 3rd zoom region
+        extent = (-3, 4, -4, 3)
+        cx, cy = 3615.0, 2097.0
+        chwidth = 10.0
+        x1, x2, y1, y2 = (
+            cx - chwidth,
+            cx + chwidth,
+            cy - chwidth,
+            cy + chwidth,
+        )  # subregion of the original image
+        axins3 = ax.inset_axes(
+            [0.28, 0.60, 0.15, 0.15],
+            xlim=(x1, x2),
+            ylim=(y1, y2),
+            xticklabels=[],
+            yticklabels=[],
+        )
+        axins3.imshow(data, origin="lower", norm=norm, cmap="binary")
+        ax.indicate_inset_zoom(axins3, edgecolor="black")
+        ax.annotate(
+            "AzV 456", (2250.0, 3350.0), fontsize=0.8 * fontsize
+        )
+        all_axins.append(axins3)
+
+        # add 4rd zoom region
+        extent = (-3, 4, -4, 3)
+        cx, cy = 6065.0, 1186.0
+        chwidth = 10.0
+        x1, x2, y1, y2 = (
+            cx - chwidth,
+            cx + chwidth,
+            cy - chwidth,
+            cy + chwidth,
+        )  # subregion of the original image
+        axins4 = ax.inset_axes(
+            [0.55, 0.15, 0.15, 0.15],
+            xlim=(x1, x2),
+            ylim=(y1, y2),
+            xticklabels=[],
+            yticklabels=[],
+        )
+        axins4.imshow(data, origin="lower", norm=norm4, cmap="binary")
+        ax.indicate_inset_zoom(axins4, edgecolor="black")
+        ax.annotate(
+            "AzV 18", (4250., 1400.0), fontsize=0.8 * fontsize
+        )
+        all_axins.append(axins4)
+
+        # add 5th zoom region
+        extent = (-3, 4, -4, 3)
+        cx, cy = 4248., 3170.0
+        chwidth = 10.0
+        x1, x2, y1, y2 = (
+            cx - chwidth,
+            cx + chwidth,
+            cy - chwidth,
+            cy + chwidth,
+        )  # subregion of the original image
+        axins5 = ax.inset_axes(
+            [0.40, 0.75, 0.15, 0.15],
+            xlim=(x1, x2),
+            ylim=(y1, y2),
+            xticklabels=[],
+            yticklabels=[],
+        )
+        axins5.imshow(data, origin="lower", norm=norm3, cmap="binary")
+        ax.indicate_inset_zoom(axins5, edgecolor="black")
+        ax.annotate(
+            "AzV 398", (3100., 4000.0), fontsize=0.8 * fontsize
+        )
+        all_axins.append(axins5)
+
+    if args.proposal:
+        fnames = ["nobump", "bump"]
+        fsyms = ["o", "P"]
+        fcols = ["b", "r"]
+    else:
+        fnames = ["lowebv", "nobump", "flat", "bump"]
+        fsyms = ["v", "o", "s", "P"]
+        fcols = ["tab:brown", "b", "c", "r"]
 
     names = []
     qpahs = []
@@ -146,7 +234,7 @@ if __name__ == "__main__":
                 coord.ra.degree,
                 coord.dec.degree,
                 transform=ax.get_transform("fk5"),
-                s=45,
+                s=30,
                 edgecolor=ccol,
                 facecolor="none",
                 linewidth=2,
@@ -156,26 +244,17 @@ if __name__ == "__main__":
 
             # zooms
             cploc = wcs.world_to_pixel(coord)
-            axins.scatter(
-                [cploc[0]],
-                [cploc[1]],
-                s=45,
-                edgecolor=ccol,
-                facecolor="none",
-                linewidth=2,
-                alpha=0.75,
-                marker=csym,
-            )
-            axins2.scatter(
-                [cploc[0]],
-                [cploc[1]],
-                s=45,
-                edgecolor=ccol,
-                facecolor="none",
-                linewidth=2,
-                alpha=0.75,
-                marker=csym,
-            )
+            for axins in all_axins:
+                axins.scatter(
+                    [cploc[0]],
+                    [cploc[1]],
+                    s=45,
+                    edgecolor=ccol,
+                    facecolor="none",
+                    linewidth=2,
+                    alpha=0.75,
+                    marker=csym,
+                )
 
             # print(ptab["name"][k], wcs.world_to_pixel(coord))
             if args.names:
@@ -228,37 +307,45 @@ if __name__ == "__main__":
             markeredgecolor="r",
             markersize=10,
         ),
-        Line2D(
-            [0],
-            [0],
-            marker="s",
-            markerfacecolor="none",
-            color="none",
-            label="Flat",
-            markeredgecolor="c",
-            markersize=10,
-        ),
-        Line2D(
-            [0],
-            [0],
-            marker="v",
-            markerfacecolor="none",
-            color="none",
-            label=r"$E(B-V)_\mathrm{SMC} < 0.1$",
-            markeredgecolor="tab:brown",
-            markersize=10,
-        ),
     ]
+    if not args.proposal:
+        legend_elements.append(
+            Line2D(
+                [0],
+                [0],
+                marker="s",
+                markerfacecolor="none",
+                color="none",
+                label="Flat",
+                markeredgecolor="c",
+                markersize=10,
+            )
+        )
+        legend_elements.append(
+            Line2D(
+                [0],
+                [0],
+                marker="v",
+                markerfacecolor="none",
+                color="none",
+                label=r"$E(B-V)_\mathrm{SMC} < 0.1$",
+                markeredgecolor="tab:brown",
+                markersize=10,
+            )
+        )
+
     ax.legend(handles=legend_elements, loc="upper left", fontsize=0.8 * fontsize)
 
     ax.annotate(r"MIPS 24 $\mu$m", (100, 100))
 
-    ax.annotate(r"Wing", (3000, 500), fontsize=1.5*fontsize, alpha=0.5)
-    ax.annotate(r"Bar", (5000, 3800), fontsize=1.5*fontsize, alpha=0.5)
+    ax.annotate(r"Wing", (3000, 500), fontsize=1.5 * fontsize, alpha=0.5)
+    ax.annotate(r"Bar", (5000, 3800), fontsize=1.5 * fontsize, alpha=0.5)
 
     plt.tight_layout()
 
     save_str = "smc_mips24_positions"
+    if args.proposal:
+        save_str = f"{save_str}_prop"
     if args.png:
         plt.savefig(f"{save_str}.png")
     elif args.pdf:
